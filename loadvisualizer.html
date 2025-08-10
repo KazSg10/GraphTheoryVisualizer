@@ -3,42 +3,75 @@
  <title>Canvases</title>
 </head>
 <body id="canvasplaceholder">
-	<h1>Dijkstra Visualization</h1>
-	<!--
-	<div id = "canvasContainer"></div>
-	-->
-	<!--
-	<canvas id="canvasgraph"></canvas>
-	-->
+	<style>
+		#divGraph{
+			float: left;
+			padding: 0;
+		}
+		#divADT{
+			float: right;
+			padding: 0;
+
+		}
+		#divPseudocode{
+			float: right;
+			padding: 0;
+		}
+		
+	</style>
 	
-	<div>
-		<script src="C:\Users\karan\OneDrive - Reading School\Computer Science NEA - Karan Singh\Code\Working\canvasgraph.js"></script>
+	<div id = "heading">
+		<h1>Dijkstra Visualization</h1>
+		
+		<button id="homeButton" style="margin-left: auto;" onclick="history.back()"> Home </button>
 	</div>
 	
-	<div>
-		<script src="C:\Users\karan\OneDrive - Reading School\Computer Science NEA - Karan Singh\Code\Working\canvasadt.js"></script>
-	</div>
+	
+	
 	
 
-	<!--
-			<script>
-					function createCanvas(id, width, height) {
-						const container = document.getElementById('canvasContainer');
-						const canvas = document.createElement(id);
-						canvas.id=id;
-						canvas.width=width;
-						canvas.style.border="1px solid #000000";
-						container.appendChild(canvas);
-						return canvas;
-						}
-					
-					const canvas = createCanvas('canvas', 200, 100);
-					
-					const ctx = canvas.getContext('2d');
-					ctx.fillStyle = 'gray';
-					ctx.fillRect(10,10,50,50);
-						
-		</script>
--->
+	<!-- Creating three div elements to represent three different parts of the HTML webpage.
+	 	 Each div element will be used to contain one canvas.
+	-->
+	<div id="divGraph" height></div>
+	<div id="divADT"></div>
+	<div id="divPseudocode"></div>
+	
+
+
+	<script>
+		var innerWidth = window.innerWidth;
+		var innerHeight = window.innerHeight;
+
+		function createCanvasElement(divId, canvasId, width, height) {
+			//Getting reference of div element from DOM (Document Object Model - Tree representation of HTML elements)
+			const divReference = document.getElementById(divId);
+			divReference.width = width;
+			divReference.height = height;
+			//Creating canvas element
+			const canvas = document.createElement("canvas");
+			//Setting newly created canvas' id
+			canvas.id=canvasId;
+			//Setting newly created canvas' width and height
+			canvas.width=width;
+			canvas.height=height;
+			//Setting newly created canvas' border style
+			canvas.style.border="2px solid #00f000";
+			//Adding the canvas element as a child node of the div element in DOM
+			divReference.appendChild(canvas);
+			return canvas;
+		}
+			
+			//Creating three canvases and linking them to the three div elements created above
+			var canvasGraph = createCanvasElement('divGraph','canvasGraph',innerWidth*0.6,innerHeight*0.86);
+			var canvasADT = createCanvasElement('divADT','canvasADT',innerWidth*0.38,innerHeight*0.425);
+			var canvasPseudocode = createCanvasElement('divPseudocode','canvasPseudocode',innerWidth*0.38,innerHeight*0.425);
+
+	</script>
+
+	<script type="text/javascript" src="C:\Users\karan\OneDrive - Reading School\Computer Science NEA - Karan Singh\coderepository\GraphTheoryVisualizer\Circle.js"></script>
+	<script type="text/javascript" src="C:\Users\karan\OneDrive - Reading School\Computer Science NEA - Karan Singh\coderepository\GraphTheoryVisualizer\Line.js"></script>
+	<script type="text/javascript" src="C:\Users\karan\OneDrive - Reading School\Computer Science NEA - Karan Singh\coderepository\GraphTheoryVisualizer\CanvasAnimations.js"></script>
+	
 </body>
 </html>
