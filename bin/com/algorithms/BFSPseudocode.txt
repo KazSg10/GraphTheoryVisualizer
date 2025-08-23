@@ -1,0 +1,17 @@
+	Sub BreadthFirstTraversal(graph, sourceNode){
+		visited= []
+		queue =[]
+		enqueue sourceNode in queue
+		queue.enqueue(sourceNode);
+		while queue is NOT empty
+			currentNode <- dequeue node from queue
+			append currentNode to visited
+			FOREACH	(neighbouring node of currentNode) 
+				IF(visited NOT contains node && queue NOT contains node){
+					enqueue node to queue
+				ENDIF	
+			}
+		ENDWHILE
+		return visited;
+		
+	}

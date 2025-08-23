@@ -1,0 +1,37 @@
+package com.algorithms;
+
+import java.util.List;
+import java.util.Map;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+public abstract class Graph {
+	private  Map<Node,List<Node>> nodeConnections;
+	private  List<Node> c_nodesList;
+	
+	public Map<Node, List<Node>> getNodeConnections() {
+		return nodeConnections;
+	}
+	public List<Node> getNodesList(){
+		return c_nodesList;
+	}
+	public abstract void addConnection(Edge edge);
+//	public boolean routeFromSourceNodeToNode(Node sourceNode) {
+//		List<Node> hasRouteFromSourceNode = new ArrayList<Node>(); 
+//		for(Node node: c_nodesList) {
+//			
+//		}
+//	}
+	public String toJson() {
+		ObjectMapper objectMapper = new ObjectMapper();
+		String json = null;
+		try {
+			json = objectMapper.writeValueAsString(this);
+		} catch (JsonProcessingException e) {
+			System.out.println(e);
+		}
+		return json;
+	}
+
+}
