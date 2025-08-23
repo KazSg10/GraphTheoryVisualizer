@@ -167,11 +167,22 @@ public class HttpServer {
 			String json = simulateAlgorithm(inputData);
 			
 			PrintWriter outputWriter = new PrintWriter(socket.getOutputStream());
+			//Response's first line containing the HTTP version, HTTP status code and status
 			outputWriter.println("HTTP/1.1 200 OK\r\n");
+			//Header providing body length
+			System.out.println(json.getBytes().length);
+			outputWriter.println("Content-Length: " + json.getBytes().length + "\r\n");
+			//Header providing type of content in the body
+			outputWriter.println("Content-Type: application/json;charset=UTF-8\r\n");
+			//Blank line to separate headers and body
 			outputWriter.println("\r\n");
+			//Adding body to response
 			outputWriter.println(json);
-			System.out.println(json);
+			
+			System.out.println(json.getBytes());
+			//Sending response back to client
 			outputWriter.flush();
+			//Closing client socket
 			socket.close();
 
 		}catch(Exception e) {

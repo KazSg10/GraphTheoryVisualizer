@@ -138,17 +138,33 @@ initial-scale=1">
 			cell.appendChild(documentElement);
 		}
 
-		function postData(tableName, algorithm){
+		async function postData(tableName, algorithm){
 			var jsonData = createJSON(tableName, algorithm);
 			//Submit POST request to the server for processing algorithm input data
-			fetch("http://localhost:8908/visualize",{
-				method:"POST",
-				body: jsonData,
-				headers: {
-					"Content-type": "application/json; charset=UTF-8"
-				}
-				//Process response received from server
-			}) .then(response => console.log(response));
+			//var promise = fetch("http://localhost:8908/visualize",
+			/*
+			* JS is a single-threaded language, therefore this asynchronous approach is required
+			* to wait response from the server 
+			* await causes the thread to wait for the promise to be fulfilled
+			* Waiting for Promise<Response> to be fulfilled
+			* After fulfilling we will get response of type Response.
+			* Any manipulations on object of type "Response" will return a new Promise<Response>
+			* for which we need to wait again for it to be fulfilled. All manipulations on 
+			* further responses of Promises will continue to return new Promises.	
+			*/
+			var response = await fetch("http://localhost:8908/visualize",
+					{
+						method:"POST",
+						body: jsonData,
+						headers: {
+							"Content-type": "application/json; charset=UTF-8",
+							"Accept": "application/json", 
+						}
+					});
+			//response.json will return a new Promise<Response> which will need to be awaited to be fulfilled
+			var bytes = await response.bytes();	
+			var stringResponse = new TextDecoder().decode(bytes);
+			console.log(stringResponse);	
 		}
 
 		function createJSON(tableName, algorithm){
