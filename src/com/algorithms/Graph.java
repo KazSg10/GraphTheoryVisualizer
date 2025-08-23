@@ -3,12 +3,15 @@ package com.algorithms;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public abstract class Graph {
-	private  Map<Node,List<Node>> nodeConnections;
-	private  List<Node> c_nodesList;
+	@JsonProperty("NodeConnections")
+	protected  Map<Node,List<Node>> nodeConnections;
+	@JsonProperty("NodesList")
+	protected  List<Node> c_nodesList;
 	
 	public Map<Node, List<Node>> getNodeConnections() {
 		return nodeConnections;

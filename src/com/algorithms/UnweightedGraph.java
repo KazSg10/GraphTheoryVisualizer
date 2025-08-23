@@ -5,10 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class UnweightedGraph extends Graph {
-	private final Map<Node,List<Node>> nodeConnections;
-	private final List<Node> c_nodesList;
-	
+public class UnweightedGraph extends Graph {	
 	public UnweightedGraph(){
 		nodeConnections = new HashMap<Node, List<Node>>();
 		c_nodesList = new ArrayList<>();

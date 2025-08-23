@@ -162,10 +162,14 @@ public class HttpServer {
 	private void processMethodPost(String path, String body, Socket socket) {
 		try {
 			System.out.println("Body: " + body);
+			//Creating a ObjectMapper for mapping input data received from the client to a class
 			ObjectMapper graphInputDataMapper = new ObjectMapper();
+			//Mapping the body containing the client data received in the POST request to the GraphInputData class 
 			GraphInputData inputData = graphInputDataMapper.readValue(body,GraphInputData.class);
+			//Processing inputData using the algorithm specified in the body
 			String json = simulateAlgorithm(inputData);
 			
+			//Creating a PrintWriter, which will be used to send data back to client
 			PrintWriter outputWriter = new PrintWriter(socket.getOutputStream());
 			//Response's first line containing the HTTP version, HTTP status code and status
 			outputWriter.println("HTTP/1.1 200 OK\r\n");

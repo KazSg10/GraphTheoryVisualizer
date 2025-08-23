@@ -1,6 +1,9 @@
 package com.server;
 
-public class DFSSimulationSteps extends SimulationSteps{ 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public class DFSSimulationSteps extends SimulationSteps{
+	@JsonProperty("StackEntry")
 	private StackEntry c_stackEntry;
 	public DFSSimulationSteps(String visitedNodeName, String pseudoCodeLine, StackEntry stackEntry ) {
 		super(visitedNodeName, pseudoCodeLine);
