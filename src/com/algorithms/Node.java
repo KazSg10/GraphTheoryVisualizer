@@ -14,4 +14,8 @@ public class Node {
 		return c_name;
 	}
 	
+	@Override
+	public String toString() {
+		return c_name;
+	}
 }

@@ -163,8 +163,14 @@ initial-scale=1">
 					});
 			//response.json will return a new Promise<Response> which will need to be awaited to be fulfilled
 			var bytes = await response.bytes();	
+			//Converting the bytes from the server to string 
 			var stringResponse = new TextDecoder().decode(bytes);
 			console.log(stringResponse);	
+			//Getting the body from the response from client
+			var body = bodyfromResponse(stringResponse);
+			localStorage.setItem('body', body);
+			window.location.href = "loadvisualizer.html";
+
 		}
 
 		function createJSON(tableName, algorithm){
@@ -205,6 +211,14 @@ initial-scale=1">
 			postJSON += "]}";
 			console.log(postJSON);
 			return postJSON;
+		}
+		function bodyfromResponse(text){
+			//Splitting text on the basis of new lines
+			const textSplit = text.split("\r\n");
+			//Body is always at the end of the text
+			var body = textSplit[textSplit.length - 1];
+			//console.log(body);
+			return body;
 		}
 	
     </script>

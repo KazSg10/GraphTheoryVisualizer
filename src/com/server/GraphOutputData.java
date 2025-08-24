@@ -25,26 +25,5 @@ public class GraphOutputData {
 	public List<SimulationSteps> getSimulationSteps(){
 		return c_stepsList;
 	}
-	
-	public String toJson() {
-		//Creating an objectMapper to map GraphOutputData to Json
-		ObjectMapper objectMapper = new ObjectMapper();
-		//Creating an empty string for Json at the start
-		String json = null;
-		try {
-			//TODO
-			objectMapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
-			//Converting current object to Json string 
-			json = objectMapper.writeValueAsString(this);
-		} catch (JsonProcessingException e) {
-			System.out.println(e);
-		}
-		return json;
-	}
-	
-	
-	
 
-
-	
 }

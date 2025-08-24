@@ -18,6 +18,9 @@ import com.algorithms.Edge.Direction;
 import com.algorithms.Node;
 import com.algorithms.Stack;
 import com.algorithms.UnweightedGraph;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.server.GraphInputData.ConnectionData;
 
@@ -175,13 +178,13 @@ public class HttpServer {
 			outputWriter.println("HTTP/1.1 200 OK\r\n");
 			//Header providing body length
 			System.out.println(json.getBytes().length);
-			outputWriter.println("Content-Length: " + json.getBytes().length + "\r\n");
+			outputWriter.println("Content-Length: " + json.getBytes().length);
 			//Header providing type of content in the body
-			outputWriter.println("Content-Type: application/json;charset=UTF-8\r\n");
+			outputWriter.println("Content-Type: application/json;charset=UTF-8");
 			//Blank line to separate headers and body
-			outputWriter.println("\r\n");
+			outputWriter.println();
 			//Adding body to response
-			outputWriter.println(json);
+			outputWriter.print(json);
 			
 			System.out.println(json.getBytes());
 			//Sending response back to client
@@ -227,7 +230,7 @@ public class HttpServer {
 				List<Node> visited = new ArrayList<Node>();
 				Stack stack = new Stack();
 				algorithm.depthFirstTraversal(graph, sourceNode, visited, stack);
-				return c_graphOutputData.toJson();
+				return toJson(c_graphOutputData);
 
 			} 
 			//			else {
@@ -259,5 +262,22 @@ public class HttpServer {
 			return output;
 
 
+		}
+		
+		
+		public String toJson(GraphOutputData outputData) {
+			//Creating an objectMapper to map GraphOutputData to Json
+			ObjectMapper objectMapper = new ObjectMapper();
+			//Creating an empty string for Json at the start
+			String json = null;
+			try {
+				//TODO
+				objectMapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
+				//Converting current object to Json string 
+				json = objectMapper.writeValueAsString(outputData);
+			} catch (JsonProcessingException e) {
+				System.out.println(e);
+			}
+			return json;
 		}
 	}

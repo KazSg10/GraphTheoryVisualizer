@@ -6,11 +6,12 @@ class Circle{
 	 * @param {*} y - y-coordinate of circle
 	 * @param {*} radius - Radius of circle
 	 */
-	constructor(ctx, x, y, radius){
-	this.ctx = ctx;
-	this.x =x;
-	this.y = y;
-	this.radius = radius;
+	constructor(name, ctx, x, y, radius){
+		this.name = name
+		this.ctx = ctx;
+		this.x =x;
+		this.y = y;
+		this.radius = radius;
 	}
 	//Procedure for drawing a circle
 	drawCircle(){

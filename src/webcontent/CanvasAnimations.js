@@ -1,6 +1,11 @@
 //import {Circle} from "./Circle";
 //import {Line} from "./Line";
 
+//Getting body from the local storage of the window
+var body = localStorage.getItem("body");
+//Parsing body to json
+var jsonBody = readJsonBody(body);
+
 //Getting canvas elements from DOM (Document Object Model)
 var canvasGraph = document.getElementById('canvasGraph');
 var canvasADT = document.getElementById('canvasADT');
@@ -31,22 +36,28 @@ function getRandomCoordinates(min, max, radius) {
 // 	{x: }
 // }
 
-var radius = 30;
-const c1 = new Circle(ctx, getRandomCoordinates(0,canvasGraph.width, radius), getRandomCoordinates(0,canvasGraph.height, radius) , radius);
-const c2 = new Circle(ctx, getRandomCoordinates(0,canvasGraph.width, radius), getRandomCoordinates(0,canvasGraph.height, radius) , radius);
-const c3 = new Circle(ctx, getRandomCoordinates(0,canvasGraph.width, radius), getRandomCoordinates(0,canvasGraph.height, radius) , radius);
+
+
+//------------------------------------------
+const circlesArray = createCircles(getNodeConnections(jsonBody), 30, ctx);
+for(i = 0; i < circlesArray.length; i++){
+	circlesArray[i].drawCircle();
+}
+
+writePseudocode(jsonBody.Pseudocode, ctxPseudocode, canvasPseudocode);
+
 
 //Draw Circle
-c1.drawCircle();
-c2.drawCircle();
-c3.drawCircle();
+// c1.drawCircle();
+// c2.drawCircle();
+// c3.drawCircle();
 
 //Draw Static lines
-const line1 = new Line(ctx, c1.x, c1.y, c2.x, c2.y);
-const line2 = new Line(ctx, c2.x, c2.y, c3.x, c3.y);
+// const line1 = new Line(ctx, c1.x, c1.y, c2.x, c2.y);
+// const line2 = new Line(ctx, c2.x, c2.y, c3.x, c3.y);
 
-line1.drawLine("black");
-line2.drawLine("black");
+// line1.drawLine("black");
+// line2.drawLine("black");
 
 //Draw Static Lines for Stack
 const stackLine1 = new Line(ctxADT, canvasADT.width*0.1, canvasADT.height*0.1, canvasADT.width*0.1, canvasADT.height*0.9);
@@ -58,25 +69,24 @@ stackLine2.drawLine('black');
 stackLine3.drawLine('black');
 
 
-//Highlight text in canvasPseudocode
-ctxPseudocode.strokeText("Karan", canvasPseudocode.width*0.1, canvasPseudocode.height*0.1);
+
 
 
 //Defining an Array of lists containing key-value pairs of two circles which are at the two ends of a line
-var circleCoordinates = [];
-//Method for adding the values to the circleCoordinates array
-circleCoordinates.push(
-	{startNode: c1, endNode: c2},
-	{startNode: c2, endNode: c3}
-);
+// var circleCoordinates = [];
+// //Method for adding the values to the circleCoordinates array
+// circleCoordinates.push(
+// 	{startNode: c1, endNode: c2},
+// 	{startNode: c2, endNode: c3}
+// );
 
-//Variable which is iterated over in the drawAnimatedPath procedure
-var frame = 0;
-//Difference in x-coordinates of the two circles
-var xDiff = c2.x - c1.x;
-//Difference in y-coordinates of the two circles
-var yDiff = c2.y - c1.y;
-var speed = 100;
+// //Variable which is iterated over in the drawAnimatedPath procedure
+// var frame = 0;
+// //Difference in x-coordinates of the two circles
+// var xDiff = c2.x - c1.x;
+// //Difference in y-coordinates of the two circles
+// var yDiff = c2.y - c1.y;
+// var speed = 100;
 
 function drawAnimatedPath(){
 	if(frame < speed - 1){
@@ -113,7 +123,49 @@ function animate(){
 	}
 }
 
+function readJsonBody(body){
+	//Parsing the body into Json form
+	const jsonBody = JSON.parse(body);
+	// var numberOfNodes = jsonBody.Graph.nodesList.length;
+	// var nodeConnections = jsonBody.Graph.NodeConnections;
+	// var pseudocode = jsonBody.Pseudocode;
+	// var stepsList = jsonBody.StepsList;
+	// console.log();
+	// console.log(pseudocode);
+	return jsonBody;
+}
+
+function getNodeConnections(jsonBody){
+	return jsonBody.Graph.NodeConnections;
+}
+
+function createCircles(nodeConnections, radius, ctx){
+	const circles = [];
+	var length = Object.keys(nodeConnections).length;
+	for(let i = 0; i < length; i++){
+		circles.push(new Circle(nodeConnections.Name, ctx, getRandomCoordinates(0,canvasGraph.width, radius), getRandomCoordinates(0,canvasGraph.height, radius) , radius))
+	}
+	//var radius = 30;
+	// const c1 = new Circle(ctx, getRandomCoordinates(0,canvasGraph.width, radius), getRandomCoordinates(0,canvasGraph.height, radius) , radius);
+	// const c2 = new Circle(ctx, getRandomCoordinates(0,canvasGraph.width, radius), getRandomCoordinates(0,canvasGraph.height, radius) , radius);
+	// const c3 = new Circle(ctx, getRandomCoordinates(0,canvasGraph.width, radius), getRandomCoordinates(0,canvasGraph.height, radius) , radius);
+	return circles;
+}
+
+function writePseudocode(pseudocode, ctx, canvas){
+	//Highlight text in canvasPseudocode
+	//ctx.strokeText("Karan", canvas.width*0.1, canvas.height*0.1);
+	var length = Object.keys(pseudocode).length;
+	ctx.font = "10pt Arial";
+	var height = 5;
+	for(let i = 0; i < length; i++){
+		height += 22;
+		ctx.fillText(pseudocode[i], 0, height, canvas.width);
+		ctx.fillStyle = "#ff2f00ff";
+	}
+}
+
 
 
 //Animating the whole algorithm
-animate();
+//animate();
