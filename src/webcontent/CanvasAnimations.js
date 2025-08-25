@@ -1,6 +1,3 @@
-//import {Circle} from "./Circle";
-//import {Line} from "./Line";
-
 //Getting body from the local storage of the window
 var body = localStorage.getItem("body");
 //Parsing body to json
@@ -16,8 +13,6 @@ const ctx = canvasGraph.getContext('2d');
 const ctxADT = canvasADT.getContext('2d');
 const ctxPseudocode = canvasPseudocode.getContext('2d');
 
-
-
 console.log(canvasGraph.width);
 
 /**
@@ -31,18 +26,17 @@ function getRandomCoordinates(min, max, radius) {
   return Math.random() * (max - (min + radius + 1)) + min;
 }
 
-//To-do fixed coordinates
-// var fixedNodeCoordinates[]{
-// 	{x: }
-// }
-
-
 
 //------------------------------------------
 const circlesArray = createCircles(getNodeConnections(jsonBody), 30, ctx);
-for(i = 0; i < circlesArray.length; i++){
+for(let i = 0; i < circlesArray.length; i++){
 	circlesArray[i].drawCircle();
 }
+const edges =  drawEdges(circlesArray, ctx);
+for(let i = 0; i < edges.length; i++){
+	edges[i].drawLine("blue");
+}
+
 
 writePseudocode(jsonBody.Pseudocode, ctxPseudocode, canvasPseudocode);
 
@@ -88,7 +82,14 @@ stackLine3.drawLine('black');
 // var yDiff = c2.y - c1.y;
 // var speed = 100;
 
-function drawAnimatedPath(){
+
+//Method for animating a line being drawn between two circles as that line is being visited along
+function traverseAlongLine(startNode, endNode){
+	//Difference in x-coordinates of the two circles
+	 var xDiff = endNode.x - startNode.x;
+	//Difference in y-coordinates of the two circles
+	var yDiff = endNode.y - startNode.y;
+		
 	if(frame < speed - 1){
 		requestAnimationFrame(drawAnimatedPath);
 	}
@@ -103,24 +104,6 @@ function drawAnimatedPath(){
 	ctx.strokeStyle="red";
 	ctx.lineWidth=4;
 	ctx.stroke();
-}
-
-//Method for animating a line being drawn between two circles as that line is being visited along
-function animate(){
-	var xDiff;
-	var yDiff;
-	
-	for(let i = 0; i< circleCoordinates.length; i++){
-		//Getting the list at index i from the circleCoordinates array and retrieving the start node value from it
-		startNode = circleCoordinates[i].startNode;
-		//Getting the list at index i from the circleCoordinates array and retrieving the end node value from it
-		endNode = circleCoordinates[i].endNode;
-		//Difference in x-coordinates of the two circles
-		xDiff = endNode.x - startNode.x;
-		//Difference in y-coordinates of the two circles
-		yDiff = endNode.y - startNode.y;
-		drawAnimatedPath();
-	}
 }
 
 function readJsonBody(body){
@@ -142,13 +125,10 @@ function getNodeConnections(jsonBody){
 function createCircles(nodeConnections, radius, ctx){
 	const circles = [];
 	var length = Object.keys(nodeConnections).length;
+	var keys = Object.keys(nodeConnections);
 	for(let i = 0; i < length; i++){
-		circles.push(new Circle(nodeConnections.Name, ctx, getRandomCoordinates(0,canvasGraph.width, radius), getRandomCoordinates(0,canvasGraph.height, radius) , radius))
+		circles.push(new Circle(keys[i], ctx, getRandomCoordinates(0,canvasGraph.width, radius), getRandomCoordinates(0,canvasGraph.height, radius) , radius))
 	}
-	//var radius = 30;
-	// const c1 = new Circle(ctx, getRandomCoordinates(0,canvasGraph.width, radius), getRandomCoordinates(0,canvasGraph.height, radius) , radius);
-	// const c2 = new Circle(ctx, getRandomCoordinates(0,canvasGraph.width, radius), getRandomCoordinates(0,canvasGraph.height, radius) , radius);
-	// const c3 = new Circle(ctx, getRandomCoordinates(0,canvasGraph.width, radius), getRandomCoordinates(0,canvasGraph.height, radius) , radius);
 	return circles;
 }
 
@@ -162,6 +142,36 @@ function writePseudocode(pseudocode, ctx, canvas){
 		height += 22;
 		ctx.fillText(pseudocode[i], 0, height, canvas.width);
 		ctx.fillStyle = "#ff2f00ff";
+	}
+}
+
+function getStepsList(jsonBody){
+	return jsonBody.StepsList;
+}
+
+function drawEdges(circlesArray, ctx){
+	var NodeConnections = getNodeConnections(jsonBody);
+	var keys = Object.keys(NodeConnections);
+	var edges = [];
+	var length = keys.length;
+	for(let i = 0; i<length; i++){
+		var key = keys[i];
+		var valuesList = NodeConnections[key];
+		var node1 = getCircle(key, circlesArray);
+		for (let j = 0; j < valuesList.length; j++) {
+			var node2 = getCircle(valuesList[j].Name, circlesArray);
+			edges.push(new Line(ctx, node1.x, node1.y, node2.x, node2.y));
+		}
+	}
+	return edges;
+}
+
+function getCircle(key, circlesArray){
+	var length = circlesArray.length;
+	for(let i = 0; i < length; i++){
+		if(circlesArray[i].name == key){
+			return circlesArray[i];
+		}		
 	}
 }
 

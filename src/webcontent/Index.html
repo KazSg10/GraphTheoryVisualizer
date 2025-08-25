@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link rel="stylesheet" href="styles.css">
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,
-initial-scale=1">
-<title >Karan's Practice</title>
+	<link rel="stylesheet" href="styles.css">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title >Karan's Practice</title>
 </head>
 <body>
 	
@@ -72,7 +71,11 @@ initial-scale=1">
 					<input type="text" id="DFSTable11">
 				</td>
 				<td>
-					<input type="text" id="DFSTable12">
+					<!-- Creating a drop down box for direction-->
+					<select id="DFSTable12">
+						<option value="BIDIRECTION">Bidirection</option>
+						<option value="UNIDIRECTION">Unidirection</option>
+					</select>	
 				</td>
 			</tr>
 		</table>
@@ -125,17 +128,47 @@ initial-scale=1">
 		function addNewRow(tableId, count){
 			var table = document.getElementById(tableId);
 			var newRow = table.insertRow();	
+			var last = false;
 			for(let i = 0; i < count; i++) {
-				insertCell(tableId, table, newRow, i);
+				if(i == count - 1){
+					 last = true;
+				}
+				
+				insertCell(tableId, table, newRow, i, last);
 			}
 		}
 
-		function insertCell(tableId, table, row, index){
+		function insertCell(tableId, table, row, index, last){
 			var cell = row.insertCell(index);
-			var documentElement = document.createElement("input");
-			documentElement.id = tableId + (table.rows.length - 1).toString() + index.toString();
-			documentElement.type = "text";
-			cell.appendChild(documentElement);
+			//If it is the last cell, the element type must be select (drop-down box) for taking input of direction
+			if(last){
+				//Creating an element of type select
+				var selectElement = document.createElement("select");
+				//Assigning the id of the select element
+				selectElement.id = tableId + (table.rows.length - 1).toString() + index.toString();
+				//Appending the select element to the cell in DOM
+				cell.appendChild(selectElement);
+				
+				//Creating options for the drop-down box
+				var optionBidirection = document.createElement("option");
+				optionBidirection.value = "BIDIRECTION";
+				optionBidirection.text = "Bidirection";
+				selectElement.appendChild(optionBidirection);
+
+				var optionUnidirection = document.createElement("option");
+				optionUnidirection.value = "UNIDIRECTION";
+				optionUnidirection.text = "Unidirection";
+				selectElement.appendChild(optionUnidirection);
+			} else {
+				//Creating an element of type input
+				var inputElement = document.createElement("input");
+				inputElement.type = "text";
+				//Assigning the id of the input element
+				inputElement.id = tableId + (table.rows.length - 1).toString() + index.toString();
+				//Appending the input element to the cell in DOM
+				cell.appendChild(inputElement);
+			}
+			
 		}
 
 		async function postData(tableName, algorithm){

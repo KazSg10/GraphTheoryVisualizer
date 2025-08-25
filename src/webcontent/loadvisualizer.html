@@ -2,8 +2,7 @@
 <html>
 <title>Canvases</title>
 <link rel="stylesheet" href="styles.css">
-</head>
-<body id="canvasplaceholder">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<style>
 		#divGraph{
 			float: left;
@@ -12,34 +11,46 @@
 		#divADT{
 			float: right;
 			padding: 0;
-
 		}
 		#divPseudocode{
 			float: right;
-			padding: 0;
+			padding: 0;	
 		}
-		
+		.buttons{
+			text-align: center;
+			padding: 15px 32px;
+			font-size: 20px;
+			background-color: #313ef1;
+		}
+		#canvasplaceholder {
+			margin-left:0;
+			margin-right:auto;
+		}
+
 	</style>
-	
-	<div id = "heading">
-		<h1>Dijkstra Visualization</h1>
-		
+
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+	<h1 text>Visualization </h1>
+
+	<div id = "settingButtons" class="buttons">		
 		<button id="homeButton" style="margin-left: auto;" onclick="history.back()"> Home </button>
+		<button id="Play" style="margin-left: center;" onClick="animate()"> Play </button>
+		<button id="Stop" style="margin-left: center;"> Stop </button>
 	</div>
-	
-	
-	
-	
 
-	<!-- Creating three div elements to represent three different parts of the HTML webpage.
-	 	 Each div element will be used to contain one canvas.
+	<!-- Creating three div elements to represent three different parts of the HTML webpage collating them in one div
+	 	 for styling all the canvases together. Each div element will be used to contain one canvas.
 	-->
-	<div id="divGraph" height></div>
-	<div id="divADT"></div>
-	<div id="divPseudocode"></div>
+	<div id="canvasplaceholder">
+		<div id="divGraph" height></div>
+		<div id="divADT"></div>
+		<div id="divPseudocode"></div>
+	</div>	 
 	
-
-
 	<script>
 		var innerWidth = window.innerWidth;
 		var innerHeight = window.innerHeight;
@@ -57,16 +68,18 @@
 			canvas.width=width;
 			canvas.height=height;
 			//Setting newly created canvas' border style
-			canvas.style.border="2px solid #0000FF";
+			canvas.style.border="5px solid  #00004d";
 			//Adding the canvas element as a child node of the div element in DOM
 			divReference.appendChild(canvas);
 			return canvas;
 		}
 			
-			//Creating three canvases and linking them to the three div elements created above
-			var canvasGraph = createCanvasElement('divGraph','canvasGraph',innerWidth*0.6,innerHeight*0.86);
-			var canvasADT = createCanvasElement('divADT','canvasADT',innerWidth*0.38,innerHeight*0.425);
-			var canvasPseudocode = createCanvasElement('divPseudocode','canvasPseudocode',innerWidth*0.38,innerHeight*0.425);
+		//Creating three canvases and linking them to the three div elements created above
+		var canvasGraph = createCanvasElement('divGraph','canvasGraph',innerWidth*0.6,innerHeight*0.86);
+		var canvasADT = createCanvasElement('divADT','canvasADT',innerWidth*0.38,innerHeight*0.425);
+		var canvasPseudocode = createCanvasElement('divPseudocode','canvasPseudocode',innerWidth*0.38,innerHeight*0.425);
+
+		
 
 	</script>
 
@@ -75,4 +88,10 @@
 	<script type="text/javascript" src="CanvasAnimations.js"></script>
 	
 </body>
+<footer>
+		<!-- <p> Karan Singh - Reading School </p>
+        <a href="#" class="btn btn-info btn-lg">
+          <span class="glyphicon glyphicon-play"></span> Play
+        </a>	 -->
+</footer>
 </html>
