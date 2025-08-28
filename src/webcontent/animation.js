@@ -14,7 +14,18 @@
 // var yDiff = c2.y - c1.y;
 // var speed = 100;
 
-function move(startNode, endNode, frame, speed, ctx) {
+var frame;
+var speed;
+var circlesArray1;
+var stepsList;
+var startNode;
+var endNode;
+var index = 0;
+var ctx;
+var color = "red";
+//(startNode, endNode, 1, 500, ctx)
+
+function move(startNode, endNode, frame, speed, ctx, color) {
 	//Difference in x-coordinates of the two circles
 	 var xDiff = endNode.x - startNode.x;
 	//Difference in y-coordinates of the two circles
@@ -26,17 +37,25 @@ function move(startNode, endNode, frame, speed, ctx) {
 	ctx.beginPath();
 	ctx.moveTo(startNode.x, startNode.y);
 	ctx.lineTo(newX, newY);	
-	ctx.strokeStyle="red";
+	ctx.strokeStyle=color;
 	ctx.lineWidth=4;
 	ctx.stroke();	
 }
 
 //Method for animating a line being drawn between two circles as that line is being visited along
-function traverseAlongLine(startNode, endNode, frame, speed, ctx){
-	move(startNode, endNode, frame, speed, ctx);
+function traverseAlongLine(){
+	move(startNode, endNode, frame, speed, ctx, color);
 	if(frame < speed){
 		frame++;
-		requestAnimationFrame(traverseAlongLine(startNode, endNode, frame, speed, ctx));
+		//TODO Check Brackets
+		requestAnimationFrame(traverseAlongLine);
+	} else {
+		color="yellow";
+		startNode = endNode;
+		endNode = null;
+		getNewNode();
+		frame = 1;
+		requestAnimationFrame(traverseAlongLine);
 	}
 }
 
@@ -44,12 +63,19 @@ function getStepsList(jsonBody){
 	return jsonBody.StepsList;
 }
 
+
+
 function animate(algorithm, circlesArray) {
+	frame = 1;
+	speed = 500;
+	this.circlesArray1 = circlesArray;
+
 	//Getting body from the local storage of the window
     var body = localStorage.getItem("body");
+	console.log(body);
     //Parsing body to json
     var jsonBody = readJsonBody(body);
-    var stepsList = jsonBody.StepsList;
+    this.stepsList = jsonBody.StepsList;
 
     //Getting canvas elements from DOM (Document Object Model)
     var canvasGraph = document.getElementById('canvasGraph');
@@ -57,33 +83,32 @@ function animate(algorithm, circlesArray) {
     var canvasPseudocode = document.getElementById('canvasPseudocode'); 
 
     //Getting the context of canvasGraph element which is required for drawing
-    const ctx = canvasGraph.getContext('2d'); 
+    ctx = canvasGraph.getContext('2d'); 
     const ctxADT = canvasADT.getContext('2d');
     const ctxPseudocode = canvasPseudocode.getContext('2d');
+	getNewNode();
+	window.requestAnimationFrame(traverseAlongLine);
+}
 
-	var startNode;
-	var endNode;
-	for(let i = 0; i < Object.keys(stepsList).length; i++){
-		
+function getNewNode() {
+	for(let i = index; i < Object.keys(stepsList).length; i++){
 		var visitedNodeName = stepsList[i].VisitedNodeName;
 		var pseudoCodeLine = stepsList[i].PseudoCodeLine;
 		if(stepsList[i].StackEntry != null){
 			var stackEntryValue = stepsList[i].StackEntry.Value;
 			var stackEntryAction = stepsList[i].StackEntry.Action;
 		}
-		
 
 		if(visitedNodeName != null){
 			if(startNode != null){
-				endNode = getCircle(visitedNodeName, circlesArray);
+				endNode = getCircle(visitedNodeName, circlesArray1);
 			}
 			else{
-				startNode = getCircle(visitedNodeName, circlesArray);
+				startNode = getCircle(visitedNodeName, circlesArray1);
 			}
 			if((startNode != null) && (endNode != null)){
-				window.requestAnimationFrame(traverseAlongLine(startNode, endNode, 1, 10000, ctx));
-				startNode = endNode;
-				endNode = null;
+				index = ++i;
+				return;
 			}
 		}
 		

@@ -28,6 +28,7 @@ function initialise(){
 	return circlesArray;
 }
 
+
 /**
  * 
  * @param {*} min - The minimum value returned by the random number generator
@@ -54,7 +55,7 @@ function drawEdges(circlesArray, ctx, jsonBody){
 		}
 	}
 	return edges;
-}
+} 
 
 function getCircle(key, circlesArray){
 	var length = circlesArray.length;
@@ -79,11 +80,11 @@ function writePseudocode(pseudocode, ctx, canvas){
 	//Highlight text in canvasPseudocode
 	//ctx.strokeText("Karan", canvas.width*0.1, canvas.height*0.1);
 	var length = Object.keys(pseudocode).length;
-	ctx.font = "10pt Arial";
-	var height = 5;
+	//var lineHeight = canvas.height/length;
+	ctx.font = "25px Arial";
 	for(let i = 0; i < length; i++){
-		height += 22;
-		ctx.fillText(pseudocode[i], 0, height, canvas.width);
+		
+		ctx.fillText(pseudocode[i], 0, ((i+1)/length)*canvas.height - (0.35/length)*canvas.height, canvas.width);
 		ctx.fillStyle = "#ff2f00ff";
 	}
 }
