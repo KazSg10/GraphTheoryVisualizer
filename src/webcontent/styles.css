@@ -2,8 +2,7 @@
 canvas{
 	border: 1px solid black;		
 	background: white;			
-	}
-	
+	}	
 body, html{
 	font-family: Arial;
 	margin: 0;
@@ -13,11 +12,11 @@ body, html{
 .header{
 	height:15%;
 	padding: 5px; 
-	color: blue;
-	font-family: Verdana, Arial;
+	color: white;
+	font-family: sans-serif, Arial;
 	font-size: 20px;
-	text-align: left;
-	background:  #ffffff;
+	text-align: right;
+	background:  blue;
 
 	
 }
@@ -70,6 +69,16 @@ table{
 	float: left;
 	width: 75%;
 	text-align: center;
+	border-collapse: collapse;
+	border: 2px solid brown;
+	padding: 2px;
+}
+td, th{
+	border: 1px solid #18e41b;
+	padding: 8px;
+}
+th{
+	background-color: #313ef1;
 }
 
 .optioncontent button{
@@ -82,6 +91,8 @@ table{
 	position:absolute;
 	float:left;
 }
+
+
 
 
 

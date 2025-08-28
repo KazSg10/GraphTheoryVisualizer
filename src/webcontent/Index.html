@@ -4,13 +4,12 @@
 	<link rel="stylesheet" href="styles.css">
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title >Karan's Practice</title>
+	<title >Graphs Visualizer</title>
 </head>
 <body>
 	
 	<div class="header">
 		<h1>Graph Theory Algorithms Visualizer</h1>
-
 	</div>
 
 	<div class="menu">
@@ -21,7 +20,17 @@
 	</div>
 	
 	<div id="Home" class="optioncontent">
-		<h3>Home</h3>
+		<!--<h3>Home</h3> -->
+		<img src = "graph_image.png" alt="graph">
+		<p>
+			This is an <b>AQA Graph Theory Algorithms Visualizer</b><br><br>
+			The Graph Algorithms taught in AQA are:<br>
+			<i> <br>
+			Depth-First Traversal (Graph Traversal)<br>
+			Breadth-First Traversal (Graph Traversal)<br>
+			Dijkstra's Shortest Path Algorithm (Optimization)<br>
+			</i>
+		</p>
 	</div>
 	
 	<div id="Dijkstra" class="optioncontent">
@@ -31,8 +40,9 @@
 			<tr>
 				<th id="DijkstraGraphTableHeader1">Node 1</th>
 				<th id="DijkstraGraphTableHeader2">Node 2</th>
-				<th id="DijkstraGraphTableHeader3">Edge Direction</th>
-				<th id="DijkstraGraphTableHeader4">Edge Weight</th>
+				<th id="DijkstraGraphTableHeader3">Edge Weight</th>
+				<th id="DijkstraGraphTableHeader4">Edge Direction</th>
+				
 			</tr>
 			<tr>
 				<td>
@@ -45,7 +55,11 @@
 					<input type="text" id="DijkstraGraphTable12">
 				</td>
 				<td>
-					<input type="text" id="DijkstraGraphTable13">
+					<!-- Creating a drop down box for direction-->
+					<select id="DFSTable12">
+						<option value="BIDIRECTION">Bidirection</option>
+						<option value="UNIDIRECTION">Unidirection</option>
+					</select>	
 				</td>
 			</tr>
 		</table>

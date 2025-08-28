@@ -38,7 +38,7 @@
 
 	<div id = "settingButtons" class="buttons">		
 		<button id="homeButton" style="margin-left: auto;" onclick="history.back()"> Home </button>
-		<button id="Play" style="margin-left: center;" onClick="animate()"> Play </button>
+		<button id="Play" style="margin-left: center;" onClick="simulate()"> Play </button>
 		<button id="Stop" style="margin-left: center;"> Stop </button>
 	</div>
 
@@ -51,6 +51,11 @@
 		<div id="divPseudocode"></div>
 	</div>	 
 	
+	<script type="text/javascript" src="Circle.js"></script>
+	<script type="text/javascript" src="Line.js"></script>
+	<script type="text/javascript" src="initialise.js"></script>
+	<script type="text/javascript" src="animation.js"></script>
+
 	<script>
 		var innerWidth = window.innerWidth;
 		var innerHeight = window.innerHeight;
@@ -79,13 +84,14 @@
 		var canvasADT = createCanvasElement('divADT','canvasADT',innerWidth*0.38,innerHeight*0.425);
 		var canvasPseudocode = createCanvasElement('divPseudocode','canvasPseudocode',innerWidth*0.38,innerHeight*0.425);
 
-		
+		const circlesArray = initialise();
+		function simulate(){
+			animate("DFS", circlesArray);
+		}
 
 	</script>
 
-	<script type="text/javascript" src="Circle.js"></script>
-	<script type="text/javascript" src="Line.js"></script>
-	<script type="text/javascript" src="CanvasAnimations.js"></script>
+	
 	
 </body>
 <footer>

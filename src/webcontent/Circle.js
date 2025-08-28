@@ -7,7 +7,7 @@ class Circle{
 	 * @param {*} radius - Radius of circle
 	 */
 	constructor(name, ctx, x, y, radius){
-		this.name = name
+		this.name = name;
 		this.ctx = ctx;
 		this.x =x;
 		this.y = y;
