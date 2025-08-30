@@ -2,19 +2,20 @@ package com.server;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class StackEntry{
-	public enum ActionDFS{
-		PUSH,
-		POP;
+public class QueueEntry{
+	public enum ActionBFS{
+		ENQUEUE,
+		DEQUEUE
 	}
 
 	@JsonProperty("Value")
 	private String c_value;
 	
 	@JsonProperty("Action")
-	private ActionDFS c_action;
+	private ActionBFS c_action;
 
-	public StackEntry(String value, ActionDFS action) {
+	public QueueEntry(String value, ActionBFS action) {
+		
 		c_value = value;
 		c_action = action;
 	}

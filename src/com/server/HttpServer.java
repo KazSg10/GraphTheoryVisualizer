@@ -16,6 +16,7 @@ import com.algorithms.Algorithm;
 import com.algorithms.Edge;
 import com.algorithms.Edge.Direction;
 import com.algorithms.Node;
+import com.algorithms.Queue;
 import com.algorithms.Stack;
 import com.algorithms.UnweightedGraph;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
@@ -171,7 +172,7 @@ public class HttpServer {
 			GraphInputData inputData = graphInputDataMapper.readValue(body,GraphInputData.class);
 			//Processing inputData using the algorithm specified in the body
 			String json = simulateAlgorithm(inputData);
-			
+
 			//Creating a PrintWriter, which will be used to send data back to client
 			PrintWriter outputWriter = new PrintWriter(socket.getOutputStream());
 			//Response's first line containing the HTTP version, HTTP status code and status
@@ -185,7 +186,7 @@ public class HttpServer {
 			outputWriter.println();
 			//Adding body to response
 			outputWriter.print(json);
-			
+
 			System.out.println(json.getBytes());
 			//Sending response back to client
 			outputWriter.flush();
@@ -217,6 +218,7 @@ public class HttpServer {
 
 			//TODO hardcoded source node need to take from ui
 			Node sourceNode = new Node(inputData.getConnections().get(0).getNode1());
+
 			for(ConnectionData data: inputData.getConnections()) {
 				Node node1 = new Node(data.getNode1());
 				Node node2 = new Node(data.getNode2());
@@ -225,59 +227,61 @@ public class HttpServer {
 			}
 
 			if(inputData.getAlgorithm().equals("DFS")) {
-				GraphOutputData c_graphOutputData = new GraphOutputData(graph, readFile(projectPath + "/src/com/algorithms/DFSPseudoCode.txt"));
-				Algorithm algorithm = new Algorithm(c_graphOutputData);
-				List<Node> visited = new ArrayList<Node>();
+				GraphOutputData c_graphOutputDataDFS = new GraphOutputData(graph, readFile(projectPath + "/src/com/algorithms/DFSPseudoCode.txt"));
+				Algorithm algorithmDFS = new Algorithm(c_graphOutputDataDFS);
+				List<Node> visitedDFS = new ArrayList<Node>();
 				Stack stack = new Stack();
-				algorithm.depthFirstTraversal(graph, sourceNode, visited, stack);
-				return toJson(c_graphOutputData);
+				algorithmDFS.depthFirstTraversal(graph, sourceNode, visitedDFS, stack);
+				return toJson(c_graphOutputDataDFS);
+			}
 
-			} 
-			//			else {
-			//
-			//			}
-
-			//		} else if(inputData.getAlgorithm() == "Dijkstra"){
-			//			UnweightedGraph graph = new UnweightedGraph();
-				}
+			if(inputData.getAlgorithm().equals("BFS")) {
+				GraphOutputData c_graphOutputDataBFS = new GraphOutputData(graph, readFile(projectPath + "/src/com/algorithms/BFSPseudoCode.txt"));
+				Algorithm algorithmBFS = new Algorithm(c_graphOutputDataBFS);
+				Queue<Node> queue = new Queue<Node>();
+				algorithmBFS.BreadthFirstTraversal(graph, sourceNode);
+				return toJson(c_graphOutputDataBFS);
+			}
+		}
 		return null;
-		}
-		public List<String> readFile(String path){
-			List<String> output = null;
-			try {
-				BufferedReader buffer = new BufferedReader(new FileReader(path));
-				output = new ArrayList<String>();
-				String outputLine = buffer.readLine();
-				while(outputLine != null) {
-					output.add(outputLine);
-					try {
-						outputLine = buffer.readLine();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-			}catch (Exception e) {
-				System.out.println(e);
-			}
-			return output;
-
-
-		}
-		
-		
-		public String toJson(GraphOutputData outputData) {
-			//Creating an objectMapper to map GraphOutputData to Json
-			ObjectMapper objectMapper = new ObjectMapper();
-			//Creating an empty string for Json at the start
-			String json = null;
-			try {
-				//TODO
-				objectMapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
-				//Converting current object to Json string 
-				json = objectMapper.writeValueAsString(outputData);
-			} catch (JsonProcessingException e) {
-				System.out.println(e);
-			}
-			return json;
-		}
 	}
+	
+	public List<String> readFile(String path){
+		List<String> output = null;
+		try {
+			BufferedReader buffer = new BufferedReader(new FileReader(path));
+			output = new ArrayList<String>();
+			String outputLine = buffer.readLine();
+			while(outputLine != null) {
+				output.add(outputLine);
+				try {
+					outputLine = buffer.readLine();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}catch (Exception e) {
+			System.out.println(e);
+		}
+		return output;
+
+
+	}
+
+
+	public String toJson(GraphOutputData outputData) {
+		//Creating an objectMapper to map GraphOutputData to Json
+		ObjectMapper objectMapper = new ObjectMapper();
+		//Creating an empty string for Json at the start
+		String json = null;
+		try {
+			//TODO
+			objectMapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
+			//Converting current object to Json string 
+			json = objectMapper.writeValueAsString(outputData);
+		} catch (JsonProcessingException e) {
+			System.out.println(e);
+		}
+		return json;
+	}
+}

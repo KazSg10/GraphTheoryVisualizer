@@ -4,10 +4,13 @@ import java.util.AbstractMap.SimpleEntry;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.server.BFSSimulationSteps;
 import com.server.DFSSimulationSteps;
 import com.server.GraphOutputData;
+import com.server.QueueEntry;
+import com.server.QueueEntry.ActionBFS;
 import com.server.StackEntry;
-import com.server.StackEntry.Action;
+import com.server.StackEntry.ActionDFS;
 
 
 
@@ -31,7 +34,7 @@ public class Algorithm {
 
 		System.out.println("Visited->" + visited);
 		stack.push(currentNode);
-		c_graphOutputData.getSimulationSteps().add(new DFSSimulationSteps(null, "push currentNode on to stack", new StackEntry(currentNode.getName(), Action.PUSH)));
+		c_graphOutputData.getSimulationSteps().add(new DFSSimulationSteps(null, "push currentNode on to stack", new StackEntry(currentNode.getName(), ActionDFS.PUSH)));
 		System.out.println("Stack-->" + stack);
 		List<Node> neighboursList = graph.getNodeConnections(currentNode);
 		for(Node neighbouringNode: neighboursList) {
@@ -54,7 +57,7 @@ public class Algorithm {
 
 		System.out.println("Node Key Name------------------>" + currentNode.getName());
 		Node poppedNode = stack.pop();
-		c_graphOutputData.getSimulationSteps().add(new DFSSimulationSteps(null, "pop currentNode from stack", new StackEntry(poppedNode.getName(), Action.POP)));
+		c_graphOutputData.getSimulationSteps().add(new DFSSimulationSteps(null, "pop currentNode from stack", new StackEntry(poppedNode.getName(), ActionDFS.POP)));
 		System.out.println("Back  --------------->" + currentNode);
 		c_graphOutputData.getSimulationSteps().add(new DFSSimulationSteps(null, "RETURN visitedList", null));
 		c_graphOutputData.getSimulationSteps().add(new DFSSimulationSteps(null, "ENDSUB", null));
@@ -62,35 +65,58 @@ public class Algorithm {
 	}
 	
 	public  List<Node> BreadthFirstTraversal(UnweightedGraph graph, Node sourceNode){
-		System.out.println("Traversal starting ------");	
+		c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, "Sub BreadthFirstTraversal(graph, sourceNode)", null));	
 		List<Node> visited= new LinkedList<>();
+		c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, "visited= []", null));	
+
 		Queue<Node> queue = new Queue<Node>();
-		System.out.println("Here 1");
+		c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, "queue =[]", null));
+		
 		queue.enqueue(sourceNode);
+		c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, "enqueue sourceNode in queue",	new QueueEntry(sourceNode.getName(), ActionBFS.ENQUEUE)));
+
 		System.out.println("Here 2");
 		while(!queue.isEmpty())
 		{
+			c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, "while queue is NOT empty",	null));
+
 			System.out.println("Queue" + queue);
 			Node currentNode = queue.dequeue();
+			c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, "currentNode <- dequeue node from queue",new QueueEntry(currentNode.getName(), ActionBFS.DEQUEUE)));
+
 			System.out.println("dequeued current node: " + currentNode);
 			System.out.println("Here 3");
 			
 			
 			visited.add(currentNode);
-			List<Node> neighboursList = graph.getNodeConnections().get(currentNode);
+			c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, "append currentNode to visited", null));
+
+			List<Node> neighboursList = graph.getNodeConnections(currentNode);
 			for(Node neighbouringNode: neighboursList) {
+				System.out.println("In for loop");
+				c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, "FOREACH(neighbouring node of currentNode)", null));
+
 				if(!visited.contains(neighbouringNode) && !queue.contains(neighbouringNode)){
+					c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, "IF(visited NOT contains node && queue NOT contains node)", null));
+					
 					queue.enqueue(neighbouringNode);
+					c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, "ENDIF", null));
+
 					System.out.println("enqueued "  + neighbouringNode.getName());
-				}	
+				}
+				c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, "enqueue node to queue", new QueueEntry(currentNode.getName(), ActionBFS.ENQUEUE)));
+
 			}
 			System.out.println("Visited->" + visited);
 		}
+		c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, "ENDWHILE", null));
+
 		if(visited.size()!= graph.getNodesList().size()){
 			System.out.println("The graph is not fully connected or there are some nodes that can't be reached");
 		}
+		c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, "return visited", null));
 		return visited;
-		
+
 	}
 	
 //	public SimpleEntry<Integer, List<Integer>> DijkstraShortestPathFinding(WeightedGraph graph, Node sourceNode){
