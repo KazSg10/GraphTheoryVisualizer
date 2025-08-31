@@ -19,11 +19,13 @@ import com.algorithms.Node;
 import com.algorithms.Queue;
 import com.algorithms.Stack;
 import com.algorithms.UnweightedGraph;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.server.GraphInputData.ConnectionData;
+import com.server.json.GraphInputData;
+import com.server.json.GraphInputData.ConnectionData;
+import com.server.json.GraphOutputData;
 
 public class HttpServer {
 
@@ -217,7 +219,7 @@ public class HttpServer {
 			UnweightedGraph graph = new UnweightedGraph();
 
 			//TODO hardcoded source node need to take from ui
-			Node sourceNode = new Node(inputData.getConnections().get(0).getNode1());
+			Node sourceNode = new Node(inputData.getSourceNodeName());
 
 			for(ConnectionData data: inputData.getConnections()) {
 				Node node1 = new Node(data.getNode1());

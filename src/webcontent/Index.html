@@ -62,8 +62,13 @@
 				</td>
 			</tr>
 		</table>
+		
+		
+		<label for="dijkstraSourceNode">Enter the name of the source node:</label>
+		<input type="text" id="dijkstraSourceNode">
+
 		<button onclick="addNewRow('DijkstraGraphTable', 4)">Add New Row</button>
-		<button onclick="postData('DijkstraGraphTable', 'Dijkstra')">Submit</button>
+		<button onclick="postData('DijkstraGraphTable', 'Dijkstra', document.getElementById('dijkstraSourceNode').value)">Submit</button>
 
 	</div>
 	
@@ -92,8 +97,12 @@
 				</td>
 			</tr>
 		</table>
+
+		<label for="dfsSourceNode">Enter the name of the source node:</label>
+		<input type="text" id="dfsSourceNode">
+
 		<button onclick="addNewRow('DFSTable', 3)">Add New Row</button>
-		<button onclick="postData('DFSTable', 'DFS')">Submit</button>
+		<button onclick="postData('DFSTable', 'DFS', document.getElementById('dfsSourceNode').value)">Submit</button>
 	</div>
 	
 	<div id="BFS" class="optioncontent">
@@ -120,8 +129,12 @@
 				</td>
 			</tr>
 		</table>
+
+		<label for="bfsSourceNode">Enter the name of the source node:</label>
+		<input type="text" id="bfsSourceNode">
+
 		<button onclick="addNewRow('BFSTable', 3)">Add New Row</button>
-		<button onclick="postData('BFSTable', 'BFS')">Submit</button>
+		<button onclick="postData('BFSTable', 'BFS', document.getElementById('bfsSourceNode').value)">Submit</button>
 
 	</div>
 
@@ -187,8 +200,8 @@
 			
 		}
 
-		async function postData(tableName, algorithm){
-			var jsonData = createJSON(tableName, algorithm);
+		async function postData(tableName, algorithm, sourceNodeName){
+			var jsonData = createJSON(tableName, algorithm, sourceNodeName);
 			//Submit POST request to the server for processing algorithm input data
 			//var promise = fetch("http://localhost:8908/visualize",
 			/*
@@ -222,12 +235,13 @@
 
 		}
 
-		function createJSON(tableName, algorithm){
+		function createJSON(tableName, algorithm, sourceNodeName){
 			var table = document.getElementById(tableName);
 
 			var numberOfRows = table.rows.length;
 			var postJSON = "{";
 			postJSON += "\"algorithm\"" + ":" + "\"" + algorithm + "\",";
+			postJSON+= "\"source node\"" + ":" + "\"" + sourceNodeName + "\",";
 			postJSON += "\"connections\"" + ":[";
 
 			for(let rowIndex = 1; rowIndex < numberOfRows; rowIndex++){

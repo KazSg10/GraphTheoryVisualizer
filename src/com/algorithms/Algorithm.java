@@ -1,16 +1,15 @@
 package com.algorithms;
 
-import java.util.AbstractMap.SimpleEntry;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.server.BFSSimulationSteps;
-import com.server.DFSSimulationSteps;
-import com.server.GraphOutputData;
-import com.server.QueueEntry;
-import com.server.QueueEntry.ActionBFS;
-import com.server.StackEntry;
-import com.server.StackEntry.ActionDFS;
+import com.server.json.BFSSimulationSteps;
+import com.server.json.DFSSimulationSteps;
+import com.server.json.GraphOutputData;
+import com.server.json.QueueEntry;
+import com.server.json.StackEntry;
+import com.server.json.QueueEntry.ActionBFS;
+import com.server.json.StackEntry.ActionDFS;
 
 
 

@@ -1,8 +1,9 @@
-package com.server;
+package com.server.json;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.algorithms.Node;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -17,6 +18,9 @@ public class GraphInputData {
 	public String getAlgorithm() {
 		return algorithm;
 	}
+	
+	@JsonProperty("source node")
+	private String sourceNodeName;
 
 	public void setAlgorithm(String algorithm) {
 		this.algorithm = algorithm;
@@ -30,7 +34,11 @@ public class GraphInputData {
 		this.connections = connections;
 	}
 
-	static class ConnectionData{
+	public String getSourceNodeName() {
+		return sourceNodeName;
+	}
+
+	public static class ConnectionData{
 		@JsonProperty("Node 1")
 		private String node1;
 		

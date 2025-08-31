@@ -1,14 +1,10 @@
-package com.server;
+package com.server.json;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.algorithms.Graph;
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class GraphOutputData {
 	@JsonProperty("Graph")
