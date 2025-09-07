@@ -14,8 +14,10 @@
 // var yDiff = c2.y - c1.y;
 // var speed = 100;
 
-var frame;
-var speed;
+var framePath = 1;
+var speedPath = 500;
+var framePseudocode = 1;
+var speedPseudocode = 500;
 var circlesArray1;
 var stepsList;
 var fromCircle;
@@ -30,6 +32,8 @@ var canvasGraph;
 var canvasADT;
 var canvasPseudocode;
 var jsonBody;
+var start = null;
+var pseudocodeLine;
 //(startNode, endNode, 1, 500, ctx)
 
 function move(fromCircle, toCircle, frame, speed, ctx, color) {
@@ -44,30 +48,79 @@ function move(fromCircle, toCircle, frame, speed, ctx, color) {
 	ctx.beginPath();
 	ctx.moveTo(fromCircle.x, fromCircle.y);
 	ctx.lineTo(newX, newY);	
+
 	ctx.strokeStyle=color;
 	ctx.lineWidth=4;
 	ctx.stroke();	
 }
 
+function updatePseudocode(pseudocodeLine) {
+	var pseudocodeArrayIndex = getPseudocodeIndex(pseudocodeLine);
+	writePseudocode(jsonBody.Pseudocode, ctxPseudocode, canvasPseudocode, pseudocodeArrayIndex);
+}
+
+var firstTimestamp;
+var previousTimestamp;
+var refreshElapsedTime;
 //Method for animating a line being drawn between two circles as that line is being visited along
-function traverseAlongLine(){
-	move(fromCircle, toCircle, frame, speed, ctx, color);
-	
-	//Making colour based on if there is backtracking or not
-	if(!startCirclesNamesList.includes(toCircle.name)){
-		color = "red";
+function traverseAlongLine(currentTime){
+
+	if(previousTimestamp == null){
+		previousTimestamp = currentTime;
 	}
 	else{
-		color = "yellow";
+		refreshElapsedTime = currentTime - previousTimestamp;
 	}
-	if(frame < speed){
-		frame++;
-		//TODO Check Brackets
+
+
+	if (firstTimestamp == null) {
+		firstTimestamp = currentTime;
 		requestAnimationFrame(traverseAlongLine);
-	} else {
-		processSteps();
-		frame = 1;
-		requestAnimationFrame(traverseAlongLine);
+
+	}
+	else{
+		var elapsedTime = currentTime - firstTimestamp;
+		if (elapsedTime <= 500) {
+			requestAnimationFrame(traverseAlongLine);
+		}
+		else{
+			if(stepsIndex >= Object.keys(stepsList).length){
+				return;
+			}
+			var fromNode = stepsList[stepsIndex].FromNode;
+			var toNode = stepsList[stepsIndex].ToNode;
+			pseudocodeLine = stepsList[stepsIndex].PseudoCodeLine;
+			updatePseudocode(pseudocodeLine);
+
+			if(fromNode != null && toNode != null){
+				fromCircle = getCircle(fromNode, circlesArray1);
+
+				if(!startCirclesNamesList.includes(fromCircle.name)) {
+					startCirclesNamesList.push(fromCircle.name);
+				} 
+
+				toCircle = getCircle(toNode, circlesArray1);
+				
+				if(framePath <= speedPath){
+					if(startCirclesNamesList.includes(toNode.name)){
+						color = "yellow";
+					}
+					move(fromCircle, toCircle, framePath, speedPath, ctx, color);
+					framePath++;
+					requestAnimationFrame(traverseAlongLine);
+				} else {
+					stepsIndex++;
+					requestAnimationFrame(traverseAlongLine);
+				}
+			}
+			else{	
+				stepsIndex++;
+				requestAnimationFrame(traverseAlongLine);
+				firstTimestamp = null;
+			}
+
+			
+		}
 	}
 }
 
@@ -78,8 +131,6 @@ function getStepsList(jsonBody){
 
 
 function animate(algorithm, circlesArray) {
-	frame = 1;
-	speed = 500;
 	circlesArray1 = circlesArray;
 
 	//Getting body from the local storage of the window
@@ -98,35 +149,10 @@ function animate(algorithm, circlesArray) {
     ctx = canvasGraph.getContext('2d'); 
     ctxADT = canvasADT.getContext('2d');
     ctxPseudocode = canvasPseudocode.getContext('2d');
-	processSteps();
-	window.requestAnimationFrame(traverseAlongLine);
+	requestAnimationFrame(traverseAlongLine);
 }
 
-function processSteps() {
-	for(;stepsIndex < Object.keys(stepsList).length; stepsIndex++){
-		var fromNode = stepsList[stepsIndex].FromNode;
-		var toNode = stepsList[stepsIndex].ToNode;
 
-		var pseudocodeLine = stepsList[stepsIndex].PseudoCodeLine;
-		var pseudocodeIndex = getPseudocodeIndex(pseudocodeLine);
-		writePseudocode(jsonBody.Pseudocode, ctxPseudocode, canvasPseudocode, pseudocodeIndex);
-		sleep(1000);
-		
-		// if(stepsList[i].StackEntry != null){
-		// 	var stackEntryValue = stepsList[i].StackEntry.Value;
-		// 	var stackEntryAction = stepsList[i].StackEntry.Action;
-		// }
-
-		if(fromNode != null && toNode != null){
-			fromCircle = getCircle(fromNode, circlesArray1);
-			startCirclesNamesList.push(fromCircle.name);
-			toCircle = getCircle(toNode, circlesArray1);
-			//Incrementing index by one to keep track of the first step which will be executed next time
-			stepsIndex++;
-			return;
-		}
-	}
-}
 
 function getPseudocodeIndex(pseudocodeLine){
 	var pseudocodeArray = jsonBody.Pseudocode;
