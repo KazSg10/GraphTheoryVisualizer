@@ -21,9 +21,13 @@ class Circle{
 		//Method to draw the circle according to the x and y coordinates and radius
 		this.ctx.arc(this.x, this.y, this.radius, 0, 2*Math.PI);
 		//Fill colour of circle is set to grey
-		this.ctx.fillStyle="grey";
+		this.ctx.fillStyle="white";
 		//Method to colour in the circle
 		this.ctx.fill();
+		//Naming nodes
+		this.ctx.fillStyle = "red";
+		this.ctx.font = "20px Arial"
+		this.ctx.fillText(this.name, this.x, this.y);
 		//Method instructing the circle to be drawn
 		this.ctx.stroke();
 	}

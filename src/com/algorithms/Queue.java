@@ -3,6 +3,8 @@ package com.algorithms;
 import java.util.ArrayList;
 import java.util.List;
 
+import Practice.DijkstraPractice.DijkstraQueueNode;
+
 public class Queue<T> {
 	private List<T> c_queue;
 
@@ -32,6 +34,15 @@ public class Queue<T> {
 	@Override 
 	public String toString() {
 		return "List: [" + c_queue + "]";
+	}
+
+
+	public List<T> getList() {
+		return c_queue;
+	}
+	
+	public void dequeueByValue(T node) {
+		c_queue.remove(node);
 	}
 	
 	

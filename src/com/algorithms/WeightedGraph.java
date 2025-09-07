@@ -9,13 +9,16 @@ import java.util.Map;
 public class WeightedGraph extends Graph {
 	private final Map<Node,List<Node>> nodeConnections;
 	private final List<Node> c_nodesList;
+	private final List<Edge> c_edgeList;
 	
 	public WeightedGraph(){
 		nodeConnections = new HashMap<Node, List<Node>>();
 		c_nodesList = new ArrayList<>();
+		c_edgeList = new ArrayList<Edge>();
 	}
 	
 	public void addConnection(Edge edge){
+		c_edgeList.add(edge);
 		Node node1 = edge.getNode1();
 		Node node2 = edge.getNode2();
 		if(!c_nodesList.contains(node1)) {
@@ -57,5 +60,28 @@ public class WeightedGraph extends Graph {
 			}
 		}
 		
+	}
+	
+	public int getWeight(Node node1, Node node2) {
+		for(Edge edge : c_edgeList) {
+			if((edge.getNode1() == node1) && (edge.getNode2() == node2)){
+				return edge.getWeight();
+			}
+		}
+		return (Integer) null;
+
+	}
+
+	public List<Edge> getEdgeList() {
+		return c_edgeList;
+	}
+	
+	public List<Node> getNodeConnections(Node inputNode) {
+		for(Map.Entry<Node, List<Node>> nodeEntry: nodeConnections.entrySet()) {
+			if(nodeEntry.getKey().getName().equals(inputNode.getName())){
+				return nodeEntry.getValue();
+			}
+		}
+		return null;
 	}
 }

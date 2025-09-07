@@ -35,11 +35,10 @@ public class Stack {
 		return "List: [" + c_stack + "]";
 	}
 	
-	
-
-
-
-
-
-
+	public Node peek() {
+		if(!c_stack.isEmpty()) {
+			return c_stack.get(c_stack.size()-1);
+		}
+		return null;
+	}
 }

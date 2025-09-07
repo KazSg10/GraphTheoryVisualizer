@@ -12,6 +12,8 @@ public abstract class Graph {
 	protected  Map<Node,List<Node>> nodeConnections;
 	@JsonProperty("NodesList")
 	protected  List<Node> c_nodesList;
+	protected List<Edge> c_edgeList;
+
 	
 	public Map<Node, List<Node>> getNodeConnections() {
 		return nodeConnections;
