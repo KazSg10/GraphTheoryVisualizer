@@ -22,11 +22,12 @@ function initialise(){
     for(let i = 0; i < edges.length; i++){
 	    edges[i].drawLine("blue");
     }
-    writePseudocode(jsonBody.Pseudocode, ctxPseudocode, canvasPseudocode);
+    writePseudocode(jsonBody.Pseudocode, ctxPseudocode, canvasPseudocode, -1);
 	initialiseStack(ctxADT, canvasADT);
 
 	return circlesArray;
 }
+
 
 
 /**
@@ -76,16 +77,22 @@ function createCircles(nodeConnections, radius, ctx){
 	return circles;
 }
 
-function writePseudocode(pseudocode, ctx, canvas){
+function writePseudocode(pseudocode, ctx, canvas, index){
 	//Highlight text in canvasPseudocode
 	//ctx.strokeText("Karan", canvas.width*0.1, canvas.height*0.1);
 	var length = Object.keys(pseudocode).length;
 	//var lineHeight = canvas.height/length;
 	ctx.font = "25px Arial";
+	
+	
 	for(let i = 0; i < length; i++){
-		
+		if(i == index){
+			ctx.fillStyle = "#ff2f00ff";
+		}
+		else{
+			ctx.fillStyle = "#000000";
+		}
 		ctx.fillText(pseudocode[i], 0, ((i+1)/length)*canvas.height - (0.35/length)*canvas.height, canvas.width);
-		ctx.fillStyle = "#ff2f00ff";
 	}
 }
 

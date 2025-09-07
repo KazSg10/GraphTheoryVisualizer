@@ -155,7 +155,6 @@ public class HttpServer {
 			String outputLine = buffer.readLine();
 			while(outputLine != null) {
 				outputWriter.println(outputLine);
-				System.out.println(outputLine);
 				outputLine = buffer.readLine();
 			}
 
@@ -237,13 +236,13 @@ public class HttpServer {
 				return toJson(c_graphOutputDataDFS);
 			}
 
-			if(inputData.getAlgorithm().equals("BFS")) {
-				GraphOutputData c_graphOutputDataBFS = new GraphOutputData(graph, readFile(projectPath + "/src/com/algorithms/BFSPseudoCode.txt"));
-				Algorithm algorithmBFS = new Algorithm(c_graphOutputDataBFS);
-				Queue<Node> queue = new Queue<Node>();
-				algorithmBFS.BreadthFirstTraversal(graph, sourceNode);
-				return toJson(c_graphOutputDataBFS);
-			}
+//			if(inputData.getAlgorithm().equals("BFS")) {
+//				GraphOutputData c_graphOutputDataBFS = new GraphOutputData(graph, readFile(projectPath + "/src/com/algorithms/BFSPseudoCode.txt"));
+//				Algorithm algorithmBFS = new Algorithm(c_graphOutputDataBFS);
+//				Queue<Node> queue = new Queue<Node>();
+//				algorithmBFS.BreadthFirstTraversal(graph, sourceNode);
+//				return toJson(c_graphOutputDataBFS);
+//			}
 		}
 		return null;
 	}
@@ -278,12 +277,13 @@ public class HttpServer {
 		String json = null;
 		try {
 			//TODO
-			objectMapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
+			//objectMapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
 			//Converting current object to Json string 
 			json = objectMapper.writeValueAsString(outputData);
 		} catch (JsonProcessingException e) {
 			System.out.println(e);
 		}
+		System.out.println("Graph output data json: " + json);
 		return json;
 	}
 }
