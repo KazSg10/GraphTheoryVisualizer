@@ -96,6 +96,11 @@ function writePseudocode(pseudocode, ctx, canvas, index){
 	}
 }
 
+function updateStack(ctxADT, canvasADT, entry, action){
+	ctx.fillStyle = "#ff2f00ff";
+	ctxADT.fillText(entry, 0, canvasADT.height*0.1, canvasADT.width*0.1);
+}
+
 function getNodeConnections(jsonBody){
 	return jsonBody.Graph.NodeConnections;
 }

@@ -27,10 +27,10 @@ body, html{
 
 .menu{
 	float: left;
-	border: 3px solid;
+	border: 1px solid;
 	width: 25%; 
 	background-color: #1a95fa;
-	height: 80%;
+	height: 85%;
 }
 
 
@@ -60,9 +60,9 @@ body, html{
 	float: left;
 	padding: 0px 12px;
 	border: 1px solid #ccc;
-	width: 70%;
+	width: 73.2%;
     border-left: none;
-    height: 80%;
+    height: 85%;
 }
 
 table{
