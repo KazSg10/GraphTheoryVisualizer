@@ -36,13 +36,12 @@ var start = null;
 var pseudocodeLine;
 var stackEntryValue;
 var stackEntryAction;
+const stack = [];
 
 var pseudoCodeUpdated = false;
 var stackUpdated = false;
 var stackIndex = 0;
 
-canvasADT.height = canvasADT.height - 100;
-//(startNode, endNode, 1, 500, ctx)
 
 var animationInProgress = false;
 
@@ -67,7 +66,7 @@ function writePseudocode(pseudocode, ctx, canvas, index){
 
 function animateEdge() {
 	if (fromCircle == null || toCircle == null) {
-		requestAnimationFrame(processSteps)
+		requestAnimationFrame(updateStack)
 		return;
 	}
 
@@ -93,7 +92,7 @@ function animateEdge() {
 	ctx.lineWidth=4;
 	ctx.stroke();	
 
-	if(framePath <= speedPath){
+	if(framePath < speedPath){
 		requestAnimationFrame(animateEdge)
 		framePath++;
 	} else {
@@ -108,6 +107,7 @@ function animateEdge() {
 
 }
 
+//Function for updating the highlighting of the pseudocode
 function updatePseudocode() {
 	if (!pseudoCodeUpdated) {
 		var pseudocodeArrayIndex = getPseudocodeIndex(pseudocodeLine);
@@ -134,11 +134,35 @@ function updateStack(){
 	ctxADT.font = "50px Arial";
 	ctxADT.fillStyle = "#ff2f00ff";
 	
-
-	ctxADT.fillText(stackEntryValue, canvasADT.width/2, canvasADT.height - (stackIndex + 1)*canvasADT.height*9/100, canvasADT.width);
-	stackIndex++;
-	requestAnimationFrame(processSteps)
+	//Adding to the stack a value and also a pointer to the left of it
+	reDrawStack();
+	requestAnimationFrame(processSteps);
+	stackEntryValue = null;
+	stackEntryAction = null;
+	
 }
+
+function reDrawStack(){
+		initialiseStack(ctxADT, canvasADT)
+		if(stackEntryAction == "PUSH"){
+			stack.push(stackEntryValue)
+		}
+		else if(stackEntryAction == "POP"){
+			stack.pop();
+		}
+		for(let i = 0; i < stack.length; i++){
+			
+			if(i == stack.length-1){
+				ctxADT.fillText("---->", canvasADT.width*0.2, canvasADT.height - (i + 1)*canvasADT.height*9/100, canvasADT.width);
+				ctxADT.fillText(stack[i], canvasADT.width/2, canvasADT.height - (i + 1)*canvasADT.height*9/100, canvasADT.width);
+
+			}
+			else{
+				ctxADT.fillText(stack[i], canvasADT.width/2, canvasADT.height - (i + 1)*canvasADT.height*9/100, canvasADT.width);
+			}
+		} 
+		stackIndex = 0;
+	}
 
 function updateQueue(){
 
