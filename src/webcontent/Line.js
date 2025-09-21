@@ -30,8 +30,8 @@ class Line {
 
 		//The colour of the line is set to the colour given by the colour parameter
 		this.ctx.strokeStyle=colour;
-		//The number of pixels of the line's width is set to 10
-		this.ctx.lineWidth=10;
+		//The number of pixels of the line's width is set to 5
+		this.ctx.lineWidth=5;
 		//Method instructing the line to be drawn
 		this.ctx.stroke();
 	}

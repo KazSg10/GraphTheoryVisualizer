@@ -8,6 +8,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class GraphOutputData {
+	@JsonProperty("Algorithm")
+	private String c_algorithm;
 	@JsonProperty("Graph")
 	private Graph c_graph;
 	@JsonProperty("Pseudocode")
@@ -15,7 +17,8 @@ public class GraphOutputData {
 	@JsonProperty("StepsList")
 	private List<SimulationSteps> c_stepsList = new ArrayList<>();
 	
-	public GraphOutputData(Graph graph, List<String> pseudoCode) {
+	public GraphOutputData(String algorithm, Graph graph, List<String> pseudoCode) {
+		c_algorithm = algorithm;
 		c_graph = graph;
 		c_pseudoCode = pseudoCode;
 	}

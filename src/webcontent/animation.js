@@ -37,6 +37,7 @@ var pseudocodeLine;
 var stackEntryValue;
 var stackEntryAction;
 const stack = [];
+const queue = [];
 
 var pseudoCodeUpdated = false;
 var stackUpdated = false;
@@ -225,6 +226,8 @@ function animate(algorithm, circlesArray) {
     ctxADT = canvasADT.getContext('2d');
     ctxPseudocode = canvasPseudocode.getContext('2d');
 	requestAnimationFrame(processSteps);
+	
+	document.getElementById("Play").disabled = true;
 }
 
 

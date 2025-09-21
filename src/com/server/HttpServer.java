@@ -133,27 +133,42 @@ public class HttpServer {
 		return httpRequestLineComponents;
 	}
 
+	//Function for processing http get request from browser
 	private void processMethodGet(String path, Socket socket) {
+		//Getting part of the path of the file from the environment variable to shorten the path of the files
 		String projectPath = System.getenv("NEA_PROJECT_ROOT");
 
 		try {
 			System.out.println("Handling HTTP Method GET " + path);
 			if(path.equals("/")) {
+				//Default path of html file code to return 
 				path = projectPath + "/src/webcontent/Index.html";
 			}else {
+				//Processing the path of the html file code requested
 				path = projectPath + "/src/webcontent" + path;
 			}
 
-
+			//Setting up the outputWriter to return data back to the browser
 			PrintWriter outputWriter = new PrintWriter(socket.getOutputStream());
 			System.out.println("Reading file " + path);
 			BufferedReader buffer = new BufferedReader(new FileReader(path));
 
 			System.out.println("Reading content from file");
+			
+			/*
+			 * Status line of the HTTP response from response
+			 * HTTP/1.1 = HTTP version
+			 * 200 OK = status code, successful response code
+			 * \r\n = carriage return
+			 */
+		
 			outputWriter.println("HTTP/1.1 200 OK\r\n");
+			
+			//Leaving a gap between status line and headers
 			outputWriter.println("\r\n");
 			String outputLine = buffer.readLine();
 			while(outputLine != null) {
+				//returning the html file code requested by the browser
 				outputWriter.println(outputLine);
 				outputLine = buffer.readLine();
 			}
@@ -176,8 +191,14 @@ public class HttpServer {
 
 			//Creating a PrintWriter, which will be used to send data back to client
 			PrintWriter outputWriter = new PrintWriter(socket.getOutputStream());
-			//Response's first line containing the HTTP version, HTTP status code and status
-			outputWriter.println("HTTP/1.1 200 OK\r\n");
+			
+			/*
+			 * Status line of the HTTP response from response
+			 * HTTP/1.1 = HTTP version
+			 * 200 OK = status code, successful response code
+			 * \r\n = carriage return
+			 */
+					outputWriter.println("HTTP/1.1 200 OK\r\n");
 			//Header providing body length
 			System.out.println(json.getBytes().length);
 			outputWriter.println("Content-Length: " + json.getBytes().length);
@@ -198,7 +219,14 @@ public class HttpServer {
 			System.out.println(e);
 		}
 	}
+	
+	//function for reading the body of the client data in the http request
 	private String readBody(BufferedReader reader, Map<String, String> headers) {
+		
+		/*
+		 * Retrieving the length of the body from the Content-Length header to know how many
+		 * characters are part of the body
+		*/
 		int bodyLength = Integer.parseInt(headers.get("Content-Length").trim());
 		String body = "";
 		for(int i = 0; i<bodyLength; i++) {	
@@ -212,37 +240,46 @@ public class HttpServer {
 
 	}
 
+	//Simulating the algorithm to get the json of the steps which will be returned to browser
+	//TODO Dijkstra as well
 	private String simulateAlgorithm(GraphInputData inputData) {
+		//Getting part of the path of the file from the environment variable to shorten the path of the files
 		String projectPath = System.getenv("NEA_PROJECT_ROOT");
 		if(inputData.getAlgorithm().equals("DFS") || inputData.getAlgorithm().equals("BFS")){
 			UnweightedGraph graph = new UnweightedGraph();
-
-			//TODO hardcoded source node need to take from ui
+			
 			Node sourceNode = new Node(inputData.getSourceNodeName());
-
+			
+			//Creating a graph based on the client data
 			for(ConnectionData data: inputData.getConnections()) {
 				Node node1 = new Node(data.getNode1());
 				Node node2 = new Node(data.getNode2());
 				Edge edge = new Edge(node1, node2, Direction.valueOf(data.getEdgeDirection()));
 				graph.addConnection(edge);
 			}
-
+			
+			//Simulating DFS
 			if(inputData.getAlgorithm().equals("DFS")) {
-				GraphOutputData c_graphOutputDataDFS = new GraphOutputData(graph, readFile(projectPath + "/src/com/algorithms/DFSPseudoCode.txt"));
+				GraphOutputData c_graphOutputDataDFS = new GraphOutputData(inputData.getAlgorithm(), graph, readFile(projectPath + "/src/com/algorithms/DFSPseudoCode.txt"));
 				Algorithm algorithmDFS = new Algorithm(c_graphOutputDataDFS);
 				List<Node> visitedDFS = new ArrayList<Node>();
 				Stack stack = new Stack();
 				algorithmDFS.depthFirstTraversal(graph, sourceNode, visitedDFS, stack);
+				
+				//Returning the steps of the traversal in json form
 				return toJson(c_graphOutputDataDFS);
 			}
 
-//			if(inputData.getAlgorithm().equals("BFS")) {
-//				GraphOutputData c_graphOutputDataBFS = new GraphOutputData(graph, readFile(projectPath + "/src/com/algorithms/BFSPseudoCode.txt"));
-//				Algorithm algorithmBFS = new Algorithm(c_graphOutputDataBFS);
-//				Queue<Node> queue = new Queue<Node>();
-//				algorithmBFS.BreadthFirstTraversal(graph, sourceNode);
-//				return toJson(c_graphOutputDataBFS);
-//			}
+			//Simulating BFS
+			if(inputData.getAlgorithm().equals("BFS")) {
+				GraphOutputData c_graphOutputDataBFS = new GraphOutputData(inputData.getAlgorithm(), graph, readFile(projectPath + "/src/com/algorithms/BFSPseudoCode.txt"));
+				Algorithm algorithmBFS = new Algorithm(c_graphOutputDataBFS);
+				Queue<Node> queue = new Queue<Node>();
+				algorithmBFS.BreadthFirstTraversal(graph, sourceNode);
+				
+				//Returning the steps of the traversal in json form
+				return toJson(c_graphOutputDataBFS);
+			}
 		}
 		return null;
 	}
