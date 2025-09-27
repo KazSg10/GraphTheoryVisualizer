@@ -101,12 +101,9 @@ public class Algorithm {
 
 				if(!visited.contains(neighbouringNode) && !queue.contains(neighbouringNode)){
 					c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, "IF(visited NOT contains node && queue NOT contains node)", null, null, null));
-					
 					queue.enqueue(neighbouringNode);
 					c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, "enqueue node to queue", 
 							new QueueEntry(currentNode.getName(), ActionBFS.ENQUEUE), currentNode.getName(), neighbouringNode.getName()));
-
-
 					System.out.println("enqueued "  + neighbouringNode.getName());
 				}
 				c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, "ENDIF", null, null, null));

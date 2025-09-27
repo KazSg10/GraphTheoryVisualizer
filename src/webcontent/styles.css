@@ -10,14 +10,14 @@ body, html{
 	}
 
 .header{
-	height:15%;
+	height:10%;
 	padding: 5px; 
 	width: 100%;
-	color: white;
+	color: rgb(0, 0, 0);
 	font-family: sans-serif, Arial;
 	font-size: 20px;
 	text-align: right;
-	background:  blue;
+	background:  rgb(255, 166, 0);
 
 	
 }
@@ -30,8 +30,8 @@ body, html{
 	float: left;
 	border: 1px solid;
 	width: 100%; 
-	background-color: #1a95fa;
-	height: 12%;
+	background-color: #fa861af1;
+	height: 6%;
 }
 
 
@@ -51,10 +51,11 @@ body, html{
 }
 
 .menu button:hover{
-	background-color: #777;
+	background-color: rgb(255, 166, 0);
+	color: rgb(0, 0, 0);
 }
 .menu button.active{
-	background-color: #313ef1;
+	background-color: #fa3c1a3a;
 }
 
 .optioncontent{
@@ -75,11 +76,11 @@ table{
 	padding: 2px;
 }
 td, th{
-	border: 1px solid #18e41b;
+	border: 1px solid #363636;
 	padding: 8px;
 }
 th{
-	background-color: #313ef1;
+	background-color: #b4b4af;
 }
 
 .optioncontent button{

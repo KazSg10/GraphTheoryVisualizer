@@ -38,6 +38,7 @@ var stackEntryValue;
 var stackEntryAction;
 const stack = [];
 const queue = [];
+const visitedNodesList = [];
 
 var pseudoCodeUpdated = false;
 var stackUpdated = false;
@@ -160,10 +161,12 @@ function reDrawStack(){
 			}
 			else{
 				ctxADT.fillText(stack[i], canvasADT.width*0.9, canvasADT.height - (i + 1)*canvasADT.height*9/100, canvasADT.width);
+				//ctxADT.fillText(stack[i], canvasADT.width*0.1, canvasADT.height*0.1, canvasADT.width*0.6*i, canvasADT.height*0.23);
 			}
 		} 
 		stackIndex = 0;
 	}
+	
 
 function updateQueue(){
 
@@ -181,6 +184,13 @@ function processSteps() {
 	//Retrieving PseudoCodeLine from the stepsList in json
 	pseudocodeLine = stepsList[stepsIndex].PseudoCodeLine;
 
+	//Retrieving visited node informations
+	var visitedNode = stepsList[stepsIndex].VisitedNodeName;
+	if(visitedNode != null){
+		visitedNodesList.push(visitedNode);
+	}
+
+	
 	//Retrieving FromNode and ToNode from the stepsList in json
 	var fromNode = stepsList[stepsIndex].FromNode;
 	var toNode = stepsList[stepsIndex].ToNode;

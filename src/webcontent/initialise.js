@@ -102,8 +102,8 @@ function initialiseStack(ctxADT, canvasADT){
 	ctxADT.clearRect(0, 0, canvasADT.width, canvasADT.height);
 
 	ctxADT.beginPath();
-	//Deaw Stack
-	ctxADT.rect(canvasADT.width*(0.85), canvasADT.height*0.1, canvasADT.width*0.12, canvasADT.height*0.8);
+	//Draw Stack
+	ctxADT.rect(canvasADT.width*(0.85), canvasADT.height*0.1, canvasADT.width*0.12, canvasADT.height*0.82);
 	ctxADT.stroke();
 
 	ctxADT.beginPath();
