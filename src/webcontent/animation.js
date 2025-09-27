@@ -132,7 +132,7 @@ function updateStack(){
 		requestAnimationFrame(processSteps)
 		return;
 	}
-	ctxADT.font = "50px Arial";
+	ctxADT.font = "30px Arial";
 	ctxADT.fillStyle = "#ff2f00ff";
 	
 	//Adding to the stack a value and also a pointer to the left of it
@@ -154,12 +154,12 @@ function reDrawStack(){
 		for(let i = 0; i < stack.length; i++){
 			
 			if(i == stack.length-1){
-				ctxADT.fillText("---->", canvasADT.width*0.2, canvasADT.height - (i + 1)*canvasADT.height*9/100, canvasADT.width);
-				ctxADT.fillText(stack[i], canvasADT.width/2, canvasADT.height - (i + 1)*canvasADT.height*9/100, canvasADT.width);
+				ctxADT.fillText("---->", canvasADT.width*0.78, canvasADT.height - (i + 1)*canvasADT.height*9/100, canvasADT.width);
+				ctxADT.fillText(stack[i], canvasADT.width*0.9, canvasADT.height - (i + 1)*canvasADT.height*9/100, canvasADT.width);
 
 			}
 			else{
-				ctxADT.fillText(stack[i], canvasADT.width/2, canvasADT.height - (i + 1)*canvasADT.height*9/100, canvasADT.width);
+				ctxADT.fillText(stack[i], canvasADT.width*0.9, canvasADT.height - (i + 1)*canvasADT.height*9/100, canvasADT.width);
 			}
 		} 
 		stackIndex = 0;

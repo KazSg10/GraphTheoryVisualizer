@@ -207,7 +207,7 @@ public class HttpServer {
 			//Blank line to separate headers and body
 			outputWriter.println();
 			//Adding body to response
-			outputWriter.print(json);
+			outputWriter.print(json); 
 
 			System.out.println(json.getBytes());
 			//Sending response back to client

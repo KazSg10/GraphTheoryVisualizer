@@ -102,51 +102,22 @@ function initialiseStack(ctxADT, canvasADT){
 	ctxADT.clearRect(0, 0, canvasADT.width, canvasADT.height);
 
 	ctxADT.beginPath();
-	ctxADT.rect(canvasADT.width*(2/3), canvasADT.height*0.1, canvasADT.width*0.3, canvasADT.height*0.8);
+	//Deaw Stack
+	ctxADT.rect(canvasADT.width*(0.85), canvasADT.height*0.1, canvasADT.width*0.12, canvasADT.height*0.8);
 	ctxADT.stroke();
 
 	ctxADT.beginPath();
-	ctxADT.rect(canvasADT.width*0.1, canvasADT.height*0.1, canvasADT.width*0.5, canvasADT.height*0.4);
+	//Draw visited Queue
+	ctxADT.rect(canvasADT.width*0.1, canvasADT.height*0.1, canvasADT.width*0.6, canvasADT.height*0.23);
 	ctxADT.stroke();
-
-
-
-
-    // const stackLine1 = new Line(ctxADT, canvasADT.width*(2/3), canvasADT.height*0.1, canvasADT.width*(2/3), canvasADT.height*0.9);
-    // const stackLine2 = new Line(ctxADT, canvasADT.width*(2/3), canvasADT.height*0.9, canvasADT.width*0.95, canvasADT.height*0.9);
-    // const stackLine3 = new Line(ctxADT, canvasADT.width*0.95, canvasADT.height*0.9, canvasADT.width*0.95, canvasADT.height*0.1);
-	// const stackLine4 = new Line(ctxADT, canvasADT.width*0.95, canvasADT.height*0.1, canvasADT.width*(2/3), canvasADT.height*0.1);
-
-
-	// const visitedLine1 = new Line(ctxADT, canvasADT.width*0.1, canvasADT.height*0.1, canvasADT.width*0.6, canvasADT.height*0.1);
-	// const visitedLine2 = new Line(ctxADT, canvasADT.width*0.6, canvasADT.height*0.1, canvasADT.width*0.6, canvasADT.height*0.4);
-	// const visitedLine3 = new Line(ctxADT, canvasADT.width*0.6, canvasADT.height*0.4, canvasADT.width*0.1, canvasADT.height*0.4);
-	// const visitedLine4 = new Line(ctxADT, canvasADT.width*0.1, canvasADT.height*0.4, canvasADT.width*0.1, canvasADT.height*0.1);
-
-
-    // stackLine1.drawLine('black');
-    // stackLine2.drawLine('black');
-    // stackLine3.drawLine('black');
-	// stackLine4.drawLine('black');
-
-	// visitedLine1.drawLine('black');
-	// visitedLine2.drawLine('black');
-	// visitedLine3.drawLine('black');
-	// visitedLine4.drawLine('black');
 }
 
 function initialiseQueue(ctxADT, canvasADT){
 	ctxADT.clearRect(0, 0, canvasADT.width, canvasADT.height);
-    const queueLine1 = new Line(ctxADT, canvasADT.width*0.1, canvasADT.height*0.1, canvasADT.width*0.1, canvasADT.height*0.9);
-    const queueLine2 = new Line(ctxADT, canvasADT.width*0.1, canvasADT.height*0.9, canvasADT.width*0.9, canvasADT.height*0.9);
-    const queueLine3 = new Line(ctxADT, canvasADT.width*0.9, canvasADT.height*0.9, canvasADT.width*0.9, canvasADT.height*0.1);
-
-    queueLine1.drawLine('black');
-    queueLine2.drawLine('black');
-    queueLine3.drawLine('black');
-}
-function initialiseQueue(){
-    //TODO queue for BFS
+	ctxADT.beginPath();
+	//Draw visited Queue
+	ctxADT.rect(canvasADT.width*0.1, canvasADT.height*0.1, canvasADT.width*0.6, canvasADT.height*0.23);
+	ctxADT.stroke();
 }
 
 function initialiseDijkstraTable(){
