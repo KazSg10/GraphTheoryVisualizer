@@ -31,7 +31,7 @@ body, html{
 	border: 1px solid;
 	width: 100%; 
 	background-color: #fa861af1;
-	height: 6%;
+	height: 15%;
 }
 
 
@@ -93,11 +93,3 @@ th{
 	position:absolute;
 	float:left;
 }
-
-
-
-
-
-
-
-
