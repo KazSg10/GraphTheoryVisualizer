@@ -35,14 +35,14 @@ public class DijkstraPractice {
 			if(node!=sourceNode) {
 				System.out.println("PriorityQueue before --->  " + priorityQueue);
 				
-				priorityQueue.enqueue(new DijkstraQueueNode(node, false));		
-				System.out.println("PriorityQueue after --->  " + priorityQueue);
+ 				System.out.println("PriorityQueue after --->  " + priorityQueue);
 
 			}
 			else {
 				
 				System.out.println("PriorityQueue before --->  " + priorityQueue);
-				priorityQueue.enqueue(new DijkstraQueueNode(node, true));
+				DijkstraQueueNode DijkstraSourceNode = new DijkstraQueueNode(sourceNode, true);
+				priorityQueue.enqueue(DijkstraSourceNode);
 				System.out.println("PriorityQueue after --->  " + priorityQueue);
 
 			}
@@ -77,15 +77,16 @@ public class DijkstraPractice {
 	}
 
 
-	public class DijkstraQueueNode{
+	public static class DijkstraQueueNode{
 		
-		private Node node;
+		private Node c_node;
 		private DijkstraQueueNode c_previousNode;
 		private int c_distanceFromSourceNode;
 
 		public DijkstraQueueNode(Node node, Boolean sourceNode) {
 			c_previousNode = null;
 			c_distanceFromSourceNode = sourceNode? 0 : Integer.MAX_VALUE;
+			c_node = node;
 
 		}
 		//Do THE INFINITY THING
@@ -104,7 +105,7 @@ public class DijkstraPractice {
 			c_distanceFromSourceNode = distanceFromSourceNode;
 		}
 		public Node getNode() {
-			return node;
+			return c_node;
 		}
 		public void changeDistanceFromSourceNode(int newDistance) {
 			c_distanceFromSourceNode = newDistance;

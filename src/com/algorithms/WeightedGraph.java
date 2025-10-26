@@ -5,20 +5,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.algorithms.Edge.Direction;
+
 
 public class WeightedGraph extends Graph {
-	private final Map<Node,List<Node>> nodeConnections;
-	private final List<Node> c_nodesList;
-	private final List<Edge> c_edgeList;
-	
+
 	public WeightedGraph(){
 		nodeConnections = new HashMap<Node, List<Node>>();
 		c_nodesList = new ArrayList<>();
 		c_edgeList = new ArrayList<Edge>();
 	}
 	
-	public void addConnection(Edge edge){
+	public void addEdge(Edge edge){
 		c_edgeList.add(edge);
+		if(edge.getDirection() == Direction.BIDIRECTION) {
+			c_edgeList.add(new Edge(edge.getNode2(), edge.getNode1(), edge.getDirection(), edge.getWeight()));
+
+		}
 		Node node1 = edge.getNode1();
 		Node node2 = edge.getNode2();
 		if(!c_nodesList.contains(node1)) {
@@ -64,11 +67,16 @@ public class WeightedGraph extends Graph {
 	
 	public int getWeight(Node node1, Node node2) {
 		for(Edge edge : c_edgeList) {
-			if((edge.getNode1() == node1) && (edge.getNode2() == node2)){
+//			System.out.println("\tComparing " + edge.getNode1() + " with " + node1);
+//			System.out.println("\tComparing " + edge.getNode2() + " with " + node2);
+//			System.out.println("\tEdge: " + edge.getWeight());
+
+			if((edge.getNode1().equals(node1)) && (edge.getNode2().equals(node2))){
+				//System.out.println("\t\tFound edge weight: " + edge.getWeight());
 				return edge.getWeight();
 			}
 		}
-		return (Integer) null;
+		return Integer.MAX_VALUE;
 
 	}
 
@@ -84,4 +92,6 @@ public class WeightedGraph extends Graph {
 		}
 		return null;
 	}
+	
+	
 }

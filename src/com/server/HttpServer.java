@@ -59,6 +59,7 @@ public class HttpServer {
 
 			while(true) {
 				System.out.println(String.format("Server waiting for connection on port %d", portNumber));
+				System.out.println("Access webapp at 192.168.1.40:8908");
 				//Server is now waiting for a connection
 				Socket socket = serverSocket.accept();
 				System.out.println(socket.toString());
@@ -172,7 +173,8 @@ public class HttpServer {
 				outputWriter.println(outputLine);
 				outputLine = buffer.readLine();
 			}
-
+			
+			//Sending the html file data to browser
 			outputWriter.flush();
 			socket.close();
 		}catch(Exception e) {
@@ -255,7 +257,7 @@ public class HttpServer {
 				Node node1 = new Node(data.getNode1());
 				Node node2 = new Node(data.getNode2());
 				Edge edge = new Edge(node1, node2, Direction.valueOf(data.getEdgeDirection()));
-				graph.addConnection(edge);
+				graph.addEdge(edge);
 			}
 			
 			//Simulating DFS

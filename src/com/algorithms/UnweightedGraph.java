@@ -21,7 +21,7 @@ public class UnweightedGraph extends Graph {
 	}
 	
 
-	public void addConnection(Edge edge){
+	public void addEdge(Edge edge){
 		Node node1 = edge.getNode1();
 		Node node2 = edge.getNode2();
 		

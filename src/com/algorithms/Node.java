@@ -39,6 +39,8 @@ public class Node {
 		if (getClass() != obj.getClass())
 			return false;
 		Node other = (Node) obj;
+		
+
 		return Objects.equals(c_name, other.c_name);
 	}
 }

@@ -7,9 +7,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+//Class for creating graph objects
 public abstract class Graph {
+	
+	//Naming the connections in Json
 	@JsonProperty("NodeConnections")
 	protected  Map<Node,List<Node>> nodeConnections;
+	
+	//Naming the list in Json
 	@JsonProperty("NodesList")
 	protected  List<Node> c_nodesList;
 	protected List<Edge> c_edgeList;
@@ -19,16 +24,15 @@ public abstract class Graph {
 		return nodeConnections;
 	}
 	public List<Node> getNodesList(){
+		
+		//Returning the list of nodes in the graph
 		return c_nodesList;
 	}
-	public abstract void addConnection(Edge edge);
-//	public boolean routeFromSourceNodeToNode(Node sourceNode) {
-//		List<Node> hasRouteFromSourceNode = new ArrayList<Node>(); 
-//		for(Node node: c_nodesList) {
-//			
-//		}
-//	}
+	public abstract void addEdge(Edge edge);
+
+	//Converting the information of the graph object into Json for portability
 	public String toJson() {
+		//Creating an object mapper which is used to map the fields of the graph into a Json form
 		ObjectMapper objectMapper = new ObjectMapper();
 		String json = null;
 		try {

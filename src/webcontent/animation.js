@@ -106,6 +106,7 @@ function animateEdge() {
 		toCircle = null;
 		framePath = 1;
 	}
+	
 
 }
 

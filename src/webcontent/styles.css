@@ -17,13 +17,11 @@ body, html{
 	font-family: sans-serif, Arial;
 	font-size: 20px;
 	text-align: right;
-	background:  rgb(255, 166, 0);
-
-	
+	background:  rgb(228, 154, 16);
 }
 
 .header h1{
-	font-size: 40px;		
+	font-size: 40px;	
 }
 
 .menu{
@@ -61,10 +59,10 @@ body, html{
 .optioncontent{
 	float: left;
 	padding: 0px 12px;
-	border: 1px solid #ccc;
+	border: 1px solid #d82a2a;
 	width: 100%;
-    border-left: none;
-    height: 70%;
+  border-left: none;
+  height: 90%;
 }
 
 table{
@@ -76,16 +74,16 @@ table{
 	padding: 2px;
 }
 td, th{
-	border: 1px solid #363636;
+	border: 1px solid #e93d09;
 	padding: 8px;
 }
 th{
-	background-color: #b4b4af;
+	background-color: #e9c10b;
 }
 
 .optioncontent button{
 	text-align: center;
-	color: blue;
+	color: rgb(99, 188, 35);
 	background-color:white;
 }
 

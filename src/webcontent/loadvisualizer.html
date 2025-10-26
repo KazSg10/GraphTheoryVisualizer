@@ -20,7 +20,7 @@
 			text-align: center;
 			padding: 15px 32px;
 			font-size: 20px;
-			background-color: #313ef1;
+			background-color: #f1ab31;
 		}
 		#canvasplaceholder {
 			margin-left:0;
@@ -34,8 +34,9 @@
 </head>
 
 <body>
-	<h1 align="center">Visualization </h1>
-
+	<div class="header">
+		<h1 align="center">Visualization </h1>
+	</div>
 	<div id = "settingButtons" class="buttons">		
 		<button id="homeButton" style="margin-left: auto;" onclick="history.back()"> Home </button>
 		<button id="Play" style="margin-left: center;" onClick="simulate()"> Play </button>
@@ -73,7 +74,7 @@
 			canvas.width=width;
 			canvas.height=height;
 			//Setting newly created canvas' border style
-			canvas.style.border="5px solid  #00004d";
+			canvas.style.border="5px solid  #ee0000";
 			//Adding the canvas element as a child node of the div element in DOM
 			divReference.appendChild(canvas);
 			return canvas;
@@ -97,4 +98,4 @@
 <footer>
 
 </footer>
-</html>
+</html> 

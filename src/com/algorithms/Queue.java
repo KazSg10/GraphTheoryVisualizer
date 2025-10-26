@@ -3,14 +3,13 @@ package com.algorithms;
 import java.util.ArrayList;
 import java.util.List;
 
-import Practice.DijkstraPractice.DijkstraQueueNode;
-
 public class Queue<T> {
 	private List<T> c_queue;
 
 	public Queue(){		
 		c_queue = new ArrayList<>();
 	}
+	
 
 	public boolean isEmpty() {
 		return c_queue.isEmpty();
@@ -33,7 +32,11 @@ public class Queue<T> {
 	
 	@Override 
 	public String toString() {
-		return "List: [" + c_queue + "]";
+		List <String> nodeNames = new ArrayList<String>();
+		for(T node : c_queue) {
+			nodeNames.add(node.toString());
+		}
+		return "List: " + nodeNames;
 	}
 
 
@@ -41,11 +44,7 @@ public class Queue<T> {
 		return c_queue;
 	}
 	
-	public void dequeueByValue(T node) {
+	public void dequeue(T node) {
 		c_queue.remove(node);
 	}
-	
-	
-	
-	
 }

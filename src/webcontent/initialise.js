@@ -20,7 +20,7 @@ function initialise(){
     }
     const edges =  drawEdges(circlesArray, ctx, jsonBody);
     for(let i = 0; i < edges.length; i++){
-	    edges[i].drawLine("blue");
+	    edges[i].drawLine("orange");
     }
     writePseudocode(jsonBody.Pseudocode, ctxPseudocode, canvasPseudocode, -1);
 	if(algorithm == "DFS"){
