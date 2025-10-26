@@ -72,7 +72,7 @@
 				</td>
 				<td>
 					<!-- Creating a drop down box for direction-->
-					<select id="DijkstraGraphTableTable13">
+					<select id="DijkstraGraphTable13">
 						<option value="BIDIRECTION">Bidirection</option>x
 						<option value="UNIDIRECTION">Unidirection</option>
 					</select>	
@@ -89,6 +89,8 @@
 
 	</div>
 	
+	<!-- Designing the DFS section of the webapp -->
+
 	<div id="DFS" class="optioncontent">
 		<h3>Depth-First Traversal</h3>
 		<p>Enter data for the graph below: </p>
@@ -121,7 +123,9 @@
 		<button onclick="addNewRow('DFSTable', 3)">Add New Row</button>
 		<button onclick="postData('DFSTable', 'DFS', document.getElementById('dfsSourceNode').value)">Submit</button>
 	</div>
-	
+
+	<!-- Designing the BFS section of the webapp -->
+
 	<div id="BFS" class="optioncontent">
 		<h3>Breadth-First Traversal</h3>
 		<p>Enter data for the graph below: </p>
@@ -156,6 +160,8 @@
 	</div>
 
 	<script>
+
+		//Event Handler when a tab is clicked, which loads the page of that tab
 		function selectOption(event, option){
 			var optionContent = document.getElementsByClassName("optioncontent");
 			for(let i = 0; i<optionContent.length; i++){
@@ -171,6 +177,7 @@
 		}
 		document.getElementById("defaultOpen").click();
 
+		//Function of adding a new row to the table 
 		function addNewRow(tableId, count){
 			var table = document.getElementById(tableId);
 			var newRow = table.insertRow();	
@@ -183,7 +190,8 @@
 				insertCell(tableId, table, newRow, i, last);
 			}
 		}
-
+		
+		//Function of adding a new cell to a row in the table 
 		function insertCell(tableId, table, row, index, last){
 			var cell = row.insertCell(index);
 			//If it is the last cell, the element type must be select (drop-down box) for taking input of direction
