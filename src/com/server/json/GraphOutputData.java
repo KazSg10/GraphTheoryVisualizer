@@ -14,7 +14,7 @@ public class GraphOutputData {
 	private Graph c_graph;
 	@JsonProperty("Pseudocode")
 	private List<String> c_pseudoCode = new ArrayList<>(); 
-	@JsonProperty("StepsList")
+	//@JsonProperty("StepsList")
 	private List<SimulationSteps> c_stepsList = new ArrayList<>();
 	
 	public GraphOutputData(String algorithm, Graph graph, List<String> pseudoCode) {

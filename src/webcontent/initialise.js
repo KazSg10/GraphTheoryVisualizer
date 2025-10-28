@@ -18,7 +18,7 @@ function initialise(){
     for(let i = 0; i < circlesArray.length; i++){
 	    circlesArray[i].drawCircle();
     }
-    const edges =  drawEdges(circlesArray, ctx, jsonBody);
+    const edges =  initialiseEdges(circlesArray, ctx, jsonBody);
     for(let i = 0; i < edges.length; i++){
 	    edges[i].drawLine("orange");
     }
@@ -46,8 +46,16 @@ function getRandomCoordinates(min, max, radius) {
   return Math.random() * (max - (min + radius + 1)) + min;
 }
 
-function drawEdges(circlesArray, ctx, jsonBody){
+/**
+ * Taking the nodeConnections part of the jsonBody in order to initialise the edges
+ * between the nodes which have a connection (edge)
+ */
+
+function initialiseEdges(circlesArray, ctx, jsonBody){
+	//Reading nodeConnections from json
 	var NodeConnections = getNodeConnections(jsonBody);
+	
+	
 	var keys = Object.keys(NodeConnections);
 	var edges = [];
 	var length = keys.length;
@@ -89,12 +97,13 @@ function getNodeConnections(jsonBody){
 function readJsonBody(body){
 	//Parsing the body into Json form
 	const jsonBody = JSON.parse(body);
-	// var numberOfNodes = jsonBody.Graph.nodesList.length;
-	// var nodeConnections = jsonBody.Graph.NodeConnections;
-	// var pseudocode = jsonBody.Pseudocode;
-	// var stepsList = jsonBody.StepsList;
-	// console.log();
-	// console.log(pseudocode);
+	var numberOfNodes = jsonBody.Graph.nodesList.length;
+	var nodeConnections = jsonBody.Graph.NodeConnections;
+	var pseudocode = jsonBody.Pseudocode;
+	var simulationSteps = jsonBody.SimulationSteps;
+	console.log();
+	console.log(pseudocode);
+	console.log(simulationSteps);
 	return jsonBody;
 }
 

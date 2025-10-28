@@ -20,6 +20,7 @@ class Line {
 	 * @param {*} color - Colour of the line
 	 */
 	drawLine(colour){
+
         console.log("Drawing line: ")
 		//Method for starting a new path for the line
 		this.ctx.beginPath();

@@ -15,10 +15,18 @@ public class DatabaseHandler {
 	public void start() {
 		try {
 			System.out.println("Starting mysql server");
+			System.out.println("Opening cmd");
+			
+			/*
+			 * Opens a cmd window
+			 * All the prompts need to be in the same command line for all of them
+			 * to run in the same window
+			 */
 			runTime.exec("C:\\Users\\karan\\Downloads\\mysql-9.4.0-winx64\\mysql-9.4.0-winx64\\bin\\mysqld.exe");
 		} catch(Exception e) {
 			System.out.println(e);
 		}
+		connect();
 	}
 
 	public void stop() {
@@ -82,7 +90,7 @@ public class DatabaseHandler {
 		DatabaseHandler dh = new DatabaseHandler();
 		dh.start();
 		dh.connect();
-		dh.readRecord();
+		//dh.readRecord();
 	}
 
 }

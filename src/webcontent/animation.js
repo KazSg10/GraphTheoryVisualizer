@@ -19,7 +19,7 @@ var speedPath = 100;
 var framePseudocode = 1;
 var speedPseudocode = 500;
 var circlesArray1;
-var stepsList;
+var simulationSteps;
 var fromCircle;
 var toCircle;
 var stepsIndex = 0;
@@ -178,32 +178,32 @@ function updateDijkstraTable(){
 }
 
 function processSteps() {
-	if(stepsIndex >= Object.keys(stepsList).length){
+	if(stepsIndex >= Object.keys(simulationSteps).length){
 		return;
 	}
 
-	//Retrieving PseudoCodeLine from the stepsList in json
-	pseudocodeLine = stepsList[stepsIndex].PseudoCodeLine;
+	//Retrieving PseudoCodeLine from the simulationSteps in json
+	pseudocodeLine = simulationSteps[stepsIndex].PseudoCodeLine;
 
 	//Retrieving visited node informations
-	var visitedNode = stepsList[stepsIndex].VisitedNodeName;
+	var visitedNode = simulationSteps[stepsIndex].VisitedNodeName;
 	if(visitedNode != null){
 		visitedNodesList.push(visitedNode);
 	}
 
 	
-	//Retrieving FromNode and ToNode from the stepsList in json
-	var fromNode = stepsList[stepsIndex].FromNode;
-	var toNode = stepsList[stepsIndex].ToNode;
+	//Retrieving FromNode and ToNode from the simulationSteps in json
+	var fromNode = simulationSteps[stepsIndex].FromNode;
+	var toNode = simulationSteps[stepsIndex].ToNode;
 	if(fromNode != null && toNode != null){
 		fromCircle = getCircle(fromNode, circlesArray1);
 		toCircle = getCircle(toNode, circlesArray1);
 	}
 	
-	if(stepsList[stepsIndex].StackEntry != null){
-		//Retrieving StackEntry.Value and StackEntry.Action from the stepsList in json
-	 	stackEntryValue = stepsList[stepsIndex].StackEntry.Value;
-	 	stackEntryAction = stepsList[stepsIndex].StackEntry.Action;
+	if(simulationSteps[stepsIndex].StackEntry != null){
+		//Retrieving StackEntry.Value and StackEntry.Action from the simulationSteps in json
+	 	stackEntryValue = simulationSteps[stepsIndex].StackEntry.Value;
+	 	stackEntryAction = simulationSteps[stepsIndex].StackEntry.Action;
 	}
 
 	//Start Animation
@@ -211,8 +211,8 @@ function processSteps() {
 	stepsIndex++;
 }
 
-function getStepsList(jsonBody){
-	return jsonBody.StepsList;
+function getsimulationSteps(jsonBody){
+	return jsonBody.SimulationSteps;
 }
 
 
@@ -225,7 +225,7 @@ function animate(algorithm, circlesArray) {
 	console.log(body);
     //Parsing body to json
     jsonBody = readJsonBody(body);
-    stepsList = jsonBody.StepsList;
+    simulationSteps = jsonBody.simulationSteps;
 
     //Getting canvas elements from DOM (Document Object Model)
     canvasGraph = document.getElementById('canvasGraph');

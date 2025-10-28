@@ -48,16 +48,20 @@
 		</div>
 
 	
+	<!--Designing the different algorithms' sections of the webapp
+		The names of the headers are in the format:
+		Table name + "Header" + index starting from 0 -->
+
 	<!-- Designing the Dijkstra's Shortest Path section of the webapp -->
 	<div id="Dijkstra" class="optioncontent">
 		<h3>Dijkstra's Shortest Path Finding</h3>
 		<p>Enter data for the graph below: </p>
 		<table id="DijkstraGraphTable">
 			<tr>
-				<th id="DijkstraGraphTableHeader1">Node 1</th>
-				<th id="DijkstraGraphTableHeader2">Node 2</th>
-				<th id="DijkstraGraphTableHeader3">Edge Weight</th>
-				<th id="DijkstraGraphTableHeader4">Edge Direction</th>
+				<th id="DijkstraGraphTableHeader0">Node 1</th>
+				<th id="DijkstraGraphTableHeader1">Node 2</th>
+				<th id="DijkstraGraphTableHeader2">Edge Weight</th>
+				<th id="DijkstraGraphTableHeader3">Edge Direction</th>
 				
 			</tr>
 			<tr>
@@ -72,8 +76,8 @@
 				</td>
 				<td>
 					<!-- Creating a drop down box for direction-->
-					<select id="DijkstraGraphTable13">
-						<option value="BIDIRECTION">Bidirection</option>x
+					<select id="DijkstraGraphTable12">
+						<option value="BIDIRECTION">Bidirection</option>
 						<option value="UNIDIRECTION">Unidirection</option>
 					</select>	
 				</td>
@@ -96,9 +100,9 @@
 		<p>Enter data for the graph below: </p>
 		<table id="DFSTable">
 			<tr>
-				<th id="DFSTableHeader1">Node 1</th>
-				<th id="DFSTableHeader2">Node 2</th>
-				<th id="DFSTableHeader3">Edge Direction</th>
+				<th id="DFSTableHeader0">Node 1</th>
+				<th id="DFSTableHeader1">Node 2</th>
+				<th id="DFSTableHeader2">Edge Direction</th>
 			</tr>
 			<tr>
 				<td>
@@ -131,9 +135,9 @@
 		<p>Enter data for the graph below: </p>
 		<table id="BFSTable">
 			<tr>
-				<th id="BFSTableHeader1">Node 1</th>
-				<th id="BFSTableHeader2">Node 2</th>
-				<th id="BFSTableHeader3">Edge Direction</th>
+				<th id="BFSTableHeader0">Node 1</th>
+				<th id="BFSTableHeader1">Node 2</th>
+				<th id="BFSTableHeader2">Edge Direction</th>
 			</tr>
 			<tr>
 				<td>
@@ -217,7 +221,11 @@
 				//Creating an element of type input
 				var inputElement = document.createElement("input");
 				inputElement.type = "text";
-				//Assigning the id of the input element
+				/**
+				 * Assigning the id of the input element in the format of 
+				 * table's ID + the row index, which starts from 0, + the index of the 
+				 * starting from 0
+				 */
 				inputElement.id = tableId + (table.rows.length - 1).toString() + index.toString();
 				//Appending the input element to the cell in DOM
 				cell.appendChild(inputElement);

@@ -19,6 +19,7 @@ import com.algorithms.Node;
 import com.algorithms.Queue;
 import com.algorithms.Stack;
 import com.algorithms.UnweightedGraph;
+import com.algorithms.WeightedGraph;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -242,8 +243,11 @@ public class HttpServer {
 
 	}
 
-	//Simulating the algorithm to get the json of the steps which will be returned to browser
-	//TODO Dijkstra as well
+	/*
+	 * Simulating the algorithm to get the json of the steps which will be returned to browser
+	 * If it's BFS or DFS, then an unweighted graph will be created
+	 * If it's Dijkstra then a weighted graph will be created
+	 */
 	private String simulateAlgorithm(GraphInputData inputData) {
 		//Getting part of the path of the file from the environment variable to shorten the path of the files
 		String projectPath = System.getenv("NEA_PROJECT_ROOT");
@@ -282,6 +286,31 @@ public class HttpServer {
 				//Returning the steps of the traversal in json form
 				return toJson(c_graphOutputDataBFS);
 			}
+			
+		}
+		
+		else if(inputData.getAlgorithm().equals("Dijkstra")) {
+			WeightedGraph graph = new WeightedGraph();
+			
+			Node sourceNode = new Node(inputData.getSourceNodeName());
+			
+			//Creating a graph based on the client data
+			for(ConnectionData data: inputData.getConnections()) {
+				Node node1 = new Node(data.getNode1());
+				Node node2 = new Node(data.getNode2());
+				Edge edge = new Edge(node1, node2, Direction.valueOf(data.getEdgeDirection()), Integer.valueOf(data.getWeight()));
+				graph.addEdge(edge);
+			}
+			
+			//Simulating Dijkstra's Algorithm
+			
+			GraphOutputData c_graphOutputDataDijkstra = new GraphOutputData(inputData.getAlgorithm(), graph, readFile(projectPath + "/src/com/algorithms/DijkstraPseudoCode.txt"));
+			Algorithm algorithmDijkstra = new Algorithm(c_graphOutputDataDijkstra);
+			algorithmDijkstra.DijkstraShortestPathFinding(graph, sourceNode);
+			
+			//Returning the steps of the traversal in json form
+			return toJson(c_graphOutputDataDijkstra);
+			
 		}
 		return null;
 	}
