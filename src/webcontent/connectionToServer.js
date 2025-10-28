@@ -1,5 +1,5 @@
-async function postData(tableName, algorithm, sourceNodeName){
-			var jsonData = createJSON(tableName, algorithm, sourceNodeName);
+async function postData(tableName, algorithm, sourceNode){
+			var jsonData = createJSON(tableName, algorithm, sourceNode);
 			//Submit POST request to the server for processing algorithm input data
 			//var promise = fetch("http://localhost:8908/visualize",
 			/*
@@ -30,12 +30,14 @@ async function postData(tableName, algorithm, sourceNodeName){
 			var body = bodyfromResponse(stringResponse);
 			localStorage.setItem('body', body);
 			window.location.href = "loadvisualizer.html";
-
-	}
+}
 
 //Function for creating the json data from the table to pass on to the server
-function createJSON(tableName, algorithm, sourceNodeName){
-	checkForErrors(tableName, sourceNodeName);
+function createJSON(tableName, algorithm, sourceNode){
+	const error = checkForErrors(tableName, sourceNode);
+	if(error){
+		return null;
+	}
 
 	//Retrieving the table from the DOM
 	var table = document.getElementById(tableName);
@@ -46,7 +48,7 @@ function createJSON(tableName, algorithm, sourceNodeName){
 	//Starting to create Json
 	var postJSON = "{";
 	postJSON += "\"algorithm\"" + ":" + "\"" + algorithm + "\",";
-	postJSON+= "\"source node\"" + ":" + "\"" + sourceNodeName + "\",";
+	postJSON+= "\"source node\"" + ":" + "\"" + sourceNode.value + "\",";
 	postJSON += "\"connections\"" + ":[";
 
 	/**
@@ -56,8 +58,12 @@ function createJSON(tableName, algorithm, sourceNodeName){
 	for(let rowIndex = 1; rowIndex < numberOfRows; rowIndex++){
 		var row = table.rows[rowIndex];
 		
-		//Retrieving the number of cells in one row
-		var cellsCount = row.cells.length;					
+		/**
+		 * Retrieving the number of cells in one row
+		 * -1 because the last cell of the first row was the source node cell 
+		 * and this doesn't need to be read since we are passing this in
+		 * */
+		var cellsCount = row.cells.length - 1;					
 		postJSON += "{";
 		
 		//A for loop iterating over the cells in one row
@@ -111,78 +117,102 @@ function savingGraphData(){
 	createJSON('DFSTable', 'DFS', document.getElementById('dfsSourceNode').value)
 }
 
-function checkForErrors(tableName, sourceNodeName){
+function checkForErrors(tableName, sourceNode){
+	var error = false;
 	var table = document.getElementById(tableName);
 	var numberOfRows = table.rows.length;
 	const nodesList = [];
 	
 	for(let rowIndex = 1; rowIndex < numberOfRows; rowIndex++){
 		var row = table.rows[rowIndex];
-		var cellsCount = row.cells.length;	
+		var cellsCount = row.cells.length - 1;	
 		for(let cellIndex = 0; cellIndex < cellsCount; cellIndex++){
 			var headerId = tableName + "Header" + (cellIndex).toString();
 			var cellId = tableName + rowIndex.toString() + cellIndex.toString();
 			var cell = document.getElementById(cellId);
 
-			if(cell == null){
-				raiseError("WARNING - There is no value in cell highlighted ", cell);
-			}
-			if(tableName == "DijkstraGraphTable"){
-			 	if(cellIndex % 3){
+			if(tableName != "DijkstraGraphTable"){
+				if(cellIndex < 2){
+					if(cell.value == ""){
+					errorBoxCell("WARNING - There is no value in cell highlighted ", cell);
+					error = true;
+					}
+				}
+			} else if(tableName == "DijkstraGraphTable"){
+				if(cellIndex < 3){
+					if(cell.value == ""){
+						errorBoxCell("WARNING - There is no value in cell highlighted ", cell);
+						error = true;
+					}
+				}
+			 	if(cellIndex % 2 == 0 && cellIndex > 0){
 					if(Number.isInteger(Number(cell.value)) == false){
-						raiseError("WARNING - The value in the highlighted cell must be an integer or a decimal followed by 0s");
+						errorBoxCell("WARNING - The value in the highlighted cell must be an integer or a decimal followed by 0s", cell);
+						error = true;
 					}
 				}
 			}
-			if(!nodesList.includes(cell.value)){
+			
+		if(headerId == tableName + "Header0" || headerId == tableName + "Header1"){
+			if(!nodesList.includes(cell.value) && cell.value != ""){
 				nodesList.push(cell.value);
 			}else{
-				raiseError("WARNING - Please remove any node duplicates in the graph");
+				if(cell.value!=""){
+					errorBox("WARNING - Please remove any node duplicates in the graph");
+					error = true;
+				}
 			}
-		
-		}
-
-		if(!nodesList.includes(sourceNodeName)){
-			raiseError("WARNING - The source node is not in the graph");
 		}
 	}
+			
+		}
+		if(!nodesList.includes(sourceNode.value)){
+			errorBoxCell("WARNING - The source node is not in the graph", sourceNode);
+			error = true;
+		}
+	
+	return error;
 }
 
-function raiseError(message, cell){
+function errorBoxCell(message, cell){
+	cell.style.backgroundColor = "yellow";
+	setTimeout(() => {
+		window.alert(message);
+	}, 70);
+}
+function errorBox(message){
+	setTimeout(() => {
+		window.alert(message);
+	}, 70);
+}
+function raiseErrorCell(message, cell){
 	cell.style.backgroundColor = "yellow";
 	const errorDiv = document.createElement("div");
 
 	errorDiv.textContent = message;
-	errorDiv.style.backgroundColor = "#ffe0e0";
+
+	errorDiv.style.fontSize = "20px";
+	//errorDiv.style.backgroundColor = "#ffe0e0";
 	errorDiv.style.color = "#b00020";
-	errorDiv.style.padding = "12px 16px";
-	errorDiv.style.margin = "10px";
 	errorDiv.style.border = "1px solid #b00020";
 	errorDiv.style.borderRadius = "8px";
 	errorDiv.style.fontFamily = "sans-serif";
 
 	document.body.appendChild(errorDiv);
-
-	setTimeout(errorDiv.remove, 3000);
 }
 
 function raiseError(message){
 	const errorDiv = document.createElement("div");
 
 	errorDiv.textContent = message;
-	errorDiv.style.backgroundColor = "#ffe0e0";
+
+	errorDiv.style.fontSize = "20px";
+	//errorDiv.style.backgroundColor = "#ffe0e0";
 	errorDiv.style.color = "#b00020";
-	errorDiv.style.padding = "12px 16px";
-	errorDiv.style.margin = "10px";
 	errorDiv.style.border = "1px solid #b00020";
 	errorDiv.style.borderRadius = "8px";
 	errorDiv.style.fontFamily = "sans-serif";
 
 	document.body.appendChild(errorDiv);
-
-	setTimeout(errorDiv.remove, 3000);
 }
 
-
-
-    

@@ -62,6 +62,7 @@
 				<th id="DijkstraGraphTableHeader1">Node 2</th>
 				<th id="DijkstraGraphTableHeader2">Edge Weight</th>
 				<th id="DijkstraGraphTableHeader3">Edge Direction</th>
+				<th id="DijkstraGraphTableHeader4">Source Node</th>
 				
 			</tr>
 			<tr>
@@ -81,15 +82,13 @@
 						<option value="UNIDIRECTION">Unidirection</option>
 					</select>	
 				</td>
+				<td>
+					<input type="text" id="DijkstraSourceNode">
+				</td>
 			</tr>
 		</table>
-		
-		
-		<label for="dijkstraSourceNode">Enter the name of the source node:</label>
-		<input type="text" id="dijkstraSourceNode">
-
 		<button onclick="addNewRow('DijkstraGraphTable', 4)">Add New Row</button>
-		<button onclick="postData('DijkstraGraphTable', 'Dijkstra', document.getElementById('dijkstraSourceNode').value)">Submit</button>
+		<button onclick="postData('DijkstraGraphTable', 'Dijkstra', document.getElementById('DijkstraSourceNode'))">Submit</button>
 
 	</div>
 	
@@ -103,6 +102,7 @@
 				<th id="DFSTableHeader0">Node 1</th>
 				<th id="DFSTableHeader1">Node 2</th>
 				<th id="DFSTableHeader2">Edge Direction</th>
+				<th id="DFSTableHeader3">Source Node</th>
 			</tr>
 			<tr>
 				<td>
@@ -118,14 +118,13 @@
 						<option value="UNIDIRECTION">Unidirection</option>
 					</select>	
 				</td>
+				<td>
+					<input type="text" id="DFSSourceNode">
+				</td>
 			</tr>
 		</table>
-
-		<label for="dfsSourceNode">Enter the name of the source node:</label>
-		<input type="text" id="dfsSourceNode">
-
 		<button onclick="addNewRow('DFSTable', 3)">Add New Row</button>
-		<button onclick="postData('DFSTable', 'DFS', document.getElementById('dfsSourceNode').value)">Submit</button>
+		<button onclick="postData('DFSTable', 'DFS', document.getElementById('DFSSourceNode'))">Submit</button>
 	</div>
 
 	<!-- Designing the BFS section of the webapp -->
@@ -138,6 +137,7 @@
 				<th id="BFSTableHeader0">Node 1</th>
 				<th id="BFSTableHeader1">Node 2</th>
 				<th id="BFSTableHeader2">Edge Direction</th>
+				<th id="BFSTableHeader3">Source Node</th>
 			</tr>
 			<tr>
 				<td>
@@ -149,17 +149,16 @@
 				<td>
 					<select id="BFSTable12">
 							<option value="BIDIRECTION">Bidirection</option>
-							<option value="UNIDIRECTION">Unidirection</option>
+							<option value="UNIDIRECTION">Unidirection</option>	
 					</select>	
+				</td>
+				<td>
+					<input type="text" id="BFSSourceNode">
 				</td>
 			</tr>
 		</table>
-
-		<label for="bfsSourceNode">Enter the name of the source node:</label>
-		<input type="text" id="bfsSourceNode">
-
 		<button onclick="addNewRow('BFSTable', 3)">Add New Row</button>
-		<button onclick="postData('BFSTable', 'BFS', document.getElementById('bfsSourceNode').value)">Submit</button>
+		<button onclick="postData('BFSTable', 'BFS', document.getElementById('BFSSourceNode'))">Submit</button>
 
 	</div>
 
