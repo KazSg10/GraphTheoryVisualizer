@@ -186,6 +186,12 @@ function checkForErrors(tableName, sourceNode){
 						edgesList.push([node1Value, node2Value, "Unidirection"]);
 					}
 				}
+
+				if(cellIndex == 2){
+					if(Number.isInteger(Number(cell.value)) == false || Number(cell.value) <= 0){
+						errorBoxCell("weight error", cell, null);
+						error = true;
+					}
 			}else if(tableName != "DijkstraGraphTable"){
 				//Setting the direction value to a variable for validation use later 
 				direction = (document.getElementById(tableName + rowIndex.toString() + "2")).value;
@@ -207,29 +213,23 @@ function checkForErrors(tableName, sourceNode){
 					if(node1Value != "" && node2Value != "" && !edgesList.includes([node1Value, node2Value])){
 						edgesList.push([node1Value, node2Value, "Unidirection"]);
 					}
+				}else{
+					errorBoxCell("duplicate", node1Cell, node2Cell);
 				}
-				if(cellIndex % 2 == 0 && cellIndex > 0){
-					if(Number.isInteger(Number(cell.value)) == false){
-						errorBoxCell("weight error", cell, null);
-						error = true;
-					}else{
-						errorBoxCell("duplicate", node1Cell, node2Cell);
-					}
 				}
 			} 	
 		}
-		
-		sourceNodeError = true;
-		for(const [node1,node2, direction] of edgesList){
-			if(node1 == sourceNode.value || node2 == sourceNode.value){
-				sourceNodeError = false;
-			}
-		}
-		if(sourceNodeError){
-			errorBoxCell("source node error", sourceNode, null);
-		}
-		return error;
 	}
+	sourceNodeError = true;
+	for(const [node1,node2, direction] of edgesList){
+		if(node1 == sourceNode.value || node2 == sourceNode.value){
+			sourceNodeError = false;
+		}
+	}
+	if(sourceNodeError){
+		errorBoxCell("source node error", sourceNode, null);
+	}
+	return error;
 }
 function errorBoxCell(error, cell1, cell2){
 	var cell1Colour;
@@ -247,12 +247,12 @@ function errorBoxCell(error, cell1, cell2){
 		message = "WARNING - There is no value in cell highlighted yellow";
 		cell1Colour = "yellow"
 		cell2Colour = "white";
-	} else if(error = "source node error"){
+	} else if(error == "source node error"){
 		message = "WARNING - Source node is not in the graph; this is highlighted red";
 		cell1Colour = "red";
 		cell2Colour = "white";
 	} else if(error == "weight error"){
-		message = "WARNING - The value in the green highlighted cell must be an integer or a decimal followed by 0s";
+		message = "WARNING - The value in the green highlighted cell must be greater than 0, and an integer or a decimal followed by 0s";
 		cell1Colour = "green";
 		cell2Colour = "white";
 	}
