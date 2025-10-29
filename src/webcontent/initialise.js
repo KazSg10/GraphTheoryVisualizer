@@ -56,13 +56,16 @@ function getRandomCoordinates(min, max, radius) {
 function initialiseEdges(circlesArray, ctx, jsonBody){
 	//Reading nodeConnections from json
 	var NodeConnections = getNodeConnections(jsonBody);
-	var keys = Object.keys(NodeConnections);
+	var nodeKeys = Object.keys(NodeConnections);
+	//Initialising a list for the edges 
 	var edges = [];
-	var length = keys.length;
+	
+	var length = nodeKeys.length;
 	for(let i = 0; i<length; i++){
-		var key = keys[i];
-		var valuesList = NodeConnections[key];
-		var node1 = getCircle(key, circlesArray);
+		var nodeKey = nodeKeys[i];
+		var valuesList = NodeConnections[nodeKey];
+		//Creating a circle for each node in the graph 
+		var node1 = getCircle(nodeKey, circlesArray);
 		for (let j = 0; j < valuesList.length; j++) {
 			var node2 = getCircle(valuesList[j].Name, circlesArray);
 			edges.push(new Line(ctx, node1.x, node1.y, node2.x, node2.y));
@@ -84,13 +87,50 @@ function getCircle(key, circlesArray){
 function createCircles(nodeConnections, radius, ctx){
 	//Initialising a list of circles
 	const circles = [];
-	//Reading the length of the nodeConnections from the json to see how many edges there are
-	var length = Object.keys(nodeConnections).length;
+	/**
+	 * Retrieving the key nodes from the node connections part of the json
+	 * The connections are arranged in the format of a adjacency list
+	 * where one node is the key and all its neighbours are in an array
+	 * which is its value
+	 */	
 	var keys = Object.keys(nodeConnections);
+	/**
+	 * Getting the number of nodes in the graph - since all the nodes will 
+	 * be a key at some point, it is enough to just get the length of the keys
+	 * to find out the number of nodes
+	 */
+	var length = Object.keys(nodeConnections).length;
+	var xCent;
+	var yCent;
 	for(let i = 0; i < length; i++){
-		circles.push(new Circle(keys[i], ctx, getRandomCoordinates(0,canvasGraph.width, radius), getRandomCoordinates(0,canvasGraph.height, radius) , radius))
+		//Foreach node, a circle is created and added to the circles list
+		var coordinatesCheck = false
+		while(!coordinatesCheck){
+			xCent = getRandomCoordinates(radius,canvasGraph.width - radius, radius);
+			yCent = getRandomCoordinates(radius,canvasGraph.height - radius, radius);
+			coordinatesCheck = centreCoordinatesValidator(xCent, yCent, radius, circles);
+		}
+		circles.push(new Circle(keys[i], ctx, xCent, yCent , radius,))
 	}
 	return circles;
+}
+
+// function circlesCopy(circles){
+// 	circlesCopyList =[];
+// 	for(var circle of circles){
+// 		circlesCopy.push(circle);
+// 	}
+// }
+
+//Validating the coordinates of the centre to see if the nodes are suitably apart
+function centreCoordinatesValidator(xCent, yCent, radius, circles){
+	for(var circle of circles){
+		var pythag = Math.pow((circle.x - xCent), 2) + Math.pow((circle.y - yCent), 2);
+		if( pythag < 900*radius){
+			return false;
+		}
+	}
+	return true;
 }
 
 function getNodeConnections(jsonBody){
