@@ -1,3 +1,4 @@
+//Sending data of the user input graph to the server and then extracting the relevent data from the server sent data
 async function postData(tableName, algorithm, sourceNode){
 			var jsonData = createJSON(tableName, algorithm, sourceNode);
 			//Submit POST request to the server for processing algorithm input data
@@ -52,18 +53,21 @@ function createJSON(tableName, algorithm, sourceNode){
 	postJSON += "\"connections\"" + ":[";
 
 	/**
+	 * Retrieving the number of cells in one row
+	 * -1 because the last cell of the first row was the source node cell 
+	 * and this doesn't need to be read since we are passing this in
+	 * */
+	var cellsCount = table.rows[0].cells.length - 1;
+	
+
+	/**
 	 * A for loop iterating over rows, starting from second row since 
 	 * first row consists of headers
 	 * */
 	for(let rowIndex = 1; rowIndex < numberOfRows; rowIndex++){
-		var row = table.rows[rowIndex];
 		
-		/**
-		 * Retrieving the number of cells in one row
-		 * -1 because the last cell of the first row was the source node cell 
-		 * and this doesn't need to be read since we are passing this in
-		 * */
-		var cellsCount = row.cells.length - 1;					
+		
+						
 		postJSON += "{";
 		
 		//A for loop iterating over the cells in one row
@@ -104,6 +108,7 @@ function createJSON(tableName, algorithm, sourceNode){
 	return postJSON;
 }
 
+//Extracting the json body containing the data for the algorithms and graphs from the server sent data
 function bodyfromResponse(text){
 	//Splitting text on the basis of new lines
 	const textSplit = text.split("\r\n");
@@ -117,7 +122,7 @@ function savingGraphData(){
 	createJSON('DFSTable', 'DFS', document.getElementById('dfsSourceNode').value)
 }
 
-//Validation Check
+//Validation Checks
 function checkForErrors(tableName, sourceNode){
 	//Setting a boolean value to false since no errors have been detected
 	var error = false;
@@ -143,7 +148,7 @@ function checkForErrors(tableName, sourceNode){
 		var node1Value = node1Cell.value;
 		var node2Value = node2Cell.value;
 
-		if(node1Value = node2Value && node1Value != "" && node2Value != ""){
+		if(node1Value == node2Value && node1Value != "" && node2Value != ""){
 			errorBoxCell("same nodes", node1Cell, node2Cell);
 		}
 		//initialising a direction variable which will be updated later 
@@ -164,66 +169,60 @@ function checkForErrors(tableName, sourceNode){
 			//Different validations for different algorithms
 			if(tableName == "DijkstraGraphTable"){
 				//Setting the direction value to a variable for validation use later 
-				var directionCell = document.getElementById(tableName + rowIndex.toString() + "3");
-				direction = directionCell.value;
-				
+				direction = document.getElementById(tableName + rowIndex.toString() + "3").value;				
+				//If any of the cells are left empty, then an error will be raised
 				if(cellIndex < 3){
 					if(cell.value == ""){
 						errorBoxCell("cell empty", cell, null);
 						error = true;
 					}
 				}
-				if(direction == "Bidirection"){
-					if(node1Value != "" && node2Value != "" && !edgesList.includes(edgesList.push([node1Value, node2Value])||!edgesList.includes(edgesList.push([node2Value, node1Value])))){
-						edgesList.push([node1Value, node2Value, "Bidirection"]);
-						edgesList.push([node2Value, node1Value, "Bidirection"]);
-					}
-					else{
-						errorBoxCell("duplicate", node1Value, node2Value);
-					}
-				}else if(direction == "Unidirection"){
-					if(node1Value != "" && node2Value != "" && !edgesList.includes(edgesList.push([node1Value, node2Value]))){
-						edgesList.push([node1Value, node2Value, "Unidirection"]);
-					}
-				}
-
+				//If the weight cell is empty then the weight error will be raised
 				if(cellIndex == 2){
 					if(Number.isInteger(Number(cell.value)) == false || Number(cell.value) <= 0){
 						errorBoxCell("weight error", cell, null);
 						error = true;
 					}
-			}else if(tableName != "DijkstraGraphTable"){
+				}
+			}else{
 				//Setting the direction value to a variable for validation use later 
 				direction = (document.getElementById(tableName + rowIndex.toString() + "2")).value;
+				//If any of the cells are left empty, then an error will be raised
 				if(cellIndex < 2){
 					if(cell.value == ""){
 					errorBoxCell("cellEmpty", cell, null);
 					error = true;
 					}
 				}
-				if(direction == "Bidirection"){
-					if(node1Value != "" && node2Value != "" && !edgesList.includes(edgesList.push([node1Value, node2Value])||!edgesList.includes(edgesList.push([node2Value, node1Value])))){
-						edgesList.push([node1Value, node2Value, "Bidirection"]);
-						edgesList.push([node2Value, node1Value, "Bidirection"]);
-					}
-					else{
-						errorBoxCell("duplicate", node1Cell, node2Cell);
-					}
-				}else if(direction == "Unidirection"){
-					if(node1Value != "" && node2Value != "" && !edgesList.includes([node1Value, node2Value])){
-						edgesList.push([node1Value, node2Value, "Unidirection"]);
-					}
-				}else{
+			}
+			/**
+			 * Error checking for duplicate edges
+			 */
+			if(cellIndex == 1){
+				if(direction == "BIDIRECTION"){
+				if(node1Value != "" && node2Value != "" && !edgeChecker([node1Value, node2Value, "BIDIRECTION"], edgesList) && !edgeChecker([node2Value, node1Value, "BIDIRECTION"], edgesList)){
+					edgesList.push([node1Value, node2Value, "BIDIRECTION"]);
+					edgesList.push([node2Value, node1Value, "BIDIRECTION"]);
+				}else if(edgeChecker([node1Value, node2Value, "BIDIRECTION"], edgesList) || edgeChecker([node2Value, node1Value, "BIDIRECTION"], edgesList)){
 					errorBoxCell("duplicate", node1Cell, node2Cell);
 				}
-				}
-			} 	
+				}else if(direction == "UNIDIRECTION"){
+					if(node1Value != "" && node2Value != "" && !edgeChecker([node1Value, node2Value, "BIDIRECTION"], edgesList)){
+						edgesList.push([node1Cell, node2Cell, "UNIDIRECTION"]);
+					}
+				}else if(edgeChecker([node1Value, node2Value, "UNIDIRECTION"], edgesList)){
+					errorBoxCell("duplicate", node1Cell, node2Cell);
+				}	
+			}
+				
 		}
 	}
-	sourceNodeError = true;
+	//Error checking for empty source node cell or no source node in the graph data
+	var sourceNodeError = true;
 	for(const [node1,node2, direction] of edgesList){
 		if(node1 == sourceNode.value || node2 == sourceNode.value){
 			sourceNodeError = false;
+			break;
 		}
 	}
 	if(sourceNodeError){
@@ -231,6 +230,21 @@ function checkForErrors(tableName, sourceNode){
 	}
 	return error;
 }
+
+//Validation check for duplicate edges
+function edgeChecker([node1, node2, direction], edgesList){
+	
+	var included = false;
+	for(const[node1List, node2List, directionList] of edgesList){
+		if(node1 == node1List && node2 == node2List && direction == directionList){
+			included = true;
+			return included
+		}
+	}
+	return included;
+}
+
+//Results of errors
 function errorBoxCell(error, cell1, cell2){
 	var cell1Colour;
 	var cell2Colour;

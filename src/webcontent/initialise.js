@@ -1,8 +1,9 @@
 function initialise(){
-    //Getting body from the local storage of the window
+    //Getting the body from the local storage of the window
     var body = localStorage.getItem("body");
     //Parsing body to json
     var jsonBody = readJsonBody(body);
+	//Reading the algorithm from the json
 	var algorithm  = jsonBody.Algorithm;
     //Getting canvas elements from DOM (Document Object Model)
     var canvasGraph = document.getElementById('canvasGraph');
@@ -14,6 +15,7 @@ function initialise(){
     const ctxADT = canvasADT.getContext('2d');
     const ctxPseudocode = canvasPseudocode.getContext('2d');
 
+	//Creating the array of circles, which represent the nodes
     const circlesArray = createCircles(getNodeConnections(jsonBody), 30, ctx);
     for(let i = 0; i < circlesArray.length; i++){
 	    circlesArray[i].drawCircle();
@@ -54,8 +56,6 @@ function getRandomCoordinates(min, max, radius) {
 function initialiseEdges(circlesArray, ctx, jsonBody){
 	//Reading nodeConnections from json
 	var NodeConnections = getNodeConnections(jsonBody);
-	
-	
 	var keys = Object.keys(NodeConnections);
 	var edges = [];
 	var length = keys.length;
@@ -80,8 +80,11 @@ function getCircle(key, circlesArray){
 	}
 }
 
+//Function to create an array of circles representing the nodes
 function createCircles(nodeConnections, radius, ctx){
+	//Initialising a list of circles
 	const circles = [];
+	//Reading the length of the nodeConnections from the json to see how many edges there are
 	var length = Object.keys(nodeConnections).length;
 	var keys = Object.keys(nodeConnections);
 	for(let i = 0; i < length; i++){
