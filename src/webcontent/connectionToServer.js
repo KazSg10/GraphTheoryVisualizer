@@ -99,11 +99,11 @@ function createJSON(tableName, algorithm, sourceNode){
 			}
 		}
 	}
-	
 	postJSON += "]}";
 	console.log(postJSON);
 	return postJSON;
 }
+
 function bodyfromResponse(text){
 	//Splitting text on the basis of new lines
 	const textSplit = text.split("\r\n");
@@ -117,102 +117,157 @@ function savingGraphData(){
 	createJSON('DFSTable', 'DFS', document.getElementById('dfsSourceNode').value)
 }
 
+//Validation Check
 function checkForErrors(tableName, sourceNode){
+	//Setting a boolean value to false since no errors have been detected
 	var error = false;
+
+	//Retrieving the contents of the table determined by the table name parameter
 	var table = document.getElementById(tableName);
 	var numberOfRows = table.rows.length;
-	const nodesList = [];
+
+	//Creating a list to store the edges of the graph, for use of validation later
+	const edgesList = [];
 	
+	/**
+	 * Creating a for loop to iterate over all the rows in the graph table to detect any
+	 * errors in any of the rows
+	 * Starting with row 1 since row 0 is the row of headers
+	 */
 	for(let rowIndex = 1; rowIndex < numberOfRows; rowIndex++){
 		var row = table.rows[rowIndex];
+		
+		node1Cell = document.getElementById(tableName + rowIndex.toString() + "0");
+		node2Cell = document.getElementById(tableName + rowIndex.toString() + "1");
+		//Setting the node values equal to variables for use of validation later
+		var node1Value = node1Cell.value;
+		var node2Value = node2Cell.value;
+
+		if(node1Value = node2Value && node1Value != "" && node2Value != ""){
+			errorBoxCell("same nodes", node1Cell, node2Cell);
+		}
+		//initialising a direction variable which will be updated later 
+		var direction = "";
+		/**
+		 * The first row has the source node, which is passed in so the last cell does not
+		 * need to be read 
+		 */
 		var cellsCount = row.cells.length - 1;	
 		for(let cellIndex = 0; cellIndex < cellsCount; cellIndex++){
-			var headerId = tableName + "Header" + (cellIndex).toString();
-			var cellId = tableName + rowIndex.toString() + cellIndex.toString();
-			var cell = document.getElementById(cellId);
 
-			if(tableName != "DijkstraGraphTable"){
-				if(cellIndex < 2){
-					if(cell.value == ""){
-					errorBoxCell("WARNING - There is no value in cell highlighted ", cell);
-					error = true;
-					}
-				}
-			} else if(tableName == "DijkstraGraphTable"){
+			//Creating a cellId for each cell to detect specific cells which have errors
+			var cellId = tableName + rowIndex.toString() + cellIndex.toString();
+
+			//Retrieving that specific cell from DOM
+			var cell = document.getElementById(cellId);
+			
+			//Different validations for different algorithms
+			if(tableName == "DijkstraGraphTable"){
+				//Setting the direction value to a variable for validation use later 
+				var directionCell = document.getElementById(tableName + rowIndex.toString() + "3");
+				direction = directionCell.value;
+				
 				if(cellIndex < 3){
 					if(cell.value == ""){
-						errorBoxCell("WARNING - There is no value in cell highlighted ", cell);
+						errorBoxCell("cell empty", cell, null);
 						error = true;
 					}
 				}
-			 	if(cellIndex % 2 == 0 && cellIndex > 0){
-					if(Number.isInteger(Number(cell.value)) == false){
-						errorBoxCell("WARNING - The value in the highlighted cell must be an integer or a decimal followed by 0s", cell);
-						error = true;
+				if(direction == "Bidirection"){
+					if(node1Value != "" && node2Value != "" && !edgesList.includes(edgesList.push([node1Value, node2Value])||!edgesList.includes(edgesList.push([node2Value, node1Value])))){
+						edgesList.push([node1Value, node2Value, "Bidirection"]);
+						edgesList.push([node2Value, node1Value, "Bidirection"]);
+					}
+					else{
+						errorBoxCell("duplicate", node1Value, node2Value);
+					}
+				}else if(direction == "Unidirection"){
+					if(node1Value != "" && node2Value != "" && !edgesList.includes(edgesList.push([node1Value, node2Value]))){
+						edgesList.push([node1Value, node2Value, "Unidirection"]);
 					}
 				}
-			}
-			
-		if(headerId == tableName + "Header0" || headerId == tableName + "Header1"){
-			if(!nodesList.includes(cell.value) && cell.value != ""){
-				nodesList.push(cell.value);
-			}else{
-				if(cell.value!=""){
-					errorBox("WARNING - Please remove any node duplicates in the graph");
+			}else if(tableName != "DijkstraGraphTable"){
+				//Setting the direction value to a variable for validation use later 
+				direction = (document.getElementById(tableName + rowIndex.toString() + "2")).value;
+				if(cellIndex < 2){
+					if(cell.value == ""){
+					errorBoxCell("cellEmpty", cell, null);
 					error = true;
+					}
 				}
+				if(direction == "Bidirection"){
+					if(node1Value != "" && node2Value != "" && !edgesList.includes(edgesList.push([node1Value, node2Value])||!edgesList.includes(edgesList.push([node2Value, node1Value])))){
+						edgesList.push([node1Value, node2Value, "Bidirection"]);
+						edgesList.push([node2Value, node1Value, "Bidirection"]);
+					}
+					else{
+						errorBoxCell("duplicate", node1Cell, node2Cell);
+					}
+				}else if(direction == "Unidirection"){
+					if(node1Value != "" && node2Value != "" && !edgesList.includes([node1Value, node2Value])){
+						edgesList.push([node1Value, node2Value, "Unidirection"]);
+					}
+				}
+				if(cellIndex % 2 == 0 && cellIndex > 0){
+					if(Number.isInteger(Number(cell.value)) == false){
+						errorBoxCell("weight error", cell, null);
+						error = true;
+					}else{
+						errorBoxCell("duplicate", node1Cell, node2Cell);
+					}
+				}
+			} 	
+		}
+		
+		sourceNodeError = true;
+		for(const [node1,node2, direction] of edgesList){
+			if(node1 == sourceNode.value || node2 == sourceNode.value){
+				sourceNodeError = false;
 			}
 		}
+		if(sourceNodeError){
+			errorBoxCell("source node error", sourceNode, null);
+		}
+		return error;
 	}
-			
-		}
-		if(!nodesList.includes(sourceNode.value)){
-			errorBoxCell("WARNING - The source node is not in the graph", sourceNode);
-			error = true;
-		}
+}
+function errorBoxCell(error, cell1, cell2){
+	var cell1Colour;
+	var cell2Colour;
+	var message;
+	if(error == "same nodes"){
+		message = "WARNING - Please do not add the same nodes in the node 1 and node 2 cells in an edge, this error is highlighted purple";
+		cell1Colour = "purple";
+		cell2Colour = "purple";
+	}else if(error == "duplicate"){
+		message = "WARNING - Please remove any duplicate edges in the graph, these are shown in the cells highlighted blue";
+		cell1Colour = "blue";
+		cell2Colour = "blue";
+	} else if(error == "cell empty"){
+		message = "WARNING - There is no value in cell highlighted yellow";
+		cell1Colour = "yellow"
+		cell2Colour = "white";
+	} else if(error = "source node error"){
+		message = "WARNING - Source node is not in the graph; this is highlighted red";
+		cell1Colour = "red";
+		cell2Colour = "white";
+	} else if(error == "weight error"){
+		message = "WARNING - The value in the green highlighted cell must be an integer or a decimal followed by 0s";
+		cell1Colour = "green";
+		cell2Colour = "white";
+	}
 	
-	return error;
-}
+	if(cell1 != null){
+		cell1.style.backgroundColor = cell1Colour;
+	}
+	if(cell2 != null){
+		cell2.style.backgroundColor = cell2Colour;
+	}
 
-function errorBoxCell(message, cell){
-	cell.style.backgroundColor = "yellow";
 	setTimeout(() => {
 		window.alert(message);
 	}, 70);
 }
-function errorBox(message){
-	setTimeout(() => {
-		window.alert(message);
-	}, 70);
-}
-function raiseErrorCell(message, cell){
-	cell.style.backgroundColor = "yellow";
-	const errorDiv = document.createElement("div");
 
-	errorDiv.textContent = message;
 
-	errorDiv.style.fontSize = "20px";
-	//errorDiv.style.backgroundColor = "#ffe0e0";
-	errorDiv.style.color = "#b00020";
-	errorDiv.style.border = "1px solid #b00020";
-	errorDiv.style.borderRadius = "8px";
-	errorDiv.style.fontFamily = "sans-serif";
-
-	document.body.appendChild(errorDiv);
-}
-
-function raiseError(message){
-	const errorDiv = document.createElement("div");
-
-	errorDiv.textContent = message;
-
-	errorDiv.style.fontSize = "20px";
-	//errorDiv.style.backgroundColor = "#ffe0e0";
-	errorDiv.style.color = "#b00020";
-	errorDiv.style.border = "1px solid #b00020";
-	errorDiv.style.borderRadius = "8px";
-	errorDiv.style.fontFamily = "sans-serif";
-
-	document.body.appendChild(errorDiv);
-}
 
