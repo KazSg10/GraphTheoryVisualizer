@@ -31,6 +31,9 @@ function initialise(){
 	else if(algorithm == "BFS"){
 		initialiseQueue(ctxADT, canvasADT);
 	}
+	else if(algorithm == "Dijkstra"){
+		initialiseDijkstraTable(ctxADT, canvasADT, circlesArray);
+	}
 
 	return circlesArray;
 }
@@ -126,7 +129,8 @@ function createCircles(nodeConnections, radius, ctx){
 function centreCoordinatesValidator(xCent, yCent, radius, circles){
 	for(var circle of circles){
 		var pythag = Math.pow((circle.x - xCent), 2) + Math.pow((circle.y - yCent), 2);
-		if( pythag < 900*radius){
+		var minimumPixeldistance = 900;
+		if(pythag < minimumPixeldistance){
 			return false;
 		}
 	}
@@ -151,6 +155,7 @@ function readJsonBody(body){
 }
 
 function initialiseStack(ctxADT, canvasADT){
+	//Clearing the canvas before remaking the stack
 	ctxADT.clearRect(0, 0, canvasADT.width, canvasADT.height);
 
 	ctxADT.beginPath();
@@ -165,13 +170,72 @@ function initialiseStack(ctxADT, canvasADT){
 }
 
 function initialiseQueue(ctxADT, canvasADT){
+	//Clearing the canvas before remaking the queue
 	ctxADT.clearRect(0, 0, canvasADT.width, canvasADT.height);
+
 	ctxADT.beginPath();
 	//Draw visited Queue
 	ctxADT.rect(canvasADT.width*0.1, canvasADT.height*0.1, canvasADT.width*0.6, canvasADT.height*0.23);
 	ctxADT.stroke();
 }
 
-function initialiseDijkstraTable(){
+function initialiseDijkstraTable(ctxADT, canvasADT, circlesArray){
     //TODO table for Dijkstra
+	ctxADT.clearRect(0, 0, canvasADT.width, canvasADT.height);
+	
+	var tableData;
+	for(let i = 0; i < circlesArray.length; i++){
+		i == 0 ? tableData.push({node : circle.name, dist : 0, prev : ""}) : tableData.push({node : circle.name, dist : "∞", prev : ""})
+	}
+
+	buildDijkstraTable(tableData, ctxADT, canvasADT);
+}
+
+/**
+ * 
+ * @param {*} tableData
+ * @param {*} canvasADT 
+ * @param {*} ctxADT 
+ * Function for building the table for the Dijkstra Algorithm
+ * There will be three columns: Node, Distance From Source Node, Previous Node
+ */
+function buildDijkstraTable(tableData, canvasADT, ctxADT){
+	var widthPadding = canvasADT.width * 0.1
+	var heightPadding = canvasADT.height * 0.1
+
+	var startX = widthPadding;
+	var endX = canvasADT.width - widthPadding;
+	var startY = heightPadding;
+	var endY = canvasADT.height - heightPadding;
+
+	tableWidth = canvasADT.width - 2 * padding;
+	tableHeight = canvasADT.height - 2 * padding;
+
+	const rows = tableData.length + 1;
+	const columns = ["Node", "Distance From Source Node", "Previous Node"];
+	const cellWidth = tableWidth / columns.length;
+	const cellHeight = tableHeight / rows;
+	
+	ctxADT.clearRect(0, 0, canvasADT.width, canvasADT.height);
+	ctxADT.textAlign = "center";
+	ctxADT.lineWidth = 2;
+	ctxADT.strokeStyle = "black";
+
+	//Drawing the table using strokeRect, where each rectangle is a cell
+	for(let rowIndex = 0; rowIndex < rows; rowIndex++){
+		for(let cellIndex = 0; cellIndex < columns; cellIndex++){
+			var x = startX + cellIndex * cellWidth;
+			var y = startY + rowIndex * cellHeight;
+			ctxADT.strokeRect(x, y, cellWidth, cellHeight);
+		}
+		
+		var text = "";
+		ctxADT.fillStyle = "yellow";
+		
+		if(rowIndex == 0){
+			text = columns[cellIndex];
+			ctxADT.fillStyle = "brown";
+			ctxADT.font = "bold 16px";
+		}
+	}
 }

@@ -45,6 +45,12 @@
 			<h4 align="center">Depth First Traversal</h4>
 			<p>Depth-First Traversal (or Depth-First Search) is a graph traversal algorithm, in which the algorithm starts at a source node, and then explores as far as possible along each branch before backtracking to previous nodes to explore other branches.
 				This algorithm uses  </p>
+		</p>
+		<!-- <footer style="position: fixed; bottom: 0; text-align: center;">
+			<p>Designer: Karan Singh</p>
+			<p><a href="mailto:v00298@reading-school.co.uk">v00298@reading-school.co.uk</a></p>
+		</footer> -->
+
 		</div>
 
 	
@@ -87,9 +93,10 @@
 				</td>
 			</tr>
 		</table>
-		<button onclick="addNewRow('DijkstraGraphTable', 4)">Add New Row</button>
-		<button onclick="postData('DijkstraGraphTable', 'Dijkstra', document.getElementById('DijkstraSourceNode'))">Submit</button>
-
+		<div class="graphMakingButtons"> 
+			<button onclick="addNewRow('DijkstraGraphTable', 4)">Add New Row</button>
+			<button onclick="postData('DijkstraGraphTable', 'Dijkstra', document.getElementById('DijkstraSourceNode'))">Submit</button>
+		</div>
 	</div>
 	
 	<!-- Designing the DFS section of the webapp -->
@@ -123,8 +130,10 @@
 				</td>
 			</tr>
 		</table>
-		<button onclick="addNewRow('DFSTable', 3)">Add New Row</button>
-		<button onclick="postData('DFSTable', 'DFS', document.getElementById('DFSSourceNode'))">Submit</button>
+		<div class="graphMakingButtons" > 
+			<button onclick="addNewRow('DFSTable', 3)">Add New Row</button>
+			<button onclick="postData('DFSTable', 'DFS', document.getElementById('DFSSourceNode'))">Submit</button>
+		</div>
 	</div>
 
 	<!-- Designing the BFS section of the webapp -->
@@ -157,9 +166,12 @@
 				</td>
 			</tr>
 		</table>
-		<button onclick="addNewRow('BFSTable', 3)">Add New Row</button>
-		<button onclick="postData('BFSTable', 'BFS', document.getElementById('BFSSourceNode'))">Submit</button>
-
+		<div class="graphMakingButtons" > 
+			<button onclick="addNewRow('BFSTable', 3)">Add New Row</button>
+			<button onclick="postData('BFSTable', 'BFS', document.getElementById('BFSSourceNode'))">Submit</button>
+		</div>
+		
+		
 	</div>
 
 	<script>

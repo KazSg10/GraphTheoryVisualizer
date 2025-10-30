@@ -18,7 +18,7 @@ var framePath = 1;
 var speedPath = 100;
 var framePseudocode = 1;
 var speedPseudocode = 500;
-var circlesArray1;
+var nodeCirclesArray1;
 var simulationSteps;
 var fromCircle;
 var toCircle;
@@ -196,8 +196,8 @@ function processSteps() {
 	var fromNode = simulationSteps[stepsIndex].FromNode;
 	var toNode = simulationSteps[stepsIndex].ToNode;
 	if(fromNode != null && toNode != null){
-		fromCircle = getCircle(fromNode, circlesArray1);
-		toCircle = getCircle(toNode, circlesArray1);
+		fromCircle = getCircle(fromNode, nodeCirclesArray1);
+		toCircle = getCircle(toNode, nodeCirclesArray1);
 	}
 	
 	if(simulationSteps[stepsIndex].StackEntry != null){
@@ -217,8 +217,8 @@ function getsimulationSteps(jsonBody){
 
 
 
-function animate(algorithm, circlesArray) {
-	circlesArray1 = circlesArray;
+function animate(algorithm, nodeCirclesArray) {
+	nodeCirclesArray1 = nodeCirclesArray;
 
 	//Getting body from the local storage of the window
     var body = localStorage.getItem("body");

@@ -61,8 +61,8 @@ body, html{
 	padding: 0px 12px;
 	border: 1px solid #d82a2a;
 	width: 100%;
-  border-left: none;
-  height: 90%;
+ 	border-left: none;
+  	height: 90%;
 }
 
 table{
@@ -72,6 +72,7 @@ table{
 	border-collapse: collapse;
 	border: 2px solid brown;
 	padding: 2px;
+	display:
 }
 td, th{
 	border: 1px solid #e93d09;
@@ -90,4 +91,22 @@ th{
 .canvasposition {
 	position:absolute;
 	float:left;
+}
+
+.graphMakingButtons{
+	text-align: center;
+}
+
+.graphMakingButtons button{
+	background-color: #e93d09;
+	border: #d82a2a;
+	color: black;
+	padding: 10px 20px;
+	font-size: 14px;
+	cursor: pointer;
+	transition: 0.5s;
+}
+.graphMakingButtons button:hover{
+	background-color: rgb(255,166,0);
+	color: white;
 }

@@ -14,19 +14,12 @@ public class DatabaseHandler {
 
 	public void start() {
 		try {
-			System.out.println("Starting mysql server");
-			System.out.println("Opening cmd");
-			
-			/*
-			 * Opens a cmd window
-			 * All the prompts need to be in the same command line for all of them
-			 * to run in the same window
-			 */
-			runTime.exec("C:\\Users\\karan\\Downloads\\mysql-9.4.0-winx64\\mysql-9.4.0-winx64\\bin\\mysqld.exe");
+			System.out.println("Starting mysql server...");			
+			runTime.exec("\"C:\\Users\\karan\\mysql\\bin\\mysqld.exe\"");
+			System.out.println("Started mysql server");
 		} catch(Exception e) {
 			System.out.println(e);
 		}
-		connect();
 	}
 
 	public void stop() {
@@ -41,11 +34,11 @@ public class DatabaseHandler {
 	public void connect() {
 		try {
 			System.out.println("Connecting to database");
-			connection = DriverManager.getConnection(url, "root", null);
+			connection = DriverManager.getConnection(url, "root", "");
 			System.out.println("Database connected");
 
 		} catch (SQLException e) {
-			start();
+			System.out.println(e.getMessage());
 		}
 	}
 
@@ -73,7 +66,7 @@ public class DatabaseHandler {
 				String username = result.getString("username");
 				String password = result.getString("password");
 				
-				System.out.println("username: " + username + " password: " + "password");
+				System.out.println("username: " + username + " password: " + password);
 			}
 			
 		} catch (Exception e) {
