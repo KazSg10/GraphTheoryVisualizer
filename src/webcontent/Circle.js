@@ -26,6 +26,7 @@ class Circle{
 		this.ctx.fill();
 		//Naming nodes
 		this.ctx.fillStyle = "red";
+		this.ctx.textAlign = "center";
 		this.ctx.font = "20px Arial"
 		this.ctx.fillText(this.name, this.x, this.y);
 		//Method instructing the circle to be drawn

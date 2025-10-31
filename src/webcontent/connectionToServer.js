@@ -190,7 +190,7 @@ function checkForErrors(tableName, sourceNode){
 				//If any of the cells are left empty, then an error will be raised
 				if(cellIndex < 2){
 					if(cell.value == ""){
-					errorBoxCell("cellEmpty", cell, null);
+					errorBoxCell("cell empty", cell, null);
 					error = true;
 					}
 				}
@@ -208,7 +208,7 @@ function checkForErrors(tableName, sourceNode){
 				}
 				}else if(direction == "UNIDIRECTION"){
 					if(node1Value != "" && node2Value != "" && !edgeChecker([node1Value, node2Value, "BIDIRECTION"], edgesList)){
-						edgesList.push([node1Cell, node2Cell, "UNIDIRECTION"]);
+						edgesList.push([node1Value, node2Value, "UNIDIRECTION"]);
 					}
 				}else if(edgeChecker([node1Value, node2Value, "UNIDIRECTION"], edgesList)){
 					errorBoxCell("duplicate", node1Cell, node2Cell);
@@ -227,6 +227,7 @@ function checkForErrors(tableName, sourceNode){
 	}
 	if(sourceNodeError){
 		errorBoxCell("source node error", sourceNode, null);
+		error = true;	
 	}
 	return error;
 }

@@ -63,7 +63,6 @@ public class HttpServer {
 				System.out.println("Access webapp at 192.168.1.40:8908");
 				//Server is now waiting for a connection
 				Socket socket = serverSocket.accept();
-				System.out.println(socket.toString());
 				InputStreamReader input = new InputStreamReader(socket.getInputStream());
 
 				//Getting each message from input one at a time
@@ -184,7 +183,6 @@ public class HttpServer {
 	}
 	private void processMethodPost(String path, String body, Socket socket) {
 		try {
-			System.out.println("Body: " + body);
 			//Creating a ObjectMapper for mapping input data received from the client to a class
 			ObjectMapper graphInputDataMapper = new ObjectMapper();
 			//Mapping the body containing the client data received in the POST request to the GraphInputData class 
@@ -201,9 +199,8 @@ public class HttpServer {
 			 * 200 OK = status code, successful response code
 			 * \r\n = carriage return
 			 */
-					outputWriter.println("HTTP/1.1 200 OK\r\n");
+			outputWriter.println("HTTP/1.1 200 OK\r\n");
 			//Header providing body length
-			System.out.println(json.getBytes().length);
 			outputWriter.println("Content-Length: " + json.getBytes().length);
 			//Header providing type of content in the body
 			outputWriter.println("Content-Type: application/json;charset=UTF-8");

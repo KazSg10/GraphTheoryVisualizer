@@ -13,7 +13,7 @@ class Line {
 	this.y1 = y1;
 	this.x2 = x2;
 	this.y2 = y2;
-	this.weight;
+	this.weight = weight;
 
 	}
 	/**
@@ -36,5 +36,13 @@ class Line {
 		this.ctx.lineWidth=5;
 		//Method instructing the line to be drawn
 		this.ctx.stroke();
+
+		if(this.weight != -1){
+			var xWeightCent = (this.x1 + this.x2)/2;
+			var yWeightCent = (this.y1 + this.y2)/2;
+
+			this.ctx.font = "16px Arial";
+			this.ctx.fillText(this.weight, xWeightCent, yWeightCent);
+		}
 	}
 }

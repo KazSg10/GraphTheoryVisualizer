@@ -1,29 +1,16 @@
-//Defining an Array of lists containing key-value pairs of two circles which are at the two ends of a line
-// var circleCoordinates = [];
-// //Method for adding the values to the circleCoordinates array
-// circleCoordinates.push(
-// 	{startNode: c1, endNode: c2},
-// 	{startNode: c2, endNode: c3}
-// );
-
-// //Variable which is iterated over in the drawAnimatedPath procedure
-// var frame = 0;
-// //Difference in x-coordinates of the two circles
-// var xDiff = c2.x - c1.x;
-// //Difference in y-coordinates of the two circles
-// var yDiff = c2.y - c1.y;
-// var speed = 100;
+const pseudocode = localStorage.getItem('pseudocode')
+const simulationSteps = localStorage.getItem('simulationSteps');
+const algorithm = localStorage.getItem('algorithm');
 
 var framePath = 1;
 var speedPath = 100;
 var framePseudocode = 1;
 var speedPseudocode = 500;
-var nodeCirclesArray1;
-var simulationSteps;
+var circlesArray1;
 var fromCircle;
 var toCircle;
 var stepsIndex = 0;
-var ctx;
+var graphCtx;
 var ctxPseudocode;
 var ctxADT;
 var colour = "red";
@@ -31,38 +18,60 @@ var startCirclesNamesList = [];
 var canvasGraph;
 var canvasADT;
 var canvasPseudocode;
-var jsonBody;
 var start = null;
 var pseudocodeLine;
-var stackEntryValue;
-var stackEntryAction;
-const stack = [];
-const queue = [];
+
 const visitedNodesList = [];
-
 var pseudoCodeUpdated = false;
-var stackUpdated = false;
-var stackIndex = 0;
 
+
+if(algorithm == "DFS"){
+	var stackEntryValue;
+	var stackEntryAction;
+	const stack = [];
+	var stackUpdated = false;
+	var stackIndex = 0;
+}else if(algorithm == "BFS"){
+	const queue = [];
+}else if(algorithm == "Dijkstra"){
+
+}
 
 var animationInProgress = false;
 
-function writePseudocode(pseudocode, ctx, canvas, index){
-	//Highlight text in canvasPseudocode
-	//ctx.strokeText("Karan", canvas.width*0.1, canvas.height*0.1);
+function animate(algorithm, circlesArray) {
+	circlesArray1 = circlesArray;
+
+    //Getting canvas elements from DOM (Document Object Model)
+    canvasGraph = document.getElementById('canvasGraph');
+    canvasADT = document.getElementById('canvasADT');
+    canvasPseudocode = document.getElementById('canvasPseudocode'); 
+
+    //Getting the context of canvasGraph element which is required for drawing
+    graphCtx = canvasGraph.getContext('2d'); 
+    ctxADT = canvasADT.getContext('2d');
+    ctxPseudocode = canvasPseudocode.getContext('2d');
+	requestAnimationFrame(processSteps);
+	
+	document.getElementById("Play").disabled = true;
+}
+
+function writePseudocode(pseudocode, graphCtx, canvas, pseudocodeArrayIndex){
 	var length = Object.keys(pseudocode).length;
 	//var lineHeight = canvas.height/length;
-	ctx.font = "25px Arial";
+	graphCtx.font = "25px Arial";
 	
 	
 	for(let i = 0; i < length; i++){
-		if(i == index){
-			ctx.fillStyle = "#ff2f00ff";
+		//Highlight current line in canvasPseudocode
+		if(i == pseudocodeArrayIndex){
+			graphCtx.fillStyle = "#ff2f00ff";
 		}
 		else{
-			ctx.fillStyle = "#000000";
+			graphCtx.fillStyle = "#000000";
 		}
-		ctx.fillText(pseudocode[i], 0, ((i+1)/length)*canvas.height - (0.35/length)*canvas.height, canvas.width);
+		//Writing the pseudocode with updated highlighted line
+		graphCtx.fillText(pseudocode[i], 0, ((i+1)/length)*canvas.height - (0.35/length)*canvas.height, canvas.width);
 	}
 }
 
@@ -86,13 +95,13 @@ function animateEdge() {
 	var newX = (xDiff * (framePath/speedPath) + fromCircle.x);
 	var newY = (yDiff * (framePath/speedPath) + fromCircle.y);
 	
-	ctx.beginPath();
-	ctx.moveTo(fromCircle.x, fromCircle.y);
-	ctx.lineTo(newX, newY);	
+	graphCtx.beginPath();
+	graphCtx.moveTo(fromCircle.x, fromCircle.y);
+	graphCtx.lineTo(newX, newY);	
 
-	ctx.strokeStyle=colour;
-	ctx.lineWidth=4;
-	ctx.stroke();	
+	graphCtx.strokeStyle=colour;
+	graphCtx.lineWidth=4;
+	graphCtx.stroke();	
 
 	if(framePath < speedPath){
 		requestAnimationFrame(animateEdge)
@@ -110,11 +119,11 @@ function animateEdge() {
 
 }
 
-//Function for updating the highlighting of the pseudocode
+//Function for updating the highlighting of the pseudocode lines
 function updatePseudocode() {
 	if (!pseudoCodeUpdated) {
 		var pseudocodeArrayIndex = getPseudocodeIndex(pseudocodeLine);
-		writePseudocode(jsonBody.Pseudocode, ctxPseudocode, canvasPseudocode, pseudocodeArrayIndex);
+		writePseudocode(pseudocode, ctxPseudocode, canvasPseudocode, pseudocodeArrayIndex);
 		pseudoCodeUpdated = true;
 	}
 
@@ -127,6 +136,20 @@ function updatePseudocode() {
 		pseudoCodeUpdated = false;
 	}
 	
+}
+ 
+function updateADT(algorithm){
+	switch(algorithm){
+		case "DFS":
+			updateDFSADT(algorithm);
+			break;
+		case "BFS":
+			updateBFSADT(algorithm);
+			break;
+		case "Dijkstra":
+			updateDijkstraADT(algorithm);
+			break;	
+	}
 }
 
 function updateStack(){
@@ -146,7 +169,7 @@ function updateStack(){
 }
 
 function reDrawStack(){
-		initialiseStack(ctxADT, canvasADT)
+	initialiseStack(ctxADT, canvasADT)
 		if(stackEntryAction == "PUSH"){
 			stack.push(stackEntryValue)
 		}
@@ -154,7 +177,6 @@ function reDrawStack(){
 			stack.pop();
 		}
 		for(let i = 0; i < stack.length; i++){
-			
 			if(i == stack.length-1){
 				ctxADT.fillText("---->", canvasADT.width*0.78, canvasADT.height - (i + 1)*canvasADT.height*9/100, canvasADT.width);
 				ctxADT.fillText(stack[i], canvasADT.width*0.9, canvasADT.height - (i + 1)*canvasADT.height*9/100, canvasADT.width);
@@ -165,11 +187,14 @@ function reDrawStack(){
 				//ctxADT.fillText(stack[i], canvasADT.width*0.1, canvasADT.height*0.1, canvasADT.width*0.6*i, canvasADT.height*0.23);
 			}
 		} 
-		stackIndex = 0;
-	}
-	
+	stackIndex = 0;
+}
 
 function updateQueue(){
+
+}
+
+function updateVisited(){
 
 }
 
@@ -196,8 +221,8 @@ function processSteps() {
 	var fromNode = simulationSteps[stepsIndex].FromNode;
 	var toNode = simulationSteps[stepsIndex].ToNode;
 	if(fromNode != null && toNode != null){
-		fromCircle = getCircle(fromNode, nodeCirclesArray1);
-		toCircle = getCircle(toNode, nodeCirclesArray1);
+		fromCircle = getCircle(fromNode, circlesArray1);
+		toCircle = getCircle(toNode, circlesArray1);
 	}
 	
 	if(simulationSteps[stepsIndex].StackEntry != null){
@@ -217,34 +242,8 @@ function getsimulationSteps(jsonBody){
 
 
 
-function animate(algorithm, nodeCirclesArray) {
-	nodeCirclesArray1 = nodeCirclesArray;
-
-	//Getting body from the local storage of the window
-    var body = localStorage.getItem("body");
-	console.log(body);
-    //Parsing body to json
-    jsonBody = readJsonBody(body);
-    simulationSteps = jsonBody.simulationSteps;
-
-    //Getting canvas elements from DOM (Document Object Model)
-    canvasGraph = document.getElementById('canvasGraph');
-    canvasADT = document.getElementById('canvasADT');
-    canvasPseudocode = document.getElementById('canvasPseudocode'); 
-
-    //Getting the context of canvasGraph element which is required for drawing
-    ctx = canvasGraph.getContext('2d'); 
-    ctxADT = canvasADT.getContext('2d');
-    ctxPseudocode = canvasPseudocode.getContext('2d');
-	requestAnimationFrame(processSteps);
-	
-	document.getElementById("Play").disabled = true;
-}
-
-
-
 function getPseudocodeIndex(pseudocodeLine){
-	var pseudocodeArray = jsonBody.Pseudocode;
+	var pseudocodeArray = pseudocode;
 	var length = Object.keys(pseudocodeArray).length;
 	
 	for(let i = 0; i < length; i++){
@@ -258,11 +257,3 @@ function sleep(milliseconds){
 	var currentTime = new Date().getTime();
 	while(currentTime + milliseconds >= new Date().getTime()){}
 }
-
-
-
-
-
-
-//Animating the whole algorithm
-//traverseAlongLine

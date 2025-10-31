@@ -8,10 +8,13 @@ import java.sql.Statement;
 
 public class DatabaseHandler {
 
-	private String url = "jdbc:mysql://localhost:3306/graphs";
+	private String url = "jdbc:mysql://localhost:3306/GraphsVisualizer";
 	Runtime runTime = Runtime.getRuntime();
 	Connection connection = null;
-
+	
+	final static String username = "root";
+	final static String password = "p&=0cBc/ogshq";
+	
 	public void start() {
 		try {
 			System.out.println("Starting mysql server...");			
@@ -21,11 +24,35 @@ public class DatabaseHandler {
 			System.out.println(e);
 		}
 	}
+	
+	//Function for creating the database and table - only needed to be called once
+	public static void createDatabase() {
+		try(Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/", username, password)){
+			Statement stmt = conn.createStatement();
+			stmt.executeUpdate("DROP DATABASE GraphsVisualizer");
+			System.out.println("Deleted database");
+			String sql = "CREATE DATABASE GraphsVisualizer";
+			stmt.executeUpdate(sql);
+			System.out.println("Database created successfully");
+			stmt.executeUpdate("USE graphsvisualizer");
+			sql = """
+					CREATE TABLE user_graphs_json (
+					user_key VARCHAR(10) PRIMARY KEY,
+					graph_json TEXT
+					);
+				""";
+			stmt.executeUpdate(sql);
+			System.out.println("Created table");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	public void stop() {
 		try {
 			System.out.println("Stopping mysql server");
-			runTime.exec("C:\\Users\\karan\\Downloads\\mysql-9.4.0-winx64\\mysql-9.4.0-winx64\\bin>mysqladmin.exe -u root shutdown");
+			runTime.exec("\"C:\\Users\\karan\\mysql\\bin\\mysqld.exe\" -u root shutdown");
 		} catch(Exception e) {
 			System.out.println(e);
 		}
@@ -34,8 +61,8 @@ public class DatabaseHandler {
 	public void connect() {
 		try {
 			System.out.println("Connecting to database");
-			connection = DriverManager.getConnection(url, "root", "");
-			System.out.println("Database connected");
+			connection = DriverManager.getConnection(url, username, password);
+			System.out.println("Database connected successfully");
 
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
@@ -45,6 +72,7 @@ public class DatabaseHandler {
 	public void disconnect() {
 		try {
 			connection.close();
+			System.out.println("Disconnected from database");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -83,7 +111,16 @@ public class DatabaseHandler {
 		DatabaseHandler dh = new DatabaseHandler();
 		dh.start();
 		dh.connect();
+		//createDatabase();
 		//dh.readRecord();
+		dh.disconnect();
+		dh.stop();
+		
+		
+		
+		
+		
+		
 	}
 
 }

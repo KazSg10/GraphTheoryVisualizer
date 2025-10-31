@@ -51,17 +51,20 @@ public class Algorithm {
 		c_graphOutputData.getSimulationSteps().add(new DFSSimulationSteps(null, "push visitedNode on to stack", new StackEntry(visitedNode.getName(), ActionDFS.PUSH), null, null));
 		System.out.println("Stack-->" + stack);
 		List<Node> neighboursList = graph.getNodeConnections(visitedNode);
-		for(Node neighbouringNode: neighboursList) {
-			c_graphOutputData.getSimulationSteps().add(new DFSSimulationSteps(null, "FOREACH(neighbouring node of visitedNode)", null, null, null));
-			if(!visited.contains(neighbouringNode)) {
-				c_graphOutputData.getSimulationSteps().add(new DFSSimulationSteps(null, "IF neighbouring node NOT in visitedList THEN", null, null, null));
-				System.out.println("Recursing  --------------->" + neighbouringNode);
-				c_graphOutputData.getSimulationSteps().add(new DFSSimulationSteps(null, "depthFirstTraversal(graph, visitedNode, visitedList, stack)",null, visitedNode.getName(), neighbouringNode.getName()));
-				depthFirstTraversal(graph, neighbouringNode, visited, stack);
+		if(neighboursList != null) {
+			for(Node neighbouringNode: neighboursList) {
+				c_graphOutputData.getSimulationSteps().add(new DFSSimulationSteps(null, "FOREACH(neighbouring node of visitedNode)", null, null, null));
+				if(!visited.contains(neighbouringNode)) {
+					c_graphOutputData.getSimulationSteps().add(new DFSSimulationSteps(null, "IF neighbouring node NOT in visitedList THEN", null, null, null));
+					System.out.println("Recursing  --------------->" + neighbouringNode);
+					c_graphOutputData.getSimulationSteps().add(new DFSSimulationSteps(null, "depthFirstTraversal(graph, visitedNode, visitedList, stack)",null, visitedNode.getName(), neighbouringNode.getName()));
+					depthFirstTraversal(graph, neighbouringNode, visited, stack);
+				}
+				c_graphOutputData.getSimulationSteps().add(new DFSSimulationSteps(null, "ENDIF", null, null, null));
+				System.out.println("Not Recursing  --------------->" + neighbouringNode);
 			}
-			c_graphOutputData.getSimulationSteps().add(new DFSSimulationSteps(null, "ENDIF", null, null, null));
-			System.out.println("Not Recursing  --------------->" + neighbouringNode);
 		}
+		
 		c_graphOutputData.getSimulationSteps().add(new DFSSimulationSteps(null, "ENDFOREACH", null, null, null));
 		System.out.println("Node Key Name------------------>" + visitedNode.getName());
 		Node poppedNode = stack.pop();
