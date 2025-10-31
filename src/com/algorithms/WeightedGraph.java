@@ -10,6 +10,7 @@ import com.algorithms.Edge.Direction;
 
 public class WeightedGraph extends Graph {
 
+	private List<Edge> c_edgeList;
 	public WeightedGraph(){
 		nodeConnections = new HashMap<Node, List<Node>>();
 		c_nodesList = new ArrayList<>();
@@ -24,6 +25,7 @@ public class WeightedGraph extends Graph {
 		}
 		Node node1 = edge.getNode1();
 		Node node2 = edge.getNode2();
+		
 		if(!c_nodesList.contains(node1)) {
 			c_nodesList.add(node1);
 		}
@@ -84,14 +86,7 @@ public class WeightedGraph extends Graph {
 		return c_edgeList;
 	}
 	
-	public List<Node> getNodeConnections(Node inputNode) {
-		for(Map.Entry<Node, List<Node>> nodeEntry: nodeConnections.entrySet()) {
-			if(nodeEntry.getKey().getName().equals(inputNode.getName())){
-				return nodeEntry.getValue();
-			}
-		}
-		return null;
-	}
+	
 	
 	
 }

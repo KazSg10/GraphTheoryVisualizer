@@ -2,9 +2,9 @@ function initialise(){
     //Getting the body from the local storage of the window
     var body = localStorage.getItem("body");
     //Parsing body to json
-    var jsonBody = readJsonBody(body);
+	readJsonBody(body);
 	//Reading the algorithm from the json
-	var algorithm  = localStorage.getItem('algorithm');
+	var algorithm  = JSON.parse(localStorage.getItem('algorithm'));
     //Getting canvas elements from DOM (Document Object Model)
     var canvasGraph = document.getElementById('canvasGraph');
     var canvasADT = document.getElementById('canvasADT');
@@ -16,15 +16,16 @@ function initialise(){
     const ctxPseudocode = canvasPseudocode.getContext('2d');
 
 	//Creating the array of circles, which represent the nodes
-    const circlesArray = createCircles(localStorage.getItem('nodesList'), 30, ctx);
+	var radius = 30
+    const circlesArray = createCircles(JSON.parse(localStorage.getItem('nodesList')), radius, ctx);
     for(let i = 0; i < circlesArray.length; i++){
 	    circlesArray[i].drawCircle();
     }
     const edges =  initialiseEdges(circlesArray, ctx, algorithm);
     for(let i = 0; i < edges.length; i++){
-	    edges[i].drawLine("orange");
+	    edges[i].drawLine("orange", radius);
     }
-    writePseudocode(jsonBody.Pseudocode, ctxPseudocode, canvasPseudocode, -1);
+    writePseudocode(JSON.parse(localStorage.getItem('pseudocode')), ctxPseudocode, canvasPseudocode, -1);
 	if(algorithm == "DFS"){
 		initialiseStack(ctxADT, canvasADT);
 	}
@@ -36,33 +37,6 @@ function initialise(){
 	}
 
 	return circlesArray;
-}
-
-//Splitting up the json body into its different components and storing it in the local storage
-function readJsonBody(body){
-	//Parsing the body into Json form
-	const jsonBody = JSON.parse(body);
-	localStorage.setItem('jsonBody', jsonBody);
-	var graph = jsonBody.Graph;
-	var pseudocode = jsonBody.pseudocode;
-	localStorage('pseudocode', pseudocode);
-	localStorage.setItem('Graph', graph);
-	var algorithm = jsonBody.Algorithm;
-	localStorage.setItem('algorithm', algorithm);
-	var numberOfNodes = jsonBody.Graph.nodesList.length;
-	localStorage.setItem('numberOfNodes', numberOfNodes);
-	var nodeConnections = jsonBody.Graph.NodeConnections;
-	localStorage.setItem('nodeConnections', nodeConnections);
-	var pseudocode = jsonBody.Pseudocode;
-	localStorage.setItem('pseudocode', pseudocode);
-	var simulationSteps = jsonBody.SimulationSteps;
-	localStorage.setItem('simulationSteps', simulationSteps);
-	var edgeList = graph.edgeList;
-	localStorage.setItem('edgeList', edgeList);
-	var nodesList = graph.nodesList;
-	localStorage('nodesList', nodesList);
-
-	return jsonBody;
 }
 
 
@@ -79,27 +53,59 @@ function getRandomCoordinates(min, max, radius) {
 }
 
 /**
+ * Splitting up the json body into its different components and storing it in the local storage
+ * JSON.stringify required because local storage can only store strings
+ * When converting back to individual components which can be used, JSON.parse is required
+ */
+function readJsonBody(body){
+	//Parsing the body into Json form
+	const jsonBody = JSON.parse(body);
+	localStorage.setItem('jsonBody', JSON.stringify(jsonBody));
+	console.log(jsonBody);
+	var pseudocode = jsonBody.Pseudocode;
+	localStorage.setItem('pseudocode', JSON.stringify(pseudocode));
+	console.log(pseudocode);
+	var graph = jsonBody.Graph;
+	localStorage.setItem('Graph', JSON.stringify(graph));
+	var algorithm = jsonBody.Algorithm;
+	console.log(algorithm);
+	localStorage.setItem('algorithm', JSON.stringify(algorithm));
+	var numberOfNodes = graph.nodesList.length;
+	localStorage.setItem('numberOfNodes', JSON.stringify(numberOfNodes));
+	var nodeConnections = graph.NodeConnections;
+	localStorage.setItem('nodeConnections', JSON.stringify(nodeConnections));
+	var simulationSteps = jsonBody.simulationSteps;
+	localStorage.setItem('simulationSteps', JSON.stringify(simulationSteps));
+	var nodesList = graph.nodesList;
+	localStorage.setItem('nodesList', JSON.stringify(nodesList));
+	console.log(nodesList);
+	var edgeList = graph.edgeList;
+	localStorage.setItem('edgeList', JSON.stringify(edgeList));
+}
+/**
  * Taking the nodeConnections part of the jsonBody in order to initialise the edges
  * between the nodes which have a connection (edge)
  */
 
+
+
 function initialiseEdges(circlesArray, ctx, algorithm){
-	nodeConnections = localStorage.getItem('nodeConnections');
-	var nodeKeys = Object.keys(nodeConnections);
+	var edgeList = JSON.parse(localStorage.getItem('nodeConnections'));
+	var keys = Object.keys(edgeList);
 	//Initialising a list for the edges 
 	var edges = [];
 	var weight = -1;
-	var length = nodeKeys.length;
+	var length = keys.length;
 	for(let i = 0; i<length; i++){
-		var nodeKey = nodeKeys[i];
-		var valuesList = nodeConnections[nodeKey];
-		//Creating a circle for each node in the graph 
-		var node1 = getCircle(nodeKey, circlesArray);
+		var key = keys[i];
+		var valuesList = edgeList[key];
+		//Getting the circle which is in the edge
+		var node1 = getCircle(key, circlesArray);
 		for (let j = 0; j < valuesList.length; j++) {
-
+			//Getting the circle which is in the edge
 			var node2 = getCircle(valuesList[j].name, circlesArray);
 			if(algorithm == "Dijkstra"){
-				edgesList = localStorage.getItem('edgeList');
+				edgesList = JSON.parse(localStorage.getItem('edgeList'));
 				for(let edgeIndex = 0; edgeIndex < edgesList.length; edgeIndex++){
 					if(node1.name == edgesList[edgeIndex].node1.name && node2.name == edgesList[edgeIndex].node2.name){
 						weight = edgesList[edgeIndex].weight;
@@ -114,8 +120,8 @@ function initialiseEdges(circlesArray, ctx, algorithm){
 			}
 		edges.push(new Line(ctx, node1.x, node1.y, node2.x, node2.y, weight));			
 		}
-	return edges;
 	} 
+	return edges;
 }
 function getCircle(key, circlesArray){
 	var length = circlesArray.length;
@@ -157,17 +163,14 @@ function createCircles(nodesList, radius, ctx){
 function centreCoordinatesValidator(xCent, yCent, radius, circles){
 	
 	for(var circle of circles){
-		var pythag = Math.pow((circle.x - xCent), 2) + Math.pow((circle.y - yCent), 2);
-		var minimumPixeldistance = 10000;
+		var pythag = Math.sqrt(Math.pow((circle.x - xCent), 2) + Math.pow((circle.y - yCent), 2));
+		var minimumPixeldistance = 300;
 		if(pythag < minimumPixeldistance){
 			return false;
 		}
 	}
 	return true;
 }
-
-
-
 
 function initialiseStack(ctxADT, canvasADT){
 	//Clearing the canvas before remaking the stack
