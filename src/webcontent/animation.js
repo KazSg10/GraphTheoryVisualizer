@@ -1,6 +1,6 @@
-const pseudocode = localStorage.getItem('pseudocode')
-const simulationSteps = localStorage.getItem('simulationSteps');
-const algorithm = localStorage.getItem('algorithm');
+const pseudocode = JSON.parse(localStorage.getItem('pseudocode'));
+const simulationSteps = JSON.parse(localStorage.getItem('simulationSteps'));
+const algorithm = JSON.parse(localStorage.getItem('algorithm'));
 
 var framePath = 1;
 var speedPath = 100;
@@ -87,6 +87,7 @@ function animateEdge() {
 	  colour = "red";
 	}
 
+	
 	//Difference in x-coordinates of the two circles
 	 var xDiff = toCircle.x - fromCircle.x;
 	//Difference in y-coordinates of the two circles

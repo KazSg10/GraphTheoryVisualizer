@@ -27,10 +27,10 @@ function initialise(){
     }
     writePseudocode(JSON.parse(localStorage.getItem('pseudocode')), ctxPseudocode, canvasPseudocode, -1);
 	if(algorithm == "DFS"){
-		initialiseStack(ctxADT, canvasADT);
+		drawDFSCanvas(ctxADT, canvasADT, [], []);
 	}
 	else if(algorithm == "BFS"){
-		initialiseQueue(ctxADT, canvasADT);
+		drawBFSCanvas(ctxADT, canvasADT, [], []);
 	}
 	else if(algorithm == "Dijkstra"){
 		initialiseDijkstraTable(ctxADT, canvasADT, circlesArray);
@@ -172,32 +172,172 @@ function centreCoordinatesValidator(xCent, yCent, radius, circles){
 	return true;
 }
 
-function initialiseStack(ctxADT, canvasADT){
-	//Clearing the canvas before remaking the stack
-	ctxADT.clearRect(0, 0, canvasADT.width, canvasADT.height);
-
-	ctxADT.beginPath();
-	//Draw Stack
-	ctxADT.rect(canvasADT.width*(0.85), canvasADT.height*0.1, canvasADT.width*0.12, canvasADT.height*0.82);
-	ctxADT.stroke();
-
-	ctxADT.beginPath();
-	//Draw visited Queue
-	ctxADT.rect(canvasADT.width*0.1, canvasADT.height*0.1, canvasADT.width*0.6, canvasADT.height*0.23);
-	ctxADT.stroke();
-}
-
-function initialiseQueue(ctxADT, canvasADT){
+/**
+ * Following function are used to redraw the canvasADT for DFS and BFS
+*/
+function drawDFSCanvas(ctxADT, canvasADT, stackNodes, visitedNodes){
 	//Clearing the canvas before remaking the queue
 	ctxADT.clearRect(0, 0, canvasADT.width, canvasADT.height);
 
-	ctxADT.beginPath();
-	//Draw visited Queue
-	ctxADT.rect(canvasADT.width*0.1, canvasADT.height*0.1, canvasADT.width*0.6, canvasADT.height*0.23);
-	ctxADT.stroke();
+	numberOfNodes = JSON.parse(localStorage.getItem('numberOfNodes'));
+
+	drawDFSStack(ctxADT, canvasADT, numberOfNodes, stackNodes);
+	drawDFSVisited(ctxADT, canvasADT, numberOfNodes, visitedNodes);
 }
 
+function drawBFSCanvas(ctxADT, canvasADT, queueNodes, visitedNodes){
+	//Clearing the canvas before remaking the queue
+	ctxADT.clearRect(0, 0, canvasADT.width, canvasADT.height);
+
+	numberOfNodes = JSON.parse(localStorage.getItem('numberOfNodes'));
+
+	drawBFSQueue(ctxADT, canvasADT, numberOfNodes, queueNodes);
+	drawBFSVisited(ctxADT, canvasADT, numberOfNodes, visitedNodes);
+}
+
+function drawBFSQueue(ctxADT, canvasADT, numberOfNodes, nodes){
+	//Draw Queue
+	ctxADT.beginPath();
+	width = canvasADT.width;
+	height = canvasADT.height;
+
+	var queueWidth = width * 0.3;
+	var queueHeight = height * 0.8;
+
+	var cellWidth = queueWidth;
+	var cellHeight = queueHeight/(numberOfNodes+1);
+
+	var x = width*0.1
+	var startY = height*0.1;
+	var y;
+
+	var text;
+
+	for(let rowIndex = 0; rowIndex < numberOfNodes + 1; rowIndex++){
+		y = startY + rowIndex * cellHeight;
+		ctxADT.strokeRect(x, y, cellWidth, cellHeight);
+		if(rowIndex == 0){
+			ctxADT.textAlign = "center";
+			ctxADT.lineWidth = 2;
+			text = "Queue";
+			ctxADT.fillStyle = "brown";
+			ctxADT.font = "bold 16px Arial";
+		}
+		else{
+			text = nodes[rowIndex] ? nodes[rowIndex] :  "";
+		}
+		ctxADT.fillText(text, x + cellWidth/2, y + cellHeight / 2)
+	}
+}
+
+function drawBFSVisited(ctxADT, canvasADT, numberOfNodes, nodes){
+	//Draw Visited list
+	ctxADT.beginPath();
+	width = canvasADT.width;
+	height = canvasADT.height;
+
+	var queueWidth = width * 0.3;
+	var queueHeight = height * 0.8;
+
+	var cellWidth = queueWidth;
+	var cellHeight = queueHeight/(numberOfNodes+1);
+
+	var x = width*0.6;
+	var startY = height*0.1;
+	var y;
+
+	var text;
+
+	for(let rowIndex = 0; rowIndex < numberOfNodes + 1; rowIndex++){
+		y = startY + rowIndex * cellHeight;
+		ctxADT.strokeRect(x, y, cellWidth, cellHeight);
+		if(rowIndex == 0){
+			ctxADT.textAlign = "center";
+			ctxADT.lineWidth = 2;
+			text = "Visited";
+			ctxADT.fillStyle = "brown";
+			ctxADT.font = "bold 16px Arial";
+		}
+		else{
+			text = nodes[rowIndex] ? nodes[rowIndex] :  "";
+		}
+		ctxADT.fillText(text, x + cellWidth/2, y + cellHeight / 2)
+	}
+}
+
+function drawDFSStack(ctxADT, canvasADT, numberOfNodes, nodes){
+	//Draw Stack
+	ctxADT.beginPath();
+	width = canvasADT.width;
+	height = canvasADT.height;
+
+	var queueWidth = width * 0.3;
+	var queueHeight = height * 0.8;
+
+	var cellWidth = queueWidth;
+	var cellHeight = queueHeight/(numberOfNodes+1);
+
+	var x = width*0.1
+	var startY = height*0.1;
+	var y;
+
+	var text;
+
+	for(let rowIndex = 0; rowIndex < numberOfNodes + 1; rowIndex++){
+		y = startY + rowIndex * cellHeight;
+		ctxADT.strokeRect(x, y, cellWidth, cellHeight);
+		if(rowIndex == 0){
+			ctxADT.textAlign = "center";
+			ctxADT.lineWidth = 2;
+			text = "Queue";
+			ctxADT.fillStyle = "brown";
+			ctxADT.font = "bold 16px Arial";
+		}
+		else{
+			text = nodes[rowIndex] ? nodes[rowIndex] :  "";
+			
+		}
+		ctxADT.fillText(text, x + cellWidth/2, y + cellHeight / 2)
+	}
+}
+
+function drawDFSVisited(ctxADT, canvasADT, numberOfNodes, nodes){
+	//Draw Visited list
+	ctxADT.beginPath();
+	width = canvasADT.width;
+	height = canvasADT.height;
+	var queueWidth = width * 0.3;
+	var queueHeight = height * 0.8;
+
+	var cellWidth = queueWidth;
+	var cellHeight = queueHeight/(numberOfNodes+1);
+
+	var x = width*0.6;
+	var startY = height*0.1;
+	var y;
+
+	var text;
+
+	for(let rowIndex = 0; rowIndex < numberOfNodes + 1; rowIndex++){
+		y = startY + rowIndex * cellHeight;
+		ctxADT.strokeRect(x, y, cellWidth, cellHeight);
+		if(rowIndex == 0){
+			ctxADT.textAlign = "center";
+			ctxADT.lineWidth = 2;
+			text = "Visited";
+			ctxADT.fillStyle = "brown";
+			ctxADT.font = "bold 16px Arial";
+		}
+		else{
+			text = nodes[rowIndex] ? nodes[rowIndex] :  "";
+		}
+		ctxADT.fillText(text, x + cellWidth/2, y + cellHeight / 2)
+	}
+}
+
+
 function initialiseDijkstraTable(ctxADT, canvasADT, circlesArray){
+	
     //TODO table for Dijkstra
 	ctxADT.clearRect(0, 0, canvasADT.width, canvasADT.height);
 	

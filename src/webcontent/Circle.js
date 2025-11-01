@@ -6,6 +6,7 @@ class Circle{
 	 * @param {*} y - y-coordinate of circle
 	 * @param {*} radius - Radius of circle
 	 */
+
 	constructor(name, ctx, x, y, radius){
 		this.name = name;
 		this.ctx = ctx;
@@ -21,7 +22,7 @@ class Circle{
 		//Method to draw the circle according to the x and y coordinates and radius
 		this.ctx.arc(this.x, this.y, this.radius, 0, 2*Math.PI);
 		//Fill colour of circle is set to grey
-		this.ctx.fillStyle="white";
+		this.ctx.fillStyle="yellow";
 		//Method to colour in the circle
 		this.ctx.fill();
 		//Naming nodes
