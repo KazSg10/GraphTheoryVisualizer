@@ -36,7 +36,7 @@ public class Algorithm {
 	 }
 	
 	public List<Node> depthFirstTraversal(UnweightedGraph graph, Node visitedNode, List<Node> visited, Stack stack ) {
-		c_graphOutputData.getSimulationSteps().add(new DFSSimulationSteps(null, "SUB depthFirstTraversal(graph, visitedNode, visitedList, stack )", null, null, null));
+		c_graphOutputData.getSimulationSteps().add(new DFSSimulationSteps(null, 0, null, null, null));
 		if(null == visited) {
 			visited = new LinkedList<>();
 		}
@@ -44,118 +44,120 @@ public class Algorithm {
 			stack = new Stack();
 		}
 		visited.add(visitedNode);
-		c_graphOutputData.getSimulationSteps().add(new DFSSimulationSteps(visitedNode.getName(), "append visitedNode to visitedList", null, null, null));
+		c_graphOutputData.getSimulationSteps().add(new DFSSimulationSteps(visitedNode.getName(), 1, null, null, null));
 
 		System.out.println("Visited->" + visited);
 		stack.push(visitedNode);
-		c_graphOutputData.getSimulationSteps().add(new DFSSimulationSteps(null, "push visitedNode on to stack", new StackEntry(visitedNode.getName(), ActionDFS.PUSH), null, null));
+		c_graphOutputData.getSimulationSteps().add(new DFSSimulationSteps(null, 2, new StackEntry(visitedNode.getName(), ActionDFS.PUSH), null, null));
 		System.out.println("Stack-->" + stack);
 		List<Node> neighboursList = graph.getNodeConnections(visitedNode);
 		if(neighboursList != null) {
 			for(Node neighbouringNode: neighboursList) {
-				c_graphOutputData.getSimulationSteps().add(new DFSSimulationSteps(null, "FOREACH(neighbouring node of visitedNode)", null, null, null));
+				c_graphOutputData.getSimulationSteps().add(new DFSSimulationSteps(null, 3, null, null, null));
 				if(!visited.contains(neighbouringNode)) {
-					c_graphOutputData.getSimulationSteps().add(new DFSSimulationSteps(null, "IF neighbouring node NOT in visitedList THEN", null, null, null));
+					c_graphOutputData.getSimulationSteps().add(new DFSSimulationSteps(null, 4, null, null, null));
 					System.out.println("Recursing  --------------->" + neighbouringNode);
-					c_graphOutputData.getSimulationSteps().add(new DFSSimulationSteps(null, "depthFirstTraversal(graph, visitedNode, visitedList, stack)",null, visitedNode.getName(), neighbouringNode.getName()));
+					c_graphOutputData.getSimulationSteps().add(new DFSSimulationSteps(null, 5,null, visitedNode.getName(), neighbouringNode.getName()));
 					depthFirstTraversal(graph, neighbouringNode, visited, stack);
 				}
-				c_graphOutputData.getSimulationSteps().add(new DFSSimulationSteps(null, "ENDIF", null, null, null));
+				c_graphOutputData.getSimulationSteps().add(new DFSSimulationSteps(null, 6, null, null, null));
 				System.out.println("Not Recursing  --------------->" + neighbouringNode);
 			}
 		}
 		
-		c_graphOutputData.getSimulationSteps().add(new DFSSimulationSteps(null, "ENDFOREACH", null, null, null));
+		c_graphOutputData.getSimulationSteps().add(new DFSSimulationSteps(null, 7, null, null, null));
 		System.out.println("Node Key Name------------------>" + visitedNode.getName());
 		Node poppedNode = stack.pop();
-		c_graphOutputData.getSimulationSteps().add(new DFSSimulationSteps(null, "pop visitedNode from stack", new StackEntry(poppedNode.getName(), ActionDFS.POP), poppedNode.getName(), stack.peek()!=null ? stack.peek().getName() : null));
+		c_graphOutputData.getSimulationSteps().add(new DFSSimulationSteps(null, 8, new StackEntry(poppedNode.getName(), ActionDFS.POP), poppedNode.getName(), stack.peek()!=null ? stack.peek().getName() : null));
 		System.out.println("Back  --------------->" + visitedNode);
-		c_graphOutputData.getSimulationSteps().add(new DFSSimulationSteps(null, "RETURN visitedList", null, null, null));
-		c_graphOutputData.getSimulationSteps().add(new DFSSimulationSteps(null, "ENDSUB", null, null, null));
+		c_graphOutputData.getSimulationSteps().add(new DFSSimulationSteps(null, 9, null, null, null));
+		c_graphOutputData.getSimulationSteps().add(new DFSSimulationSteps(null, 10, null, null, null));
 		return visited;
 	}
 	
 	public List<Node> BreadthFirstTraversal(UnweightedGraph graph, Node sourceNode){
-		c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, "Sub BreadthFirstTraversal(graph, sourceNode)", null, null, null));	
+		c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, 0, null, null, null));	
 		List<Node> visited= new LinkedList<>();
-		c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, "visited= []", null, null, null));	
+		c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, 1, null, null, null));	
 		Queue<Node> queue = new Queue<Node>();
-		c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, "queue =[]", null, null, null));
+		c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, 2, null, null, null));
 		queue.enqueue(sourceNode);
-		c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, "enqueue sourceNode in queue",	new QueueEntry(sourceNode.getName(), ActionBFS.ENQUEUE), null, null));
+		c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, 3,	new QueueEntry(sourceNode.getName(), ActionBFS.ENQUEUE), null, null));
 		System.out.println("Here 2");
 		while(!queue.isEmpty())
 		{
-			c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, "while queue is NOT empty",	null, null, null));
+			c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, 4,	null, null, null));
 			System.out.println("Queue" + queue);
 			Node visitedNode = queue.dequeue();
-			c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, "visitedNode <- dequeue node from queue",new QueueEntry(visitedNode.getName(), ActionBFS.DEQUEUE), null, null ));
+			c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, 5,new QueueEntry(visitedNode.getName(), ActionBFS.DEQUEUE), null, null ));
 			System.out.println("dequeued current node: " + visitedNode);
 			System.out.println("Here 3");
 			visited.add(visitedNode);
-			c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, "append visitedNode to visited", null, null, null));
+			c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(visitedNode.getName(), 6, null, null, null));
 			List<Node> neighboursList = graph.getNodeConnections(visitedNode);
 			for(Node neighbouringNode: neighboursList) {
 				System.out.println("In for loop");
-				c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, "FOREACH(neighbouring node of visitedNode)", null, null, null));
+				c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, 7, null, null, null));
 				if(!visited.contains(neighbouringNode) && !queue.contains(neighbouringNode)){
-					c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, "IF(visited NOT contains node && queue NOT contains node)", null, null, null));
+					c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, 8, null, null, null));
 					queue.enqueue(neighbouringNode);
-					c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, "enqueue node to queue", 
-							new QueueEntry(visitedNode.getName(), ActionBFS.ENQUEUE), visitedNode.getName(), neighbouringNode.getName()));
+					c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, 9, new QueueEntry(visitedNode.getName(), ActionBFS.ENQUEUE), visitedNode.getName(), neighbouringNode.getName()));
 					System.out.println("enqueued "  + neighbouringNode.getName());
 				}
-				c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, "ENDIF", null, null, null));
+				c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, 10, null, null, null));
 			}
 			System.out.println("Visited->" + visited);
 		}
-		c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, "ENDWHILE", null, null, null));
-		c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, "return visited", null, null, null));
-		c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, "ENDSUB", null, null, null));
+		c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, 11, null, null, null));
+		c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, 12, null, null, null));
+		c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, 13, null, null, null));
+		c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, 14, null, null, null));
 
 		return visited;
+		
 	}
 	public void DijkstraShortestPathFinding(WeightedGraph graph, Node sourceNode){
 		
-		c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, "sub Dijkstra(graph, source)", null, null, 0, null, null, null));
+		c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, 0, null, null, Integer.MAX_VALUE, null, null, null));
 		//Creating a priority queue for the nodes
 		Queue<DijkstraQueueNode> priorityQueue = new Queue<DijkstraQueueNode>();
-		c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, "Queue = []", null, null, 0, null, null, null));
+		c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, 1, null, null, Integer.MAX_VALUE, null, null, null));
 
-		List<DijkstraQueueNode> visitedNodes = new ArrayList<DijkstraQueueNode>();
-		c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, "VisitedNodes = []", null, null, 0, null, null, null));
+		List<DijkstraQueueNode> traversedNodes = new ArrayList<DijkstraQueueNode>();
+		c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, 2, null, null, Integer.MAX_VALUE, null, null, null));
 
 		//Retrieving the list of nodes in the graph
 		List<Node> NodeList = graph.getNodesList();
 		for(Node node: NodeList){
-			c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, "FOREACH (node v graph.nodes)", null, null, 0, null, null, null));
+			c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, 3, null, null, Integer.MAX_VALUE, null, null, null));
 			
 			//System.out.println(node + " -> " + graph.getNodeConnections(node));
 			/*
 			 * If the node is not the source node, then the boolean value will be set to false, otherwise it will be set to true
 			 * Depending on this, the distance from the source node field will be altered
 			 */
-			if(node!=sourceNode){
-				c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, "IF (v is the source)", null, null, 0, null, null, null));
+			if(!node.equals(sourceNode)){
+				c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, 4, null, null, Integer.MAX_VALUE, null, null, null));
 
 				priorityQueue.enqueue(new DijkstraQueueNode(node, false));
 				
-				c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, "dist[v] <-INFINITY", null, null, 0, null, null, null));
-				c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, "prev[v] <- NULL", null, null, 0, null, null, null));
+				c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, 5, null, null, Integer.MAX_VALUE, null, null, null));
+				c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, 6, null, null, Integer.MAX_VALUE, null, null, null));
 				
  			//	System.out.println("PriorityQueue --->  " + priorityQueue);
 			}else{
-				c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, "ELSE", null, null, 0, null, null, null));
+				c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, 7, null, null, Integer.MAX_VALUE, null, null, null));
 
 				priorityQueue.enqueue(new DijkstraQueueNode(sourceNode, true));
-				c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, "dist[source] <- 0", null, null, 0, null, null, null));
-				c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, "enqueue v in Queue", null, null, 0, null, null, null));
+				c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, 8, null, null, Integer.MAX_VALUE, null, null, null));
+				c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, 9, null, null, Integer.MAX_VALUE, null, null, null));
+				c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, 11, null, null, Integer.MAX_VALUE, null, null, null));
 
 			//	System.out.println("PriorityQueue --->  " + priorityQueue);
 			}
 			
 		}
-		c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, "ENDFOREACH", null, null, 0, null, null, null));
+		c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, 13, null, null, Integer.MAX_VALUE, null, null, null));
 
 		
 		/*
@@ -164,17 +166,18 @@ public class Algorithm {
 		 */
 		
 		while(true) {
-			c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, "WHILE(true)", null, null, 0, null, null, null));
+			c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, 15, null, null, Integer.MAX_VALUE, null, null, null));
 			int distance = Integer.MAX_VALUE;
 
-			DijkstraQueueNode visitedNode = null;
+			DijkstraQueueNode traversingNode = null;
 			for(DijkstraQueueNode node: priorityQueue.getList()) {
-				if(!visitedNodes.contains(node) && node.getDistanceFromSourceNode() < distance) {
+				if(!traversedNodes.contains(node) && node.getDistanceFromSourceNode() < distance) {
+					
 					distance = node.getDistanceFromSourceNode();
-					visitedNode = node;
+					traversingNode = node;
 				}		
 			}
-			c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, "u <- node in Queue with minimum dist[u]", null, null, 0, null, null, null));
+			c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, 16, null, null, Integer.MAX_VALUE, null, null, null));
 
 			
 		
@@ -182,74 +185,81 @@ public class Algorithm {
 			 * For each node (neighbouringNode), for which there is a path from the visitedNode, we are calculating the shortest distance from the current node
 			 * to that node  
 			 */
-			if(visitedNode!=null) {
-				System.out.println("visitedNode ----> " + visitedNode.getNode());
-
-				for(Node neighbouringNode: graph.getNodeConnections(visitedNode.getNode())) {
-					c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, "FOREACH (neighbour node v of u in Queue that is not in VisitedNodes)", null, null, 0, null, null, null));
-					
-					c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, visitedNode.getNode().getName(), neighbouringNode.getName(), 0, null, null, null));
-
-					//Adding the current distance to the weight of the edge between the neighbouringNode and the visitedNode to calculate a new alternate distance
-					int alternateDistance = visitedNode.getDistanceFromSourceNode() + graph.getWeight(visitedNode.getNode(), neighbouringNode);
-					c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, "altDist <- dist[u] + graph.edges(u, v)", null, null, 0, null, null, null));
-
-					DijkstraQueueNode dijkstraNeighbouringNode = null;
-					
-					//Iterating through the priorityQueue to retrieve the node equal to the neighbouringNode
-					for(DijkstraQueueNode nodeInPriorityQueue : priorityQueue.getList()) {
-						if(nodeInPriorityQueue.getNode().equals(neighbouringNode)) {
-							
-							//Now that the required node has been found, it has been stored in dijkstraNeighbouringNode
-							dijkstraNeighbouringNode = nodeInPriorityQueue;
-							break;
-						}
+			if(traversingNode!=null) {
+				System.out.println("traversing node ----> " + traversingNode.getNode());
+				
+				if(graph.getNodeConnections(traversingNode.getNode())!= null) {
+					for(Node neighbouringNode: graph.getNodeConnections(traversingNode.getNode())) {
+						c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, 18, null, null, Integer.MAX_VALUE, null, null, null));
 						
+						c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, Integer.MAX_VALUE, traversingNode.getNode().getName(), neighbouringNode.getName(), Integer.MAX_VALUE, null, null, null));
+
+						//Adding the current distance to the weight of the edge between the neighbouringNode and the visitedNode to calculate a new alternate distance
+						int alternateDistance = traversingNode.getDistanceFromSourceNode() + graph.getWeight(traversingNode.getNode(), neighbouringNode);
+						c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, 19, null, null, Integer.MAX_VALUE, null, null, null));
+
+						DijkstraQueueNode dijkstraNeighbouringNode = null;
+						
+						//Iterating through the priorityQueue to retrieve the node equal to the neighbouringNode
+						for(DijkstraQueueNode nodeInPriorityQueue : priorityQueue.getList()) {
+							if(nodeInPriorityQueue.getNode().equals(neighbouringNode)) {
+								
+								//Now that the required node has been found, it has been stored in dijkstraNeighbouringNode
+								dijkstraNeighbouringNode = nodeInPriorityQueue;
+								break;
+							}
+						}
+							
 						/*
 						 * If the alternate distance is less than the current distance of the dijkstraNeighbouringNode,
 						 * then current distance will be replaced with this alternate distance
 						 * Now this new distance is the shortest distance
 						 */
-						if(alternateDistance < dijkstraNeighbouringNode.getDistanceFromSourceNode() && alternateDistance>0) {
-							c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, "IF(altDist < dist[v])", null, null, 0, null, null, null));
+						if(alternateDistance < dijkstraNeighbouringNode.getDistanceFromSourceNode() && alternateDistance > 0) {
+							c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, 20, null, null, Integer.MAX_VALUE, null, null, null));
 
 							dijkstraNeighbouringNode.changeDistanceFromSourceNode(alternateDistance);
-							c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, "dist[v] <- altDist", null, null, alternateDistance, null, null, null));
+							c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, 21, null, null, Integer.MAX_VALUE, null, null, null));
 
 							//Updating the previous node to the visitedNode since this is the previous node in this new shortest path
-							dijkstraNeighbouringNode.changePreviousNode(visitedNode);
-							c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, "prev[v] <- u", null, null, 0, visitedNode.getNode().getName(), null, null));
+							dijkstraNeighbouringNode.changePreviousNode(traversingNode);
+							c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, dijkstraNeighbouringNode.getNode().getName(), 22, null, null, alternateDistance, traversingNode.getNode().getName(), null, null));
 
-							// System.out.println("PriorityQueue ---> " + priorityQueue);
+							System.out.println(priorityQueue);
 						}
-						c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, "ENDIF", null, null, 0, null, null, null));
+							c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, 23, null, null, Integer.MAX_VALUE, null, null, null));
 
-					
+						
 					}
-					c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, "ENDFOREACH", null, null, 0, null, null, null));
-
-				visitedNodes.add(visitedNode);
-				c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(visitedNode.getNode().getName(), "Add u to VisitedNodes", null, null, 0, null, null, null));
 				}
+				
+				c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, 24, null, null, Integer.MAX_VALUE, null, null, null));
+				traversedNodes.add(traversingNode);
+				c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(traversingNode.getNode().getName(), null, 26, null, null, Integer.MAX_VALUE, null, null, null));
+			
 			}else {
-				c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, "IF(all the nodes have been enqueued in Queue)", null, null, 0, null, null, null));
+				c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, 28, null, null, Integer.MAX_VALUE, null, null, null));
 
-				for(DijkstraQueueNode queueNode: visitedNodes){
+				for(DijkstraQueueNode queueNode: traversedNodes){
 					String path = "";
 					System.out.println(queueNode.getNode().getName() + ":");
 					path =createPath(queueNode, sourceNode, path);
-					System.out.println(createPath(queueNode, sourceNode, path) + " , shortest distance from source node to " + queueNode.getNode().getName() + ": "+ queueNode.getDistanceFromSourceNode());
-					c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, null, null, 0, null, queueNode.getNode().getName(), path));
-
+					if(!path.equals(queueNode.getNode().getName() + " is unreachable")) {
+						System.out.println(createPath(queueNode, sourceNode, path) + " , shortest distance from source node to " + queueNode.getNode().getName() + ": "+ queueNode.getDistanceFromSourceNode());
+						c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, Integer.MAX_VALUE, null, null, Integer.MAX_VALUE, null, queueNode.getNode().getName(), path));
+					}
+					else {
+						System.out.println(path);
+					}
 				} 
-				c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, "break from the while loop", null, null, 0, null, null, null));
-				
+				c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, 29, null, null, Integer.MAX_VALUE, null, null, null));			
 				break;
 
 			}
-			c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, "ENDIF", null, null, 0, null, null, null));
+			
+			c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, 30, null, null, Integer.MAX_VALUE, null, null, null));
 		}
-		c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, "ENDWHILE", null, null, 0, null, null, null));
+		c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, 31, null, null, Integer.MAX_VALUE, null, null, null));
 
 	}
 	
@@ -262,8 +272,8 @@ public class Algorithm {
 		
 		else {
 			
-			if(node.getDistanceFromSourceNode() == Integer.MAX_VALUE) {
-				System.out.println(node.getNode().getName() + " is unreachable");	
+			if(node.getDistanceFromSourceNode() == Integer.MAX_VALUE - 1) {
+				return node.getNode().getName() + " is unreachable";	
 			}else{
 				path = node.getNode().getName();
 			}			
@@ -307,7 +317,7 @@ public class Algorithm {
 		 */
 		public DijkstraQueueNode(Node node, Boolean sourceNode) {
 			c_previousNode = null;
-			c_distanceFromSourceNode = sourceNode? 0 : Integer.MAX_VALUE;
+			c_distanceFromSourceNode = sourceNode? 0 : Integer.MAX_VALUE - 1;
 			c_node = node;
 
 		}

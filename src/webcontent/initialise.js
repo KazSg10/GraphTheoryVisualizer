@@ -11,19 +11,19 @@ function initialise(){
     var canvasPseudocode = document.getElementById('canvasPseudocode'); 
 
     //Getting the context of canvasGraph element which is required for drawing
-    const ctx = canvasGraph.getContext('2d'); 
+    const ctxGraph  = canvasGraph.getContext('2d'); 
     const ctxADT = canvasADT.getContext('2d');
     const ctxPseudocode = canvasPseudocode.getContext('2d');
 
 	//Creating the array of circles, which represent the nodes
 	var radius = 30
-    const circlesArray = createCircles(JSON.parse(localStorage.getItem('nodesList')), radius, ctx);
+    const circlesArray = createCircles(JSON.parse(localStorage.getItem('nodesList')), radius, ctxGraph );
     for(let i = 0; i < circlesArray.length; i++){
-	    circlesArray[i].drawCircle();
+	    circlesArray[i].drawCircle("yellow");
     }
-    const edges =  initialiseEdges(circlesArray, ctx, algorithm);
+    const edges =  initialiseEdges(circlesArray, ctxGraph , algorithm);
     for(let i = 0; i < edges.length; i++){
-	    edges[i].drawLine("orange", radius);
+	    edges[i].drawLine("black", radius);
     }
     writePseudocode(JSON.parse(localStorage.getItem('pseudocode')), ctxPseudocode, canvasPseudocode, -1);
 	if(algorithm == "DFS"){
@@ -33,6 +33,7 @@ function initialise(){
 		drawBFSCanvas(ctxADT, canvasADT, [], []);
 	}
 	else if(algorithm == "Dijkstra"){
+		var tableData = [];
 		initialiseDijkstraTable(ctxADT, canvasADT, circlesArray);
 	}
 
@@ -89,7 +90,7 @@ function readJsonBody(body){
 
 
 
-function initialiseEdges(circlesArray, ctx, algorithm){
+function initialiseEdges(circlesArray, ctxGraph , algorithm){
 	var edgeList = JSON.parse(localStorage.getItem('nodeConnections'));
 	var keys = Object.keys(edgeList);
 	//Initialising a list for the edges 
@@ -118,7 +119,7 @@ function initialiseEdges(circlesArray, ctx, algorithm){
 				// 	}
 				// }	
 			}
-		edges.push(new Line(ctx, node1.x, node1.y, node2.x, node2.y, weight));			
+		edges.push(new Line(ctxGraph , node1.x, node1.y, node2.x, node2.y, weight));			
 		}
 	} 
 	return edges;
@@ -133,7 +134,7 @@ function getCircle(key, circlesArray){
 }
 
 //Function to create an array of circles representing the nodes
-function createCircles(nodesList, radius, ctx){
+function createCircles(nodesList, radius, ctxGraph ){
 	//Initialising a list of circles
 	const circles = [];
 	
@@ -147,7 +148,7 @@ function createCircles(nodesList, radius, ctx){
 			yCent = getRandomCoordinates(radius,canvasGraph.height - radius, radius);
 			coordinatesCheck = centreCoordinatesValidator(xCent, yCent, radius, circles);
 		}
-		circles.push(new Circle(nodesList[i].name, ctx, xCent, yCent , radius,))
+		circles.push(new Circle(nodesList[i].name, ctxGraph , xCent, yCent , radius,))
 	}
 	return circles;
 }
@@ -175,24 +176,24 @@ function centreCoordinatesValidator(xCent, yCent, radius, circles){
 /**
  * Following function are used to redraw the canvasADT for DFS and BFS
 */
-function drawDFSCanvas(ctxADT, canvasADT, stackNodes, visitedNodes){
+function drawDFSCanvas(ctxADT, canvasADT, stack, visited){
 	//Clearing the canvas before remaking the queue
 	ctxADT.clearRect(0, 0, canvasADT.width, canvasADT.height);
 
 	numberOfNodes = JSON.parse(localStorage.getItem('numberOfNodes'));
 
-	drawDFSStack(ctxADT, canvasADT, numberOfNodes, stackNodes);
-	drawDFSVisited(ctxADT, canvasADT, numberOfNodes, visitedNodes);
+	drawDFSStack(ctxADT, canvasADT, numberOfNodes, stack);
+	drawDFSVisited(ctxADT, canvasADT, numberOfNodes, visited);
 }
 
-function drawBFSCanvas(ctxADT, canvasADT, queueNodes, visitedNodes){
+function drawBFSCanvas(ctxADT, canvasADT, queue, visited){
 	//Clearing the canvas before remaking the queue
 	ctxADT.clearRect(0, 0, canvasADT.width, canvasADT.height);
 
 	numberOfNodes = JSON.parse(localStorage.getItem('numberOfNodes'));
 
-	drawBFSQueue(ctxADT, canvasADT, numberOfNodes, queueNodes);
-	drawBFSVisited(ctxADT, canvasADT, numberOfNodes, visitedNodes);
+	drawBFSQueue(ctxADT, canvasADT, numberOfNodes, queue);
+	drawBFSVisited(ctxADT, canvasADT, numberOfNodes, visited);
 }
 
 function drawBFSQueue(ctxADT, canvasADT, numberOfNodes, nodes){
@@ -224,7 +225,7 @@ function drawBFSQueue(ctxADT, canvasADT, numberOfNodes, nodes){
 			ctxADT.font = "bold 16px Arial";
 		}
 		else{
-			text = nodes[rowIndex] ? nodes[rowIndex] :  "";
+			text = nodes[rowIndex - 1] ? nodes[rowIndex - 1] :  "";
 		}
 		ctxADT.fillText(text, x + cellWidth/2, y + cellHeight / 2)
 	}
@@ -259,7 +260,7 @@ function drawBFSVisited(ctxADT, canvasADT, numberOfNodes, nodes){
 			ctxADT.font = "bold 16px Arial";
 		}
 		else{
-			text = nodes[rowIndex] ? nodes[rowIndex] :  "";
+			text = nodes[rowIndex-1] ? nodes[rowIndex-1] :  "";
 		}
 		ctxADT.fillText(text, x + cellWidth/2, y + cellHeight / 2)
 	}
@@ -289,12 +290,12 @@ function drawDFSStack(ctxADT, canvasADT, numberOfNodes, nodes){
 		if(rowIndex == 0){
 			ctxADT.textAlign = "center";
 			ctxADT.lineWidth = 2;
-			text = "Queue";
+			text = "Stack";
 			ctxADT.fillStyle = "brown";
 			ctxADT.font = "bold 16px Arial";
 		}
 		else{
-			text = nodes[rowIndex] ? nodes[rowIndex] :  "";
+			text = nodes[rowIndex-1] ? nodes[rowIndex-1] :  "";
 			
 		}
 		ctxADT.fillText(text, x + cellWidth/2, y + cellHeight / 2)
@@ -329,38 +330,57 @@ function drawDFSVisited(ctxADT, canvasADT, numberOfNodes, nodes){
 			ctxADT.font = "bold 16px Arial";
 		}
 		else{
-			text = nodes[rowIndex] ? nodes[rowIndex] :  "";
+			text = nodes[rowIndex-1] ? nodes[rowIndex-1] :  "";
 		}
 		ctxADT.fillText(text, x + cellWidth/2, y + cellHeight / 2)
 	}
 }
 
-
 function initialiseDijkstraTable(ctxADT, canvasADT, circlesArray){
-	
-    //TODO table for Dijkstra
-	ctxADT.clearRect(0, 0, canvasADT.width, canvasADT.height);
-	
-	var tableData = [];
-	for(let i = 0; i < circlesArray.length; i++){
-		i == 0 ? tableData.push({node : circlesArray[i].name, dist : 0, prev : ""}) : tableData.push({node : circlesArray[i].name, dist : "\u221E", prev : ""})
-	}
-
-	buildDijkstraTable(tableData, canvasADT, ctxADT);
+	buildDijkstraTable(buildTableData(null, circlesArray), canvasADT, ctxADT);
 }
 
 /**
+ * Function for building the data for the Dijkstra table
+ * @param {*} tableChangedRowData - This will be the row of the table that has been updated
+ * This will be null in the beginning
+ * @param {*} circlesArray 
  * 
- * @param {*} tableData
- * @param {*} canvasADT 
- * @param {*} ctxADT 
+ */
+function buildTableData(tableChangedRowData, circlesArray){
+	var newTableData = [];
+	if(tableChangedRowData == null){
+		for(let i = 0; i < circlesArray.length; i++){
+			i == 0 ? tableData.push({node : circlesArray[i].name, dist : 0, prev : ""}) : tableData.push({node : circlesArray[i].name, dist : "\u221E", prev : ""});
+		}
+		return tableData;
+	}else{
+		var length = tableData.length;
+		for(let i = length - circlesArray.length; i < length; i++){
+			if((tableData[i]).node == tableChangedRowData[0]){
+				tableData.push({node: tableChangedRowData[0], dist: tableChangedRowData[1], prev: tableChangedRowData[2]});
+			}else{
+				tableData.push(tableData[i]);
+			}
+		}
+		for(let i = length - circlesArray.length; i < tableData.length; i++){
+			newTableData.push(tableData[i]);	
+		}
+		return newTableData;
+	}
+
+	
+	
+}
+
+/**
  * Function for building the table for the Dijkstra Algorithm
  * There will be three columns: Node, Distance From Source Node, Previous Node
  */
 function buildDijkstraTable(tableData, canvasADT, ctxADT){
 	//Padding around the table
-	var widthPadding = canvasADT.width * 0.1
-	var heightPadding = canvasADT.height * 0.1
+	var widthPadding = canvasADT.width * 0.1;
+	var heightPadding = canvasADT.height * 0.1;
 
 	//The start and end coordinates for the table
 	var startX = widthPadding;
@@ -398,7 +418,7 @@ function buildDijkstraTable(tableData, canvasADT, ctxADT){
 				ctxADT.lineWidth = 2;
 				text = columns[cellIndex];
 				ctxADT.fillStyle = "brown";
-				ctxADT.font = "bold 16px Arial";
+				ctxADT.font = "bold 10px Arial";
 			//If the row index is not 0, the values in the tableData will be written in the cell	
 			}else{
 				switch(cellIndex){

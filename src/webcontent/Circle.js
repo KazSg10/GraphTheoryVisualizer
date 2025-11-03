@@ -7,30 +7,30 @@ class Circle{
 	 * @param {*} radius - Radius of circle
 	 */
 
-	constructor(name, ctx, x, y, radius){
+	constructor(name, ctxGraph , x, y, radius){
 		this.name = name;
-		this.ctx = ctx;
-		this.x =x;
+		this.ctxGraph  = ctxGraph ;
+		this.x = x;
 		this.y = y;
 		this.radius = radius;
 	}
 	//Procedure for drawing a circle
-	drawCircle(){
+	drawCircle(circleFillColour){
 		console.log('Drawing Circle with co-ordinates - ' + 'x:' + this.x);
 		//Method for starting a new path for the line
-		this.ctx.beginPath();
+		this.ctxGraph.beginPath();
 		//Method to draw the circle according to the x and y coordinates and radius
-		this.ctx.arc(this.x, this.y, this.radius, 0, 2*Math.PI);
+		this.ctxGraph.arc(this.x, this.y, this.radius, 0, 2*Math.PI);
 		//Fill colour of circle is set to grey
-		this.ctx.fillStyle="yellow";
+		this.ctxGraph.fillStyle= circleFillColour;
 		//Method to colour in the circle
-		this.ctx.fill();
+		this.ctxGraph.fill();
 		//Naming nodes
-		this.ctx.fillStyle = "red";
-		this.ctx.textAlign = "center";
-		this.ctx.font = "20px Arial"
-		this.ctx.fillText(this.name, this.x, this.y);
+		this.ctxGraph.fillStyle = "red";
+		this.ctxGraph.textAlign = "center";
+		this.ctxGraph.font = "20px Arial"
+		this.ctxGraph.fillText(this.name, this.x, this.y);
 		//Method instructing the circle to be drawn
-		this.ctx.stroke();
+		this.ctxGraph.stroke();
 	}
 }

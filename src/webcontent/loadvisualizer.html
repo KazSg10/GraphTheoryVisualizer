@@ -45,7 +45,7 @@
 
 	<!-- Creating three div elements to represent three different parts of the HTML webpage collating them in one div
 	 	 for styling all the canvases together. Each div element will be used to contain one canvas.
-	-->
+		 -->
 	<div id="canvasplaceholder">
 		<div id="divGraph" height></div>
 		<div id="divADT"></div>
@@ -85,10 +85,7 @@
 		var canvasADT = createCanvasElement('divADT','canvasADT',innerWidth*0.38,innerHeight*0.425);
 		var canvasPseudocode = createCanvasElement('divPseudocode','canvasPseudocode',innerWidth*0.38,innerHeight*0.425);
 
-		const nodeCirclesArray = initialise();
-		function simulate(){
-			animate("DFS", nodeCirclesArray);
-		}
+		const circlesArray = initialise();
 
 	</script>
 

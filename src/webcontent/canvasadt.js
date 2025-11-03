@@ -12,7 +12,7 @@ resize();
 window.addEventListener('resize', resize);
 
 
-var ctx = canvas.getContext('2d');
-ctx.fillStyle="red";
-ctx.fillRect(window.innerWidth/2,0, canvas.width, canvas.height);
+var ctxGraph  = canvas.getContext('2d');
+ctxGraph .fillStyle="red";
+ctxGraph .fillRect(window.innerWidth/2,0, canvas.width, canvas.height);
 

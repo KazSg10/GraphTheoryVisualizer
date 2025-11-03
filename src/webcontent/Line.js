@@ -7,15 +7,13 @@ class Line {
 	 * @param {*} x2 - x-coordinate of end node
 	 * @param {*} y2 - y-coordinate of end node
 	 */
-	constructor(ctx, x1, y1, x2, y2, weight){
-    this.ctx = ctx;    
-	this.x1 = x1;
-	this.y1 = y1;
-	this.x2 = x2;
-	this.y2 = y2;
-	this.weight = weight;
-	
-
+	constructor(ctxGraph , x1, y1, x2, y2, weight){
+		this.ctxGraph  = ctxGraph ;    
+		this.x1 = x1;
+		this.y1 = y1;
+		this.x2 = x2;
+		this.y2 = y2;
+		this.weight = weight;
 	}
 	/**
 	 * Procedure to draw a line between two points
@@ -50,25 +48,25 @@ class Line {
 		const newy2 = this.y2 - (unity * radius);
 
 		//Method for starting a new path for the line
-		this.ctx.beginPath();
+		this.ctxGraph.beginPath();
 		//Method instructing the line to start from coordinates (newx1,newy1)
-		this.ctx.moveTo(newx1, newy1);
+		this.ctxGraph.moveTo(newx1, newy1);
 		//Method instructing the line to end at coordinates (newx2,newy2)
-		this.ctx.lineTo(newx2, newy2);
+		this.ctxGraph.lineTo(newx2, newy2);
 		//The colour of the line is set to the colour given by the colour parameter
-		this.ctx.strokeStyle = colour;
+		this.ctxGraph.strokeStyle = colour;
 		//The number of pixels of the line's width is set to 5
-		this.ctx.lineWidth = 5;
+		this.ctxGraph.lineWidth = 5;
 		//Method instructing the line to be drawn
-		this.ctx.stroke();
+		this.ctxGraph.stroke();
 
 		//Weight -1 means that there is no weight
 		if(this.weight != -1){
 			const xWeightCent = (this.x1 + this.x2)/2;
 			const yWeightCent = (this.y1 + this.y2)/2;
 
-			this.ctx.font = "16px Arial";
-			this.ctx.fillText(this.weight, xWeightCent, yWeightCent);
+			this.ctxGraph.font = "16px Arial";
+			this.ctxGraph.fillText(this.weight, xWeightCent, yWeightCent);
 		}
 	}
 }

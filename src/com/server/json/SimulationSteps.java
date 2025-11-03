@@ -7,8 +7,9 @@ public abstract class SimulationSteps {
 	@JsonProperty("VisitedNodeName")
 	private String c_visitedNodeName;
 	
-	@JsonProperty("PseudoCodeLine")
-	private String c_pseudoCodeLine;
+	//Index of Pseudocode line in the Pseudocode txt file
+	@JsonProperty("PseudocodeLineIndex")
+	private int c_PseudocodeLineIndex;
 	
 	@JsonProperty("FromNode")
 	private String c_fromNode;
@@ -16,9 +17,9 @@ public abstract class SimulationSteps {
 	@JsonProperty("ToNode")
 	private String c_toNode;
 	
-	public SimulationSteps(String visitedNodeName, String pseudoCodeLine, String fromNode, String toNode) {
+	public SimulationSteps(String visitedNodeName, int PseudocodeLineIndex, String fromNode, String toNode) {
 		c_visitedNodeName = visitedNodeName;
-		c_pseudoCodeLine = pseudoCodeLine;
+		c_PseudocodeLineIndex = PseudocodeLineIndex;
 		c_fromNode = fromNode;
 		c_toNode = toNode;
 	}
@@ -27,8 +28,8 @@ public abstract class SimulationSteps {
 		return c_visitedNodeName;
 	}
 
-	public String getC_pseudoCodeLine() {
-		return c_pseudoCodeLine;
+	public int getC_PseudocodeLineIndex() {
+		return c_PseudocodeLineIndex;
 	}
 	
 }

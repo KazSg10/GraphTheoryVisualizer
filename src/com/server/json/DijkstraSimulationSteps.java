@@ -2,8 +2,9 @@ package com.server.json;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class DijkstraSimulationSteps extends SimulationSteps{
-	@JsonProperty("VisitedNodesEntry")
-	private String c_visitedNodeName;
+
+	@JsonProperty("TraversedNodeName")
+	private String c_traversedNodeName;
 	
 	@JsonProperty("NewDistance")
 	private int c_newDistance;
@@ -17,10 +18,10 @@ public class DijkstraSimulationSteps extends SimulationSteps{
 	@JsonProperty("Path")
 	private String c_path;
 	
-	public DijkstraSimulationSteps(String visitedNodeName, String pseudoCodeLine, String fromNode, String toNode, int newDistance, String newPreviousNode, String nodeOfPath, String path) {
-		super(visitedNodeName, pseudoCodeLine, fromNode, toNode);
+	public DijkstraSimulationSteps(String traversedNodeName, String visitedNodeName, int pseudocodeLineIndex, String fromNode, String toNode, int newDistance, String newPreviousNode, String nodeOfPath, String path) {
+		super(visitedNodeName, pseudocodeLineIndex, fromNode, toNode);
 
-		c_visitedNodeName = visitedNodeName;
+		c_traversedNodeName = traversedNodeName;
 		c_newDistance = newDistance;
 		c_newPreviousNode = newPreviousNode;
 		c_nodeOfPath = nodeOfPath;

@@ -9,7 +9,7 @@
 				IF(visited NOT contains node && queue NOT contains node)
 					enqueue node to queue
 				ENDIF	
-			}
+			ENDFOREACH
 		ENDWHILE
 		return visited;
 	ENDSUB	

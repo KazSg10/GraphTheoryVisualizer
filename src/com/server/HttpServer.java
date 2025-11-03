@@ -330,8 +330,6 @@ public class HttpServer {
 			System.out.println(e);
 		}
 		return output;
-
-
 	}
 
 
