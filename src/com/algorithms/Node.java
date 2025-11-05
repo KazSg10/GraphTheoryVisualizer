@@ -29,6 +29,7 @@ public class Node {
 		return Objects.hash(c_name);
 	}
 
+	//Overriding the equals operation so the Node objects are compared on their names, not memory locations
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -38,8 +39,6 @@ public class Node {
 		if (getClass() != obj.getClass())
 			return false;
 		Node other = (Node) obj;
-		
-
 		return Objects.equals(c_name, other.c_name);
 	}
 }

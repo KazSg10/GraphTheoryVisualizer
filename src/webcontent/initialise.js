@@ -82,7 +82,10 @@ function readJsonBody(body){
 	console.log(nodesList);
 	var edgeList = graph.edgeList;
 	localStorage.setItem('edgeList', JSON.stringify(edgeList));
+	var sourceNode= jsonBody.SourceNode;
+	localStorage.setItem('sourceNode', JSON.stringify(sourceNode));
 }
+
 /**
  * Taking the nodeConnections part of the jsonBody in order to initialise the edges
  * between the nodes which have a connection (edge)
@@ -164,14 +167,33 @@ function createCircles(nodesList, radius, ctxGraph ){
 function centreCoordinatesValidator(xCent, yCent, radius, circles){
 	
 	for(var circle of circles){
-		var pythag = Math.sqrt(Math.pow((circle.x - xCent), 2) + Math.pow((circle.y - yCent), 2));
-		var minimumPixeldistance = 300;
+		var pythag = distance(xCent, circle.x, yCent, circle.y);
+		var minimumPixeldistance = 100;
 		if(pythag < minimumPixeldistance){
 			return false;
 		}
 	}
+
+	// for(let i = 0; i < circles.length; i++){
+	// 	for(let j = 0; j < circles.length; j++){
+	// 		if(circles[i] != circles[j]){
+	// 			if(distance(xCent, circles[i].x, yCent, circles[i].y) < distanceBetweenTwoCircles(circles[i], circles[j])/2 || distance(xCent, circles[j].x, yCent, circles[j].y) < distanceBetweenTwoCircles(circles[i], circles[j])/2){
+	// 				return false;
+	// 			}
+	// 		}
+	// 	}
+	// }
 	return true;
 }
+
+function distance(x1, x2, y1, y2){
+	return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+}
+
+function distanceBetweenTwoCircles(circle1, circle2){
+	return Math.sqrt(circle1.x * circle1.x + circle2.y * circle2.y);
+}
+
 
 /**
  * Following function are used to redraw the canvasADT for DFS and BFS
@@ -351,7 +373,11 @@ function buildTableData(tableChangedRowData, circlesArray){
 	var newTableData = [];
 	if(tableChangedRowData == null){
 		for(let i = 0; i < circlesArray.length; i++){
-			i == 0 ? tableData.push({node : circlesArray[i].name, dist : 0, prev : ""}) : tableData.push({node : circlesArray[i].name, dist : "\u221E", prev : ""});
+			if(circlesArray[i].name == JSON.parse(localStorage.getItem('sourceNode')).name){
+				tableData.push({node : circlesArray[i].name, dist : 0, prev : ""})
+			}else{
+				tableData.push({node : circlesArray[i].name, dist : "\u221E", prev : ""});
+			}
 		}
 		return tableData;
 	}else{
@@ -363,14 +389,11 @@ function buildTableData(tableChangedRowData, circlesArray){
 				tableData.push(tableData[i]);
 			}
 		}
-		for(let i = length - circlesArray.length; i < tableData.length; i++){
+		for(let i = (tableData.length - circlesArray.length); i < tableData.length; i++){
 			newTableData.push(tableData[i]);	
 		}
 		return newTableData;
-	}
-
-	
-	
+	}	
 }
 
 /**

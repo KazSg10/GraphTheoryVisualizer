@@ -3,25 +3,10 @@ package com.algorithms;
 
 public class Edge {
 	public enum Direction{
-		BIDIRECTION(0),
-		UNIDIRECTION(1);
-
-		int c_direction;
-
-		Direction(int direction){
-			c_direction = direction;
-		}   		int getDirection() {
-			return c_direction;
-		}
-		public static Direction fromId(int id) {
-			for (Direction type: values()) {
-				if(type.getDirection() == id) {
-					return type;
-				}
-			}	
-			return null;
-		}
+		BIDIRECTION,
+		UNIDIRECTION;	
 	}
+	
 	private Node c_node1;
 	private Node c_node2;
 	private Direction c_direction;

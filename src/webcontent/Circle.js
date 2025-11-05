@@ -9,10 +9,11 @@ class Circle{
 
 	constructor(name, ctxGraph , x, y, radius){
 		this.name = name;
-		this.ctxGraph  = ctxGraph ;
+		this.ctxGraph  = ctxGraph;
 		this.x = x;
 		this.y = y;
 		this.radius = radius;
+		this.fillColour;
 	}
 	//Procedure for drawing a circle
 	drawCircle(circleFillColour){
@@ -25,8 +26,8 @@ class Circle{
 		this.ctxGraph.fillStyle= circleFillColour;
 		//Method to colour in the circle
 		this.ctxGraph.fill();
-		//Naming nodes
-		this.ctxGraph.fillStyle = "red";
+		this.fillColour = circleFillColour;
+		this.ctxGraph.fillStyle = circleFillColour;
 		this.ctxGraph.textAlign = "center";
 		this.ctxGraph.font = "20px Arial"
 		this.ctxGraph.fillText(this.name, this.x, this.y);

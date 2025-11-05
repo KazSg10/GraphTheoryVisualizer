@@ -1,36 +1,99 @@
 //Sending data of the user input graph to the server and then extracting the relevent data from the server sent data
 async function postData(tableName, algorithm, sourceNode){
-			var jsonData = createJSON(tableName, algorithm, sourceNode);
-			//Submit POST request to the server for processing algorithm input data
-			//var promise = fetch("http://localhost:8908/visualize",
-			/*
-			* JS is a single-threaded language, therefore this asynchronous approach is required
-			* to wait response from the server 
-			* await causes the thread to wait for the promise to be fulfilled
-			* Waiting for Promise<Response> to be fulfilled
-			* After fulfilling we will get response of type Response.
-			* Any manipulations on object of type "Response" will return a new Promise<Response>
-			* for which we need to wait again for it to be fulfilled. All manipulations on 
-			* further responses of Promises will continue to return new Promises.	
-			*/
-			var response = await fetch("http://localhost:8908/visualize",
-					{
-						method:"POST",
-						body: jsonData,
-						headers: {
-							"Content-type": "application/json; charset=UTF-8",
-							"Accept": "application/json", 
-						}
-					});
-			//response.json will return a new Promise<Response> which will need to be awaited to be fulfilled
-			var bytes = await response.bytes();	
-			//Converting the bytes from the server to string 
-			var stringResponse = new TextDecoder().decode(bytes);
-			console.log(stringResponse);	
-			//Getting the body from the response from client
-			var body = bodyfromResponse(stringResponse);
-			localStorage.setItem('body', body);
-			window.location.href = "loadvisualizer.html";
+	var jsonData;	
+	if(boolDataFromFile(tableName, sourceNode)){
+		
+		var cell = document.getElementById("savedJson" + algorithm);
+		jsonData = document.getElementById("savedJson"+ algorithm).value;
+		
+		if(!isJson(jsonData)){
+			setTimeout(() => {
+					window.alert("JSON entered is invalid");
+				}, 70);
+				return;
+		}	
+		if(JSON.parse(jsonData).algorithm != algorithm){
+			setTimeout(() => {
+				window.alert("JSON entered is invalid, make sure the algorithm in this json is the same as the algorithm you are trying to simulate");
+			}, 70);
+			return;
+		}
+	}else{
+			jsonData = createJSON(tableName, algorithm, sourceNode);
+		}
+	localStorage.setItem('userJsonBody', jsonData);
+
+	//Submit POST request to the server for processing algorithm input data
+	//var promise = fetch("http://localhost:8908/visualize",
+	/*
+	* JS is a single-threaded language, therefore this asynchronous approach is required
+	* to wait response from the server 
+	* await causes the thread to wait for the promise to be fulfilled
+	* Waiting for Promise<Response> to be fulfilled
+	* After fulfilling we will get response of type Response.
+	* Any manipulations on object of type "Response" will return a new Promise<Response>
+	* for which we need to wait again for it to be fulfilled. All manipulations on 
+	* further responses of Promises will continue to return new Promises.	
+	*/
+	var response = await fetch("http://localhost:8908/visualize",
+			{
+				method:"POST",
+				body: jsonData,
+				headers: {
+					"Content-type": "application/json; charset=UTF-8",
+					"Accept": "application/json", 
+				}
+			});
+	//response.json will return a new Promise<Response> which will need to be awaited to be fulfilled
+	var bytes = await response.bytes();	
+	//Converting the bytes from the server to string 
+	var stringResponse = new TextDecoder().decode(bytes);
+	console.log(stringResponse);	
+	//Getting the body from the response from client
+	var body = bodyfromResponse(stringResponse);
+	localStorage.setItem('body', body);
+	window.location.href = "loadvisualizer.html";
+}
+
+function isJson(json){
+	try{
+		JSON.parse(json);
+		return true;
+	}catch(e){
+		return false;
+	}
+}
+
+
+function boolDataFromFile(tableName, sourceNode){
+	//Retrieving the contents of the table determined by the table name parameter
+	var table = document.getElementById(tableName);
+	var numberOfRows = table.rows.length;
+
+	var empty = true;
+	for(let rowIndex = 1; rowIndex < numberOfRows; rowIndex++){
+		var row = table.rows[rowIndex];	
+		var cellsCount = row.cells.length - 1;	
+
+		for(let cellIndex = 0; cellIndex < cellsCount - 1; cellIndex++){
+
+			//Creating a cellId for each cell to detect specific cells which have errors
+			var cellId = tableName + rowIndex.toString() + cellIndex.toString();
+
+			//Retrieving that specific cell from DOM
+			var cell = document.getElementById(cellId);
+						
+			if(cellIndex < cellsCount){
+				if(cell.value != ""){
+					empty = false; 
+					return empty;
+				}
+			}
+		}
+		
+	}
+	sourceNode.value != "" ? empty = false : empty = true;
+	return empty;
 }
 
 //Function for creating the json data from the table to pass on to the server
@@ -59,17 +122,12 @@ function createJSON(tableName, algorithm, sourceNode){
 	 * */
 	var cellsCount = table.rows[0].cells.length - 1;
 	
-
 	/**
 	 * A for loop iterating over rows, starting from second row since 
 	 * first row consists of headers
 	 * */
-	for(let rowIndex = 1; rowIndex < numberOfRows; rowIndex++){
-		
-		
-						
-		postJSON += "{";
-		
+	for(let rowIndex = 1; rowIndex < numberOfRows; rowIndex++){		
+		postJSON += "{";	
 		//A for loop iterating over the cells in one row
 		for(let cellIndex = 0; cellIndex < cellsCount; cellIndex++){
 			//Creating the headerId
@@ -118,10 +176,6 @@ function bodyfromResponse(text){
 	return body;
 }
 
-function savingGraphData(){
-	createJSON('DFSTable', 'DFS', document.getElementById('dfsSourceNode').value)
-}
-
 //Validation Checks
 function checkForErrors(tableName, sourceNode){
 	//Setting a boolean value to false since no errors have been detected
@@ -134,14 +188,17 @@ function checkForErrors(tableName, sourceNode){
 	//Creating a list to store the edges of the graph, for use of validation later
 	const edgesList = [];
 	
+	var cellsCount = table.rows[1].cells.length - 1;	
+
+
 	/**
 	 * Creating a for loop to iterate over all the rows in the graph table to detect any
 	 * errors in any of the rows
 	 * Starting with row 1 since row 0 is the row of headers
 	 */
+	
 	for(let rowIndex = 1; rowIndex < numberOfRows; rowIndex++){
-		var row = table.rows[rowIndex];
-		
+		var row = table.rows[rowIndex];	
 		node1Cell = document.getElementById(tableName + rowIndex.toString() + "0");
 		node2Cell = document.getElementById(tableName + rowIndex.toString() + "1");
 		//Setting the node values equal to variables for use of validation later
@@ -150,6 +207,7 @@ function checkForErrors(tableName, sourceNode){
 
 		if(node1Value == node2Value && node1Value != "" && node2Value != ""){
 			errorBoxCell("same nodes", node1Cell, node2Cell);
+			error = true;
 		}
 		//initialising a direction variable which will be updated later 
 		var direction = "";
@@ -157,7 +215,6 @@ function checkForErrors(tableName, sourceNode){
 		 * The first row has the source node, which is passed in so the last cell does not
 		 * need to be read 
 		 */
-		var cellsCount = row.cells.length - 1;	
 		for(let cellIndex = 0; cellIndex < cellsCount; cellIndex++){
 
 			//Creating a cellId for each cell to detect specific cells which have errors
@@ -166,35 +223,33 @@ function checkForErrors(tableName, sourceNode){
 			//Retrieving that specific cell from DOM
 			var cell = document.getElementById(cellId);
 			
-			//Different validations for different algorithms
-			if(tableName == "DijkstraGraphTable"){
-				//Setting the direction value to a variable for validation use later 
-				direction = document.getElementById(tableName + rowIndex.toString() + "3").value;				
-				//If any of the cells are left empty, then an error will be raised
-				if(cellIndex < 3){
-					if(cell.value == ""){
+
+			if(cellIndex < cellsCount - 1){
+				if(cell.value == ""){
 						errorBoxCell("cell empty", cell, null);
 						error = true;
-					}
 				}
-				//If the weight cell is empty then the weight error will be raised
-				if(cellIndex == 2){
-					if(Number.isInteger(Number(cell.value)) == false || Number(cell.value) <= 0){
-						errorBoxCell("weight error", cell, null);
-						error = true;
+				if(tableName == "DijkstraGraphTable"){
+					if(cellIndex == 2){
+						if(Number.isInteger(Number(cell.value)) == false || Number(cell.value) <= 0){
+							errorBoxCell("weight error", cell, null);
+							error = true;
+						}
 					}
-				}
-			}else{
-				//Setting the direction value to a variable for validation use later 
-				direction = (document.getElementById(tableName + rowIndex.toString() + "2")).value;
-				//If any of the cells are left empty, then an error will be raised
-				if(cellIndex < 2){
-					if(cell.value == ""){
-					errorBoxCell("cell empty", cell, null);
-					error = true;
-					}
+					
 				}
 			}
+			if(tableName == "DijkstraGraphTable"){
+				//Setting the direction value to a variable for validation use later 
+				direction = document.getElementById(tableName + rowIndex.toString() + "3").value;
+
+			}else{
+				//Setting the direction value to a variable for validation use later 
+				direction = document.getElementById(tableName + rowIndex.toString() + "2").value;
+			}
+
+
+			
 			/**
 			 * Error checking for duplicate edges
 			 */
@@ -213,10 +268,10 @@ function checkForErrors(tableName, sourceNode){
 				}else if(edgeChecker([node1Value, node2Value, "UNIDIRECTION"], edgesList)){
 					errorBoxCell("duplicate", node1Cell, node2Cell);
 				}	
-			}
-				
+			}	
 		}
 	}
+
 	//Error checking for empty source node cell or no source node in the graph data
 	var sourceNodeError = true;
 	for(const [node1,node2, direction] of edgesList){

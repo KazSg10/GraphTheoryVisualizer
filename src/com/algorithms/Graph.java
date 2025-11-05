@@ -1,5 +1,6 @@
 package com.algorithms;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +13,7 @@ public abstract class Graph {
 	
 	//Naming the connections in Json
 	@JsonProperty("NodeConnections")
-	protected  Map<Node,List<Node>> nodeConnections;
+	protected  Map<Node,List<Node>> c_nodeConnections;
 	
 	//Naming the list in Json
 	@JsonProperty("NodesList")
@@ -20,9 +21,8 @@ public abstract class Graph {
 	@JsonProperty("edgeList")
 	protected List<Edge> c_edgeList;
 
-	
 	public Map<Node, List<Node>> getNodeConnections() {
-		return nodeConnections;
+		return c_nodeConnections;
 	}
 	public List<Node> getNodesList(){
 		
@@ -31,26 +31,56 @@ public abstract class Graph {
 	}
 	public abstract void addEdge(Edge edge);
 
-//	//Converting the information of the graph object into Json for portability
-//	public String toJson() {
-//		//Creating an object mapper which is used to map the fields of the graph into a Json form
-//		ObjectMapper objectMapper = new ObjectMapper();
-//		String json = null;
-//		try {
-//			json = objectMapper.writeValueAsString(this);
-//		} catch (JsonProcessingException e) {
-//			System.out.println(e);
-//		}
-//		return json;
-//	}
-	
+	//Returning the neighbours of each node
 	public List<Node> getNodeConnections(Node inputNode) {
-		for(Map.Entry<Node, List<Node>> nodeEntry: nodeConnections.entrySet()) {
+		for(Map.Entry<Node, List<Node>> nodeEntry: c_nodeConnections.entrySet()) {
 			if(nodeEntry.getKey().getName().equals(inputNode.getName())){
 				return nodeEntry.getValue();
 			}
 		}
 		return null;
 	}
-
+	public void addToNodeConnections(Edge edge) {
+		Node node1 = edge.getNode1();
+		Node node2 = edge.getNode2();
+		
+		if(!c_nodesList.contains(node1)) {
+			c_nodesList.add(node1);
+		}
+		if(!c_nodesList.contains(node2)) {
+			c_nodesList.add(node2);
+		}
+		
+		switch(edge.getDirection()) {
+		case BIDIRECTION:
+			if(c_nodeConnections.containsKey(node1)){
+				List<Node> neighbours = c_nodeConnections.get(node1);
+				neighbours.add(node2);
+			} else {
+				List<Node> neighbours = new ArrayList<Node>();
+				neighbours.add(node2);
+				c_nodeConnections.put(node1, neighbours);
+			}
+			
+			if(c_nodeConnections.containsKey(node2)) {
+				List<Node> neighbours = c_nodeConnections.get(node2);
+				neighbours.add(node1);
+			} else {
+				List<Node> neighbours = new ArrayList<Node>();
+				neighbours.add(node1);
+				c_nodeConnections.put(node2, neighbours);
+			}
+			break;
+		
+		case UNIDIRECTION:
+			if(c_nodeConnections.containsKey(node1)) {
+				List<Node> neighbours = c_nodeConnections.get(node1);
+				neighbours.add(node2);
+			} else {
+				List<Node> neighbours = new ArrayList<Node>();
+				neighbours.add(node2);
+				c_nodeConnections.put(node1, neighbours);
+			}
+		}
+	}
 }

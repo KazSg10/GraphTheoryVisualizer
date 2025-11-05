@@ -3,6 +3,7 @@ package com.algorithms;
 import java.util.ArrayList;
 import java.util.List;
 
+//Class for creating Queue ADT objects which follow the FIFO system 
 public class Queue<T> {
 	private List<T> c_queue;
 
@@ -10,7 +11,6 @@ public class Queue<T> {
 		c_queue = new ArrayList<>();
 	}
 	
-
 	public boolean isEmpty() {
 		return c_queue.isEmpty();
 	}
@@ -22,9 +22,7 @@ public class Queue<T> {
 	public T dequeue() {
 		T dequeuedElement = c_queue.get(0);
 		c_queue.remove(0);
-		return dequeuedElement;
-	
-		
+		return dequeuedElement;	
 	}
 	public boolean contains(T element) {
 		return c_queue.contains(element);
@@ -38,7 +36,6 @@ public class Queue<T> {
 		}
 		return "List: " + nodeNames;
 	}
-
 
 	public List<T> getList() {
 		return c_queue;

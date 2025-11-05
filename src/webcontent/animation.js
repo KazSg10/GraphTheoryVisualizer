@@ -1,10 +1,10 @@
-const pseudocode = JSON.parse(localStorage.getItem('pseudocode'));
-const simulationSteps = JSON.parse(localStorage.getItem('simulationSteps'));
-const algorithm = JSON.parse(localStorage.getItem('algorithm'));
+const pseudocode = JSON.parse(localStorage.getItem('body')).Pseudocode;
+const simulationSteps = JSON.parse(localStorage.getItem('body')).simulationSteps;
+const algorithm = JSON.parse(localStorage.getItem('body')).Algorithm;
 
 var framePath = 1;
 //Increasing the speed value, actually makes the simulation slower
-var speed =50;
+var speed =10;
 var framePseudocode = 1;
 var speedPseudocode = 500;
 var fromCircle;
@@ -15,6 +15,7 @@ var ctxPseudocode;
 var ctxADT;
 var colour;
 var startCirclesNamesList = [];
+var endCircleNamesList = [];
 var canvasGraph;
 var canvasADT;
 var canvasPseudocode;
@@ -31,10 +32,13 @@ var stackIndex = 0;
 var queue = [];
 var distance;
 var tableData = []
+var fromCircleColour;
+var toCircleColour;
 
 
 var animationInProgress = false;
 
+//The function that will trigger the animation
 function simulate() {
     //Getting canvas elements from DOM (Document Object Model)
     canvasGraph = document.getElementById('canvasGraph');
@@ -44,20 +48,29 @@ function simulate() {
     //Getting the context of canvasGraph element which is required for drawing
     graphCtx = canvasGraph.getContext('2d'); 
     ctxADT = canvasADT.getContext('2d');
-    ctxPseudocode = canvasPseudocode.getContext('2d');	
+    ctxPseudocode = canvasPseudocode.getContext('2d');
+	
+	//Disabling the play button for the duration of the animation
 	document.getElementById("Play").disabled = true;
+	
+	//Starting the animation process
 	processSteps();
 }
 
+//Function for rewriting the pseudocode with the current line being highlighted
 function writePseudocode(pseudocode, ctxPseudocode, canvas, PseudocodeLineIndex){
+
+	//Clearing the pseudocode before writing pseudocode
 	ctxPseudocode.clearRect(0, 0, canvasPseudocode.width, canvasPseudocode.height);
+
+	//Getting length of the pseudocode array in the json
 	var length = Object.keys(pseudocode).length;
 	//var lineHeight = canvas.height/length;
 	ctxPseudocode.font = "10px Arial";
 	
 	
 	for(let i = 0; i < length; i++){
-		//Highlight current line in canvasPseudocode
+		//Highlight current line in canvasPseudocode told by PseudocodeLineIndex
 		if(i == PseudocodeLineIndex){
 			ctxPseudocode.fillStyle = "#ff2f00ff";
 		}
@@ -69,11 +82,14 @@ function writePseudocode(pseudocode, ctxPseudocode, canvas, PseudocodeLineIndex)
 	}
 }
 
+//Function for drawing line 
 function animateEdge() {
+	//If there is no fromCircle or toCircle, then there is no edge to be drawn along, leading to processSteps being called again
 	if (fromCircle == null || toCircle == null) {
 		processSteps();
 	}else{
-		if(startCirclesNamesList.includes(toCircle.name)){
+
+		if(startCirclesNamesList.includes(toCircle.name) && endCircleNamesList.includes(fromCircle.name)){
 			colour = "yellow";
 		}else{
 			colour = "red";
@@ -102,6 +118,9 @@ function animateEdge() {
 			if(!startCirclesNamesList.includes(fromCircle.name)) {
 				startCirclesNamesList.push(fromCircle.name);
 			} 
+			if(!endCircleNamesList.includes(toCircle.name)){
+				endCircleNamesList.push(toCircle.name);
+			}
 			fromCircle = null;
 			toCircle = null;
 			framePath = 1;

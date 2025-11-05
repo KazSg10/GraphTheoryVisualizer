@@ -7,6 +7,7 @@ class Line {
 	 * @param {*} x2 - x-coordinate of end node
 	 * @param {*} y2 - y-coordinate of end node
 	 */
+	
 	constructor(ctxGraph , x1, y1, x2, y2, weight){
 		this.ctxGraph  = ctxGraph ;    
 		this.x1 = x1;
@@ -20,7 +21,6 @@ class Line {
 	 * @param {*} color - Colour of the line
 	 */
 	drawLine(colour, radius){
-		
 		const xDiff = this.x2 - this.x1;
 		const yDiff = this.y2 - this.y1;
 
@@ -66,6 +66,7 @@ class Line {
 			const yWeightCent = (this.y1 + this.y2)/2;
 
 			this.ctxGraph.font = "16px Arial";
+			this.ctxGraph.strokeStyle = "black";
 			this.ctxGraph.fillText(this.weight, xWeightCent, yWeightCent);
 		}
 	}

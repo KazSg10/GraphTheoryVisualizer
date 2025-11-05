@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import com.algorithms.Algorithm;
 import com.algorithms.Edge;
 import com.algorithms.Edge.Direction;
@@ -24,27 +23,35 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.server.database.DatabaseHandler;
 import com.server.json.GraphInputData;
 import com.server.json.GraphInputData.ConnectionData;
 import com.server.json.GraphOutputData;
 
-public class HttpServer {
+public class WebServer {
 
+	//Enum to store constants of the HTTP Methods which will be included in the client browser request
 	enum HttpMethods{
 		GET,
 		POST;
 	}
-	//Class for Http Server
+	
+	//Class for Web Server
 	public static void main(String[]args) {
-		HttpServer server = new HttpServer();
-		System.out.println("Server starting...");
-		server.startServer();
+		WebServer webServer = new WebServer();
+		//Web server starting
+		webServer.startServer();
 	}
-
-
-
-	private void startServer() {
+	
+	public void startServer() {
+		System.out.println("Web server started");
 		int portNumber = -1;
+		/*
+		 * Use of environment variable for convenience as shorter path required when typing file paths
+		 * later on when using this environment variable.
+		 * The path of this environment variable is 
+		 * C:\Users\karan\OneDrive - Reading School\Computer Science NEA - Karan Singh\coderepository\GraphTheoryVisualizer
+		 */
 		String projectPath = System.getenv("NEA_PROJECT_ROOT");
 		try {
 			BufferedReader buffer = new BufferedReader(new FileReader(projectPath + "/src/com/server/server.config"));
@@ -55,17 +62,19 @@ public class HttpServer {
 					portNumber = Integer.parseInt(arr[1]);
 				}
 			} 
-			//The server sets up a socket for client connections 
+			//Setting up a socket for client-server connections 
 			ServerSocket serverSocket = new ServerSocket(portNumber);
 
+			//Processing HTTP requests
 			while(true) {
 				System.out.println(String.format("Server waiting for connection on port %d", portNumber));
 				System.out.println("Access webapp at 192.168.1.40:8908");
 				//Server is now waiting for a connection
 				Socket socket = serverSocket.accept();
+				//The request from browser is being stored
 				InputStreamReader input = new InputStreamReader(socket.getInputStream());
 
-				//Getting each message from input one at a time
+				//Getting each message from input one line at a time
 				BufferedReader clientBufferedReader = new BufferedReader(input);	
 				/*
 				 * First line of the http request is the request line which contains following information:
@@ -134,7 +143,7 @@ public class HttpServer {
 		return httpRequestLineComponents;
 	}
 
-	//Function for processing http get request from browser
+	//Function for processing HTTP GET request from browser
 	private void processMethodGet(String path, Socket socket) {
 		//Getting part of the path of the file from the environment variable to shorten the path of the files
 		String projectPath = System.getenv("NEA_PROJECT_ROOT");
@@ -162,9 +171,7 @@ public class HttpServer {
 			 * 200 OK = status code, successful response code
 			 * \r\n = carriage return
 			 */
-		
-			outputWriter.println("HTTP/1.1 200 OK\r\n");
-			
+			outputWriter.println("HTTP/1.1 200 OK\r\n");	
 			//Leaving a gap between status line and headers
 			outputWriter.println("\r\n");
 			String outputLine = buffer.readLine();
@@ -181,9 +188,11 @@ public class HttpServer {
 			System.out.println(e);
 		}
 	}
-	private void processMethodPost(String path, String body, Socket socket) {
+	
+	//Function for processing HTTP POST request from browser
+	private void processMethodPost(String path, String body, Socket socket){
 		try {
-			//Creating a ObjectMapper for mapping input data received from the client to a class
+			//Creating a ObjectMapper for mapping input data received from the client to a class' fields
 			ObjectMapper graphInputDataMapper = new ObjectMapper();
 			//Mapping the body containing the client data received in the POST request to the GraphInputData class 
 			GraphInputData inputData = graphInputDataMapper.readValue(body,GraphInputData.class);
@@ -208,7 +217,6 @@ public class HttpServer {
 			outputWriter.println();
 			//Adding body to response
 			outputWriter.print(json); 
-
 			System.out.println(json.getBytes());
 			//Sending response back to client
 			outputWriter.flush();
@@ -221,8 +229,7 @@ public class HttpServer {
 	}
 	
 	//function for reading the body of the client data in the http request
-	private String readBody(BufferedReader reader, Map<String, String> headers) {
-		
+	private String readBody(BufferedReader reader, Map<String, String> headers) {	
 		/*
 		 * Retrieving the length of the body from the Content-Length header to know how many
 		 * characters are part of the body
@@ -237,9 +244,8 @@ public class HttpServer {
 			}
 		}
 		return body;
-
 	}
-
+	
 	/*
 	 * Simulating the algorithm to get the json of the steps which will be returned to browser
 	 * If it's BFS or DFS, then an unweighted graph will be created
@@ -263,10 +269,10 @@ public class HttpServer {
 			
 			//Simulating DFS
 			if(inputData.getAlgorithm().equals("DFS")) {
-				GraphOutputData c_graphOutputDataDFS = new GraphOutputData(inputData.getAlgorithm(), graph, readFile(projectPath + "/src/com/algorithms/DFSPseudoCode.txt"));
+				GraphOutputData c_graphOutputDataDFS = new GraphOutputData(inputData.getAlgorithm(), graph, readFile(projectPath + "/src/com/algorithms/DFSPseudoCode.txt"), sourceNode);
 				Algorithm algorithmDFS = new Algorithm(c_graphOutputDataDFS);
 				List<Node> visitedDFS = new ArrayList<Node>();
-				Stack stack = new Stack();
+				Stack<Node> stack = new Stack<Node>();
 				algorithmDFS.depthFirstTraversal(graph, sourceNode, visitedDFS, stack);
 				
 				//Returning the steps of the traversal in json form
@@ -275,39 +281,32 @@ public class HttpServer {
 
 			//Simulating BFS
 			if(inputData.getAlgorithm().equals("BFS")) {
-				GraphOutputData c_graphOutputDataBFS = new GraphOutputData(inputData.getAlgorithm(), graph, readFile(projectPath + "/src/com/algorithms/BFSPseudoCode.txt"));
+				GraphOutputData c_graphOutputDataBFS = new GraphOutputData(inputData.getAlgorithm(), graph, readFile(projectPath + "/src/com/algorithms/BFSPseudoCode.txt"), sourceNode);
 				Algorithm algorithmBFS = new Algorithm(c_graphOutputDataBFS);
 				Queue<Node> queue = new Queue<Node>();
 				algorithmBFS.BreadthFirstTraversal(graph, sourceNode);
 				
 				//Returning the steps of the traversal in json form
 				return toJson(c_graphOutputDataBFS);
-			}
-			
-		}
-		
+			}		
+		}	
 		else if(inputData.getAlgorithm().equals("Dijkstra")) {
-			WeightedGraph graph = new WeightedGraph();
-			
+			WeightedGraph graph = new WeightedGraph();			
 			Node sourceNode = new Node(inputData.getSourceNodeName());
-			
 			//Creating a graph based on the client data
 			for(ConnectionData data: inputData.getConnections()) {
 				Node node1 = new Node(data.getNode1());
 				Node node2 = new Node(data.getNode2());
 				Edge edge = new Edge(node1, node2, Direction.valueOf(data.getEdgeDirection()), Integer.valueOf(data.getWeight()));
 				graph.addEdge(edge);
-			}
-			
+			}		
 			//Simulating Dijkstra's Algorithm
-			
-			GraphOutputData c_graphOutputDataDijkstra = new GraphOutputData(inputData.getAlgorithm(), graph, readFile(projectPath + "/src/com/algorithms/DijkstraPseudoCode.txt"));
+			GraphOutputData c_graphOutputDataDijkstra = new GraphOutputData(inputData.getAlgorithm(), graph, readFile(projectPath + "/src/com/algorithms/DijkstraPseudoCode.txt"), sourceNode);
 			Algorithm algorithmDijkstra = new Algorithm(c_graphOutputDataDijkstra);
 			algorithmDijkstra.DijkstraShortestPathFinding(graph, sourceNode);
-			
+
 			//Returning the steps of the traversal in json form
 			return toJson(c_graphOutputDataDijkstra);
-			
 		}
 		return null;
 	}
@@ -332,16 +331,12 @@ public class HttpServer {
 		return output;
 	}
 
-
 	public String toJson(GraphOutputData outputData) {
 		//Creating an objectMapper to map GraphOutputData to Json
 		ObjectMapper objectMapper = new ObjectMapper();
 		//Creating an empty string for Json at the start
 		String json = null;
 		try {
-			//TODO
-			//objectMapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
-			//Converting current object to Json string 
 			json = objectMapper.writeValueAsString(outputData);
 		} catch (JsonProcessingException e) {
 			System.out.println(e);

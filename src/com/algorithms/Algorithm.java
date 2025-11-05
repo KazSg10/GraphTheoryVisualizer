@@ -1,4 +1,5 @@
 package com.algorithms;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -18,30 +19,13 @@ public class Algorithm {
 		c_graphOutputData = graphOutputData;
 	}
 	
-	public static void main(String[] args) {
-		
-//		WeightedGraph graph = new WeightedGraph();
-//		Node sourceNode = new Node("1");
-//		graph.addEdge(new Edge(sourceNode, new Node("2"), Direction.BIDIRECTION, 10));
-//		graph.addEdge(new Edge(new Node("4"), new Node("2"), Direction.BIDIRECTION, 15));
-//		graph.addEdge(new Edge(new Node("2"), new Node("5"), Direction.BIDIRECTION, 13));
-//		graph.addEdge(new Edge(new Node("7"), new Node("6"), Direction.BIDIRECTION, 7));
-//		graph.addEdge(new Edge(new Node("6"), new Node("3"), Direction.BIDIRECTION, 5));
-//		graph.addEdge(new Edge(sourceNode, new Node("8"), Direction.BIDIRECTION, 11));
-//		graph.addEdge(new Edge(new Node("6"), new Node("5"), Direction.BIDIRECTION, 19));
-//		graph.addEdge(new Edge(new Node("7"), new Node("5"), Direction.BIDIRECTION, 16));
-//		graph.addEdge(new Edge(sourceNode, new Node("6"), Direction.BIDIRECTION, 3));
-//		DijkstraShortestPathFinding(graph, sourceNode);
-		
-	 }
-	
-	public List<Node> depthFirstTraversal(UnweightedGraph graph, Node visitedNode, List<Node> visited, Stack stack ) {
+	public List<Node> depthFirstTraversal(UnweightedGraph graph, Node visitedNode, List<Node> visited, Stack<Node> stack ){
 		c_graphOutputData.getSimulationSteps().add(new DFSSimulationSteps(null, 0, null, null, null));
 		if(null == visited) {
 			visited = new LinkedList<>();
 		}
 		if(null == stack) {
-			stack = new Stack();
+			stack = new Stack<Node>();
 		}
 		visited.add(visitedNode);
 		c_graphOutputData.getSimulationSteps().add(new DFSSimulationSteps(visitedNode.getName(), 1, null, null, null));
@@ -83,7 +67,6 @@ public class Algorithm {
 		c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, 2, null, null, null));
 		queue.enqueue(sourceNode);
 		c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, 3,	new QueueEntry(sourceNode.getName(), ActionBFS.ENQUEUE), null, null));
-		System.out.println("Here 2");
 		while(!queue.isEmpty())
 		{
 			c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, 4,	null, null, null));
@@ -113,11 +96,10 @@ public class Algorithm {
 		c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, 13, null, null, null));
 		c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, 14, null, null, null));
 
-		return visited;
-		
+		return visited;	
 	}
+	
 	public void DijkstraShortestPathFinding(WeightedGraph graph, Node sourceNode){
-		
 		c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, 0, null, null, Integer.MAX_VALUE, null, null, null));
 		//Creating a priority queue for the nodes
 		Queue<DijkstraQueueNode> priorityQueue = new Queue<DijkstraQueueNode>();
@@ -144,7 +126,7 @@ public class Algorithm {
 				c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, 5, null, null, Integer.MAX_VALUE, null, null, null));
 				c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, 6, null, null, Integer.MAX_VALUE, null, null, null));
 				
- 			//	System.out.println("PriorityQueue --->  " + priorityQueue);
+ 				System.out.println("PriorityQueue --->  " + priorityQueue);
 			}else{
 				c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, 7, null, null, Integer.MAX_VALUE, null, null, null));
 
@@ -153,7 +135,7 @@ public class Algorithm {
 				c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, 9, null, null, Integer.MAX_VALUE, null, null, null));
 				c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, 11, null, null, Integer.MAX_VALUE, null, null, null));
 
-			//	System.out.println("PriorityQueue --->  " + priorityQueue);
+				System.out.println("PriorityQueue --->  " + priorityQueue);
 			}
 			
 		}
@@ -168,19 +150,19 @@ public class Algorithm {
 		while(true) {
 			c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, 15, null, null, Integer.MAX_VALUE, null, null, null));
 			int distance = Integer.MAX_VALUE;
-
 			DijkstraQueueNode traversingNode = null;
+			
 			for(DijkstraQueueNode node: priorityQueue.getList()) {
-				if(!traversedNodes.contains(node) && node.getDistanceFromSourceNode() < distance) {
-					
+				if(!traversedNodes.contains(node) && node.getDistanceFromSourceNode() < distance) {				
 					distance = node.getDistanceFromSourceNode();
 					traversingNode = node;
 				}		
 			}
+			if(distance == Integer.MAX_VALUE - 1) {
+				break;
+			}
 			c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, 16, null, null, Integer.MAX_VALUE, null, null, null));
-
 			
-		
 			/*
 			 * For each node (neighbouringNode), for which there is a path from the visitedNode, we are calculating the shortest distance from the current node
 			 * to that node  
@@ -227,7 +209,7 @@ public class Algorithm {
 
 							System.out.println(priorityQueue);
 						}
-							c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, 23, null, null, Integer.MAX_VALUE, null, null, null));
+						c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, 23, null, null, Integer.MAX_VALUE, null, null, null));
 
 						
 					}
@@ -280,33 +262,9 @@ public class Algorithm {
 			return createPath(node.getPreviousNode(), sourceNode, path) + " -> " + path;
 		}	
 	}
-	
-//	public static Queue<DijkstraQueueNode> sortPriorityQueue(Queue<DijkstraQueueNode> priorityQueue) {
-//		
-//		int distance = Integer.MAX_VALUE;
-//		DijkstraQueueNode visitedNodeToAdd = null;
-//		Queue<DijkstraQueueNode> sortedPriorityQueue = new Queue<DijkstraQueueNode>();
-//		
-//		sortedPriorityQueue.enqueue(priorityQueue.getList().get(0));
-//		while(sortedPriorityQueue.getList().size() != priorityQueue.getList().size()) {
-//			for(DijkstraQueueNode nodeInPriorityQueue : priorityQueue.getList()) {
-//				if(nodeInPriorityQueue.getDistanceFromSourceNode() <= distance && !sortedPriorityQueue.contains(nodeInPriorityQueue)){
-//					visitedNodeToAdd = nodeInPriorityQueue;
-//				}
-//				sortedPriorityQueue.enqueue(visitedNodeToAdd);
-//				System.out.println(visitedNodeToAdd.getNode());
-//				System.out.println(sortedPriorityQueue);
-//			}
-//		}
-//		return priorityQueue;
-//	}
-	
-	
 
 	//Creating special nodes called DijkstraQueueNodes which will be used to store nodes in the priority queue along with their distance from source node
-	
 	public static class DijkstraQueueNode{
-		
 		private Node c_node;
 		private DijkstraQueueNode c_previousNode;
 		private int c_distanceFromSourceNode;
@@ -319,9 +277,7 @@ public class Algorithm {
 			c_previousNode = null;
 			c_distanceFromSourceNode = sourceNode? 0 : Integer.MAX_VALUE - 1;
 			c_node = node;
-
 		}
-
 		
 		public DijkstraQueueNode getPreviousNode() {
 			return c_previousNode;
@@ -350,6 +306,4 @@ public class Algorithm {
 			return c_node.toString() + ":" + c_distanceFromSourceNode;
 		}
 	}
-
 }
-	

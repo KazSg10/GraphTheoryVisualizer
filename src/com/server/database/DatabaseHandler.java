@@ -17,12 +17,12 @@ public class DatabaseHandler {
 	
 	public void start() {
 		try {
-			System.out.println("Starting mysql server...");			
 			runTime.exec("\"C:\\Users\\karan\\mysql\\bin\\mysqld.exe\"");
 			System.out.println("Started mysql server");
 		} catch(Exception e) {
 			System.out.println(e);
 		}
+		this.connect();
 	}
 	
 	//Function for creating the database and table - only needed to be called once
@@ -106,6 +106,7 @@ public class DatabaseHandler {
 	public void addRecord() {
 		
 	}
+	
 	
 	public static void main(String[] args) {
 		DatabaseHandler dh = new DatabaseHandler();
