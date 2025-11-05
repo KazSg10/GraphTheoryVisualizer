@@ -10,7 +10,7 @@ var speedPseudocode = 500;
 var fromCircle;
 var toCircle;
 var stepsIndex = 0;
-var graphCtx;
+var ctxGraph;
 var ctxPseudocode;
 var ctxADT;
 var colour;
@@ -46,7 +46,7 @@ function simulate() {
     canvasPseudocode = document.getElementById('canvasPseudocode'); 
 
     //Getting the context of canvasGraph element which is required for drawing
-    graphCtx = canvasGraph.getContext('2d'); 
+    ctxGraph = canvasGraph.getContext('2d'); 
     ctxADT = canvasADT.getContext('2d');
     ctxPseudocode = canvasPseudocode.getContext('2d');
 	
@@ -85,14 +85,18 @@ function writePseudocode(pseudocode, ctxPseudocode, canvas, PseudocodeLineIndex)
 //Function for drawing line 
 function animateEdge() {
 	//If there is no fromCircle or toCircle, then there is no edge to be drawn along, leading to processSteps being called again
+	
 	if (fromCircle == null || toCircle == null) {
 		processSteps();
 	}else{
-
 		if(startCirclesNamesList.includes(toCircle.name) && endCircleNamesList.includes(fromCircle.name)){
-			colour = "yellow";
+			colour = "cyan";
 		}else{
 			colour = "red";
+		}
+		if(framePath == 1){
+			fromCircleColour = fromCircle.fillColour;
+			toCircleColour = toCircle.fillColour;
 		}
 		//Difference in x-coordinates of the two circles
 		var xDiff = toCircle.x - fromCircle.x;
@@ -102,13 +106,13 @@ function animateEdge() {
 		var newX = (xDiff * (framePath /speed) + fromCircle.x);
 		var newY = (yDiff * (framePath/speed) + fromCircle.y);
 		
-		graphCtx.beginPath();
-		graphCtx.moveTo(fromCircle.x, fromCircle.y);
-		graphCtx.lineTo(newX, newY);	
+		ctxGraph.beginPath();
+		ctxGraph.moveTo(fromCircle.x, fromCircle.y);
+		ctxGraph.lineTo(newX, newY);	
 
-		graphCtx.strokeStyle=colour;
-		graphCtx.lineWidth=4;
-		graphCtx.stroke();	
+		ctxGraph.strokeStyle=colour;
+		ctxGraph.lineWidth=4;
+		ctxGraph.stroke();	
 
 		if(framePath < speed){
 			framePath++;
@@ -121,6 +125,12 @@ function animateEdge() {
 			if(!endCircleNamesList.includes(toCircle.name)){
 				endCircleNamesList.push(toCircle.name);
 			}
+			fromCircle.drawCircle(fromCircleColour);
+			toCircle.drawCircle(toCircleColour);
+
+			var line = retrieveLine(fromCircle, toCircle);
+			line.drawLine(colour, fromCircle.radius);
+
 			fromCircle = null;
 			toCircle = null;
 			framePath = 1;
@@ -128,6 +138,14 @@ function animateEdge() {
 		}
 	}
 }
+
+function retrieveLine(circle1, circle2){
+		for(var line of JSON.parse(localStorage.getItem('edges'))){
+			if((line.x1 == circle1.x && line.x2 == circle2.x && line.y1 == circle1.y && line.y2 == circle2.y)||(line.x1 == circle2.x && line.x2 == circle1.x && line.y1 == circle2.y && line.y2 == circle1.y)){
+				return new Line(ctxGraph, line.x1, line.y1, line.x2, line.y2, line.weight);
+			}
+		}
+	}
 
 //Function for updating the highlighting of the pseudocode lines
 function updatePseudocode() {

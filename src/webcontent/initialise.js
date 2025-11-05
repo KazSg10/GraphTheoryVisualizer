@@ -94,37 +94,34 @@ function readJsonBody(body){
 
 
 function initialiseEdges(circlesArray, ctxGraph , algorithm){
-	var edgeList = JSON.parse(localStorage.getItem('nodeConnections'));
-	var keys = Object.keys(edgeList);
+	var nodeConnections = JSON.parse(localStorage.getItem('nodeConnections'));
+	var keys = Object.keys(nodeConnections);
 	//Initialising a list for the edges 
 	var edges = [];
 	var weight = -1;
 	var length = keys.length;
 	for(let i = 0; i<length; i++){
 		var key = keys[i];
-		var valuesList = edgeList[key];
+		var valuesList = nodeConnections[key];
 		//Getting the circle which is in the edge
 		var node1 = getCircle(key, circlesArray);
 		for (let j = 0; j < valuesList.length; j++) {
 			//Getting the circle which is in the edge
 			var node2 = getCircle(valuesList[j].name, circlesArray);
 			if(algorithm == "Dijkstra"){
-				edgesList = JSON.parse(localStorage.getItem('edgeList'));
-				for(let edgeIndex = 0; edgeIndex < edgesList.length; edgeIndex++){
-					if(node1.name == edgesList[edgeIndex].node1.name && node2.name == edgesList[edgeIndex].node2.name){
-						weight = edgesList[edgeIndex].weight;
+				edgeList = JSON.parse(localStorage.getItem('edgeList'));
+				for(let edgeIndex = 0; edgeIndex < edgeList.length; edgeIndex++){
+					if(node1.name == edgeList[edgeIndex].node1.name && node2.name == edgeList[edgeIndex].node2.name){
+						weight = edgeList[edgeIndex].weight;
 						break;
 					}			
 				}
-				// for(var [direction, node1, node2, weight] in edgesList){
-				// 	if(node1 == edge.node1 && node2 == edge.node2){
-				// 		weight = edge.weight;
-				// 	}
-				// }	
+
 			}
 		edges.push(new Line(ctxGraph , node1.x, node1.y, node2.x, node2.y, weight));			
 		}
 	} 
+	localStorage.setItem('edges', JSON.stringify(edges));
 	return edges;
 }
 function getCircle(key, circlesArray){

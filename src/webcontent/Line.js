@@ -66,7 +66,7 @@ class Line {
 			const yWeightCent = (this.y1 + this.y2)/2;
 
 			this.ctxGraph.font = "16px Arial";
-			this.ctxGraph.strokeStyle = "black";
+			this.ctxGraph.fillStyle = "blue";
 			this.ctxGraph.fillText(this.weight, xWeightCent, yWeightCent);
 		}
 	}
