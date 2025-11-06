@@ -1,7 +1,10 @@
 package com.server;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -64,13 +67,19 @@ public class WebServer {
 					portNumber = Integer.parseInt(arr[1]);
 				}
 			} 
-			//Setting up a socket for client-server connections 
-			ServerSocket serverSocket = new ServerSocket(portNumber);
+			//Setting up a socket for client-server connections
+			InetAddress localHost = InetAddress.getLocalHost();
+			InetAddress addr = InetAddress.getByName(localHost.getHostAddress());
+			
+			writeFile(projectPath + "/src/webcontent/connectionToServer.js", connectionToServerFileUpdate(localHost));
+			
+			ServerSocket serverSocket = new ServerSocket(portNumber, 10, addr);
+			
+			System.out.println("Access webapp at " + serverSocket.getInetAddress().getHostAddress());
 
 			//Processing HTTP requests
 			while(true) {
 				System.out.println(String.format("Server waiting for connection on port %d", portNumber));
-				System.out.println("Access webapp at 192.168.1.40:"+ Integer.toString(portNumber));
 				//Server is now waiting for a connection
 				Socket socket = serverSocket.accept();
 				//The request from browser is being stored
@@ -312,6 +321,20 @@ public class WebServer {
 		}
 		return null;
 	}
+
+	public String toJson(GraphOutputData outputData) {
+		//Creating an objectMapper to map GraphOutputData to Json
+		ObjectMapper objectMapper = new ObjectMapper();
+		//Creating an empty string for Json at the start
+		String json = null;
+		try {
+			json = objectMapper.writeValueAsString(outputData);
+		} catch (JsonProcessingException e) {
+			System.out.println(e);
+		}
+		System.out.println("Graph output data json: " + json);
+		return json;
+	}
 	
 	public List<String> readFile(String path){
 		List<String> output = null;
@@ -332,18 +355,38 @@ public class WebServer {
 		}
 		return output;
 	}
-
-	public String toJson(GraphOutputData outputData) {
-		//Creating an objectMapper to map GraphOutputData to Json
-		ObjectMapper objectMapper = new ObjectMapper();
-		//Creating an empty string for Json at the start
-		String json = null;
+	
+	public void writeFile(String path, List<String> fileList) throws IOException {
+		File currentFile = new File(path);
+		currentFile.delete();
+		System.out.println("Deleted file");
+		File newFile = new File(path);
+		BufferedWriter buffer = new BufferedWriter(new FileWriter(path));
 		try {
-			json = objectMapper.writeValueAsString(outputData);
-		} catch (JsonProcessingException e) {
-			System.out.println(e);
+			for(String line : fileList) {
+				buffer.write(line);
+				buffer.newLine();
+			}
+		}catch (IOException e) {
+			e.printStackTrace();
+		}	
+		buffer.close();
+		System.out.println("Created file");
+	}
+	
+	public List<String> connectionToServerFileUpdate(InetAddress localHost) {
+		String filePath = System.getenv("NEA_PROJECT_ROOT") + "/src/webcontent/connectionToServer.js";
+		List<String> jsFileList = readFile(filePath);
+		int index = 0;
+		for(int i = 0; i<jsFileList.size(); i++) {
+			if(jsFileList.get(i).contains("	var response = await fetch")) {
+				index = i;
+				break;
+			}
 		}
-		System.out.println("Graph output data json: " + json);
-		return json;
+		jsFileList.add(index, "	var response = await fetch(\"http://"+ localHost.getHostAddress() + ":8908/visualize\",");
+		jsFileList.remove(index + 1);
+		System.out.println("updated file");
+		return jsFileList;
 	}
 }

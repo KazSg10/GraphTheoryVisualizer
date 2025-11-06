@@ -106,7 +106,6 @@
 	</div>
 	
 	<!-- Designing the DFS section of the webapp -->
-
 	<div id="DFS" class="optioncontent">
 		<h3>Depth-First Traversal</h3>
 		<p>Enter data for the graph below: </p>
@@ -144,7 +143,6 @@
 	</div>
 
 	<!-- Designing the BFS section of the webapp -->
-
 	<div id="BFS" class="optioncontent">
 		<h3>Breadth-First Traversal</h3>
 		<p>Enter data for the graph below: </p>
@@ -177,9 +175,7 @@
 			<button onclick="addNewRow('BFSTable', 3)">Add New Row</button>
 			<input type="text" id="savedJsonBFS" placeholder="Enter the JSON string of your saved graph">
 			<button onclick="postData('BFSTable', 'BFS', document.getElementById('BFSSourceNode'))">Submit</button>
-		</div>
-		
-		
+		</div>	
 	</div>
 
 	<script>
@@ -202,6 +198,7 @@
 			//Changing css of button because it is now active
 			event.currentTarget.className+=" active";
 		}
+		document.getElementById("defaultOpen").click();
 
 		//Function of adding a new row to the table 
 		function addNewRow(tableId, count){
@@ -211,8 +208,7 @@
 			for(let i = 0; i < count; i++) {
 				if(i == count - 1){
 					 last = true;
-				}
-				
+				}	
 				insertCell(tableId, table, newRow, i, last);
 			}
 		}
@@ -251,13 +247,8 @@
 				inputElement.id = tableId + (table.rows.length - 1).toString() + index.toString();
 				//Appending the input element to the cell in DOM
 				cell.appendChild(inputElement);
-			}
-			
+			}		
 		}
-
-
     </script>
 </body>	
 </html>
-
- 

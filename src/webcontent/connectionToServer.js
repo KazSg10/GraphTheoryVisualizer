@@ -3,7 +3,6 @@ async function postData(tableName, algorithm, sourceNode){
 	var jsonData;	
 	if(boolDataFromFile(tableName, sourceNode)){
 		
-		var cell = document.getElementById("savedJson" + algorithm);
 		jsonData = document.getElementById("savedJson"+ algorithm).value;
 		
 		if(!isJson(jsonData)){
@@ -24,7 +23,6 @@ async function postData(tableName, algorithm, sourceNode){
 	localStorage.setItem('userJsonBody', jsonData);
 
 	//Submiting POST request to the server for processing algorithm input data
-	//var promise = fetch("http://localhost:8908/visualize",
 	/*
 	* JS is a single-threaded language, therefore this asynchronous approach is required
 	* to wait response from the server 
@@ -35,7 +33,7 @@ async function postData(tableName, algorithm, sourceNode){
 	* for which we need to wait again for it to be fulfilled. All manipulations on 
 	* further responses of Promises will continue to return new Promises.	
 	*/
-	var response = await fetch("http://localhost:8908/visualize",
+	var response = await fetch("http://192.168.1.194:8908/visualize",
 			{
 				method:"POST",
 				body: jsonData,
