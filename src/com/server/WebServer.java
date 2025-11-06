@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -18,12 +19,12 @@ import com.algorithms.Node;
 import com.algorithms.Queue;
 import com.algorithms.Stack;
 import com.algorithms.UnweightedGraph;
+
 import com.algorithms.WeightedGraph;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.server.database.DatabaseHandler;
 import com.server.json.GraphInputData;
 import com.server.json.GraphInputData.ConnectionData;
 import com.server.json.GraphOutputData;
@@ -69,7 +70,7 @@ public class WebServer {
 			//Processing HTTP requests
 			while(true) {
 				System.out.println(String.format("Server waiting for connection on port %d", portNumber));
-				System.out.println("Access webapp at 192.168.1.40:8908");
+				System.out.println("Access webapp at 192.168.1.40:"+ Integer.toString(portNumber));
 				//Server is now waiting for a connection
 				Socket socket = serverSocket.accept();
 				//The request from browser is being stored

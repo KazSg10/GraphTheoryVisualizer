@@ -5,11 +5,9 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<script type="text/javascript" src="connectionToServer.js"></script>
-
 	<title >Graphs Visualizer</title>
 </head>
 <body>
-	
 	<!-- Designing the header of the webapp -->
 	<div class="header">
 		<h1 align="center"> AQA Graph Theory Algorithms Visualizer</h1>
@@ -54,21 +52,13 @@
 			<p align="center">After clicking submit, you would be able to say 3 boxes, one with the graph, another with the abstract data type or data structure involved in the algorithm
 				and another with the pseudocode. To start the simulation you can click <b>Play</b>. To go back to the custom graph making page, you can click <b>Home</b>. If you want to save this graph, 
 				you can click <b>Save Graph</b> to download the text file with the json form of the custom graph you created. Additionally you can also control the speed by changing the position of the <b>Speed Slider</b>.
-			</p>
-			
+			</p>	
 			<h3 align="center"><b>Final Comments</b></h3>
 			<p align="center">If you enjoyed using this webapp, and thought this convenient for your studies, then please free to let the designer <b>Karan Singh</b> 
 				through his email <a href="mailto:v00298@reading-school.co.uk">v00298@reading-school.co.uk</a>. Additionally please Karan know if there are any issues or suggestions related to this webapp.</p>
 			<h3><b>Hope you enjoy!</b></h3>	
-
-		<!-- <footer style="position: fixed; bottom: 0; text-align: center;">
-			<p>Designer: Karan Singh</p>
-			<p><a href="mailto:v00298@reading-school.co.uk">v00298@reading-school.co.uk</a></p>
-		</footer> -->
-
 		</div>
 
-	
 	<!--Designing the different algorithms' sections of the webapp
 		The names of the headers are in the format:
 		Table name + "Header" + index starting from 0 -->
@@ -195,19 +185,23 @@
 	<script>
 		//Event Handler when a tab is clicked, which loads the page of that tab
 		function selectOption(event, option){
+			//Getting all the elements under the class "optioncontent"
 			var optionContent = document.getElementsByClassName("optioncontent");
 			for(let i = 0; i<optionContent.length; i++){
+				//Foreach of the tabs, I am hiding the contents from the user
 				optionContent[i].style.display="none";
 			}
+			//Getting all the elements under the class "options"
 			var options = document.getElementsByClassName("options");
 			for(let i = 0; i<options.length; i++){
-				console.log(event.type);
+				//Removing the active highlight from all the tab buttons, being active or not affects the css of the button
 				options[i].className = options[i].className.replace(" active", "")
 			}
+			//Presenting the tabs content which was required by the user
 			document.getElementById(option).style.display = "block";
+			//Changing css of button because it is now active
 			event.currentTarget.className+=" active";
 		}
-		document.getElementById("defaultOpen").click();
 
 		//Function of adding a new row to the table 
 		function addNewRow(tableId, count){
