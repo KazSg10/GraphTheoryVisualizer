@@ -1,4 +1,4 @@
-
+/*Styling the html elements*/
 canvas{
 	border: 1px solid black;		
 	background: white;			
@@ -32,7 +32,6 @@ body, html{
 	height: 15%;
 }
 
-
 .menu button {	
   outline: none;
   display: block;
@@ -59,7 +58,6 @@ body, html{
 .optioncontent{
 	float: left;
 	padding: 0px 12px;
-	border: 1px solid #d82a2a;
 	width: 100%;
  	border-left: none;
   	height: 90%;
@@ -87,6 +85,11 @@ th{
 	background-color:white;
 }
 
+.optioncontent p{
+	padding: 2%;
+}
+
+
 .canvasposition {
 	position:absolute;
 	float:left;
@@ -105,6 +108,7 @@ th{
 	cursor: pointer;
 	transition: 0.5s;
 }
+
 .graphMakingButtons button:hover{
 	background-color: rgb(255,166,0);
 	color: white;

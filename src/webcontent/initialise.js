@@ -1,3 +1,4 @@
+//Initialising the canvases and variables required for the simulation of the algorithm
 function initialise(){
     //Getting the body from the local storage of the window
     var body = localStorage.getItem("body");
@@ -21,10 +22,14 @@ function initialise(){
     for(let i = 0; i < circlesArray.length; i++){
 	    circlesArray[i].drawCircle("yellow");
     }
+
+	//Creating the edges between the circles
     const edges =  initialiseEdges(circlesArray, ctxGraph , algorithm);
     for(let i = 0; i < edges.length; i++){
 	    edges[i].drawLine("black", radius);
     }
+
+	//Writing the pseucode in the canvasPseudocode at the start, index is -1 since no line is being highlighted
     writePseudocode(JSON.parse(localStorage.getItem('pseudocode')), ctxPseudocode, canvasPseudocode, -1);
 	if(algorithm == "DFS"){
 		drawDFSCanvas(ctxADT, canvasADT, [], []);
@@ -33,24 +38,10 @@ function initialise(){
 		drawBFSCanvas(ctxADT, canvasADT, [], []);
 	}
 	else if(algorithm == "Dijkstra"){
-		var tableData = [];
 		initialiseDijkstraTable(ctxADT, canvasADT, circlesArray);
 	}
 
 	return circlesArray;
-}
-
-
-
-/**
- * 
- * @param {*} min - The minimum value returned by the random number generator
- * @param {*} max - The maximum value returned by the random number generator
- * @param {*} radius - The radius of the circle required ...
- * @returns 
- */
-function getRandomCoordinates(min, max, radius) {
-  return Math.random() * (max - (min + radius + 1)) + min;
 }
 
 /**
@@ -86,44 +77,49 @@ function readJsonBody(body){
 	localStorage.setItem('sourceNode', JSON.stringify(sourceNode));
 }
 
-/**
- * Taking the nodeConnections part of the jsonBody in order to initialise the edges
- * between the nodes which have a connection (edge)
- */
-
-
-
+//Initialising edges between the circles
 function initialiseEdges(circlesArray, ctxGraph , algorithm){
 	var nodeConnections = JSON.parse(localStorage.getItem('nodeConnections'));
 	var keys = Object.keys(nodeConnections);
 	//Initialising a list for the edges 
 	var edges = [];
-	var weight = -1;
 	var length = keys.length;
 	for(let i = 0; i<length; i++){
+		//Retreiving the key in the node connections
 		var key = keys[i];
-		var valuesList = nodeConnections[key];
-		//Getting the circle which is in the edge
-		var node1 = getCircle(key, circlesArray);
-		for (let j = 0; j < valuesList.length; j++) {
+		//Retreiving that key node's neighbours
+		var neighboursList = nodeConnections[key];
+		//Getting the circle representing the key
+		var keyNode = getCircle(key, circlesArray);
+		for (let j = 0; j < neighboursList.length; j++) {
 			//Getting the circle which is in the edge
-			var node2 = getCircle(valuesList[j].name, circlesArray);
+			var neighbourNode = getCircle(neighboursList[j].name, circlesArray);
 			if(algorithm == "Dijkstra"){
+				/**
+				 * In the json from the server, the weight of the edge between the key node
+				 * and neighbouring node is given in the edgeList section, so I am retreiving
+				 * the weight from there
+				 */
 				edgeList = JSON.parse(localStorage.getItem('edgeList'));
 				for(let edgeIndex = 0; edgeIndex < edgeList.length; edgeIndex++){
-					if(node1.name == edgeList[edgeIndex].node1.name && node2.name == edgeList[edgeIndex].node2.name){
-						weight = edgeList[edgeIndex].weight;
+					if(keyNode.name == edgeList[edgeIndex].node1.name && neighbourNode.name == edgeList[edgeIndex].node2.name){
+						var weight = edgeList[edgeIndex].weight;
 						break;
 					}			
 				}
-
+				//DFS and BFS graph edges have no weight
+			}else{
+				//since there is no weight, I am saying the value for that parameter is -1
+				var weight = -1;
 			}
-		edges.push(new Line(ctxGraph , node1.x, node1.y, node2.x, node2.y, weight));			
+		edges.push(new Line(ctxGraph , keyNode.x, keyNode.y, neighbourNode.x, neighbourNode.y, weight));			
 		}
 	} 
 	localStorage.setItem('edges', JSON.stringify(edges));
 	return edges;
 }
+
+//Function for retrieving the circle, respresenting a specific node, from circlesArray 
 function getCircle(key, circlesArray){
 	var length = circlesArray.length;
 	for(let i = 0; i < length; i++){
@@ -153,47 +149,39 @@ function createCircles(nodesList, radius, ctxGraph ){
 	return circles;
 }
 
-// function circlesCopy(circles){
-// 	circlesCopyList =[];
-// 	for(var circle of circles){
-// 		circlesCopy.push(circle);
-// 	}
-// }
+/**
+ * 
+ * @param {*} min - The minimum value returned by the random number generator
+ * @param {*} max - The maximum value returned by the random number generator
+ * @param {*} radius - The radius of the circle required
+ * @returns 
+ */
+
+//Getting random coordinates for circles in the graph
+function getRandomCoordinates(min, max, radius) {
+  return Math.random() * (max - (min + radius + 1)) + min;
+}
 
 //Validating the coordinates of the centre to see if the nodes are suitably apart
 function centreCoordinatesValidator(xCent, yCent, radius, circles){
-	
 	for(var circle of circles){
 		var pythag = distance(xCent, circle.x, yCent, circle.y);
-		var minimumPixeldistance = 100;
-		if(pythag < minimumPixeldistance){
+		var minimumPixelDistance = 100;
+		//Making sure each circle is at least minimumPixelDistance distance from each of the circles
+		if(pythag < minimumPixelDistance){
 			return false;
 		}
 	}
-
-	// for(let i = 0; i < circles.length; i++){
-	// 	for(let j = 0; j < circles.length; j++){
-	// 		if(circles[i] != circles[j]){
-	// 			if(distance(xCent, circles[i].x, yCent, circles[i].y) < distanceBetweenTwoCircles(circles[i], circles[j])/2 || distance(xCent, circles[j].x, yCent, circles[j].y) < distanceBetweenTwoCircles(circles[i], circles[j])/2){
-	// 				return false;
-	// 			}
-	// 		}
-	// 	}
-	// }
 	return true;
 }
 
+//Getting distance between two coordinates
 function distance(x1, x2, y1, y2){
 	return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
 }
 
-function distanceBetweenTwoCircles(circle1, circle2){
-	return Math.sqrt(circle1.x * circle1.x + circle2.y * circle2.y);
-}
-
-
 /**
- * Following function are used to redraw the canvasADT for DFS and BFS
+ * Following two function are used to redraw the canvasADT for DFS and BFS
 */
 function drawDFSCanvas(ctxADT, canvasADT, stack, visited){
 	//Clearing the canvas before remaking the queue
@@ -201,6 +189,7 @@ function drawDFSCanvas(ctxADT, canvasADT, stack, visited){
 
 	numberOfNodes = JSON.parse(localStorage.getItem('numberOfNodes'));
 
+	//Drawing tack and visited in the canvasADT
 	drawDFSStack(ctxADT, canvasADT, numberOfNodes, stack);
 	drawDFSVisited(ctxADT, canvasADT, numberOfNodes, visited);
 }
@@ -211,10 +200,12 @@ function drawBFSCanvas(ctxADT, canvasADT, queue, visited){
 
 	numberOfNodes = JSON.parse(localStorage.getItem('numberOfNodes'));
 
+	//Drawing queue and visited in the canvasADT
 	drawBFSQueue(ctxADT, canvasADT, numberOfNodes, queue);
 	drawBFSVisited(ctxADT, canvasADT, numberOfNodes, visited);
 }
 
+//Drawing queue for BFS
 function drawBFSQueue(ctxADT, canvasADT, numberOfNodes, nodes){
 	//Draw Queue
 	ctxADT.beginPath();
@@ -225,6 +216,7 @@ function drawBFSQueue(ctxADT, canvasADT, numberOfNodes, nodes){
 	var queueHeight = height * 0.8;
 
 	var cellWidth = queueWidth;
+	//The first row is the header row, therefore I am doing numberOfNode + 1 to have an extra row
 	var cellHeight = queueHeight/(numberOfNodes+1);
 
 	var x = width*0.1
@@ -234,6 +226,7 @@ function drawBFSQueue(ctxADT, canvasADT, numberOfNodes, nodes){
 	var text;
 
 	for(let rowIndex = 0; rowIndex < numberOfNodes + 1; rowIndex++){
+		//Drawing a rectangle for each cell in the queue, with the value of the cell in the center
 		y = startY + rowIndex * cellHeight;
 		ctxADT.strokeRect(x, y, cellWidth, cellHeight);
 		if(rowIndex == 0){
@@ -244,12 +237,17 @@ function drawBFSQueue(ctxADT, canvasADT, numberOfNodes, nodes){
 			ctxADT.font = "bold 16px Arial";
 		}
 		else{
+			/**
+			 * If there is a value in nodes[rowIndex - 1], then that value will be copied into text, otherwise
+			 * the text will be blank
+			 */
 			text = nodes[rowIndex - 1] ? nodes[rowIndex - 1] :  "";
 		}
 		ctxADT.fillText(text, x + cellWidth/2, y + cellHeight / 2)
 	}
 }
 
+//Drawing visited for BFS
 function drawBFSVisited(ctxADT, canvasADT, numberOfNodes, nodes){
 	//Draw Visited list
 	ctxADT.beginPath();
@@ -284,6 +282,8 @@ function drawBFSVisited(ctxADT, canvasADT, numberOfNodes, nodes){
 		ctxADT.fillText(text, x + cellWidth/2, y + cellHeight / 2)
 	}
 }
+
+//Drawing stack for DFS
 
 function drawDFSStack(ctxADT, canvasADT, numberOfNodes, nodes){
 	//Draw Stack
@@ -321,6 +321,7 @@ function drawDFSStack(ctxADT, canvasADT, numberOfNodes, nodes){
 	}
 }
 
+//Drawing queue for DFS
 function drawDFSVisited(ctxADT, canvasADT, numberOfNodes, nodes){
 	//Draw Visited list
 	ctxADT.beginPath();
@@ -355,29 +356,34 @@ function drawDFSVisited(ctxADT, canvasADT, numberOfNodes, nodes){
 	}
 }
 
+//Drawing the Dijkstra Table for Dijkstra
 function initialiseDijkstraTable(ctxADT, canvasADT, circlesArray){
+	/**
+	 * tableChangedRowData parameter is null since the table is not edited yet,
+	 * null means draw the initial table
+	 */
 	buildDijkstraTable(buildTableData(null, circlesArray), canvasADT, ctxADT);
 }
 
-/**
- * Function for building the data for the Dijkstra table
- * @param {*} tableChangedRowData - This will be the row of the table that has been updated
- * This will be null in the beginning
- * @param {*} circlesArray 
- * 
- */
+//Function for building the data for the Dijkstra table
 function buildTableData(tableChangedRowData, circlesArray){
 	var newTableData = [];
 	if(tableChangedRowData == null){
 		for(let i = 0; i < circlesArray.length; i++){
 			if(circlesArray[i].name == JSON.parse(localStorage.getItem('sourceNode')).name){
+				//If the row is for the source node, then the dist value is 0 since distance from source node to itself is 0
 				tableData.push({node : circlesArray[i].name, dist : 0, prev : ""})
 			}else{
+				//Else the dist value is infinity ("\u221E" is the infinity symbol)
 				tableData.push({node : circlesArray[i].name, dist : "\u221E", prev : ""});
 			}
 		}
 		return tableData;
 	}else{
+		/**
+		 * In js arrays/lists, there is no inbuilt function to remove items based off index, therefore, I append the data to
+		 * table data everytime, and then I copy the last rows, that are the updated rows, into newTableData
+		 */
 		var length = tableData.length;
 		for(let i = length - circlesArray.length; i < length; i++){
 			if((tableData[i]).node == tableChangedRowData[0]){
@@ -394,7 +400,7 @@ function buildTableData(tableChangedRowData, circlesArray){
 }
 
 /**
- * Function for building the table for the Dijkstra Algorithm
+ * Proceudre for building the table for the Dijkstra Algorithm
  * There will be three columns: Node, Distance From Source Node, Previous Node
  */
 function buildDijkstraTable(tableData, canvasADT, ctxADT){
@@ -454,9 +460,7 @@ function buildDijkstraTable(tableData, canvasADT, ctxADT){
 			}
 			//Centering the values in the cells
 			ctxADT.fillText(text, x + cellWidth / 2, y + cellHeight / 2);
-		}
-		
-		
+		}	
 	}
 }
 

@@ -23,7 +23,7 @@ async function postData(tableName, algorithm, sourceNode){
 		}
 	localStorage.setItem('userJsonBody', jsonData);
 
-	//Submit POST request to the server for processing algorithm input data
+	//Submiting POST request to the server for processing algorithm input data
 	//var promise = fetch("http://localhost:8908/visualize",
 	/*
 	* JS is a single-threaded language, therefore this asynchronous approach is required
@@ -52,9 +52,11 @@ async function postData(tableName, algorithm, sourceNode){
 	//Getting the body from the response from client
 	var body = bodyfromResponse(stringResponse);
 	localStorage.setItem('body', body);
+	//Going to the loadVisualizer.html page
 	window.location.href = "loadvisualizer.html";
 }
 
+//Validating json
 function isJson(json){
 	try{
 		JSON.parse(json);
@@ -64,7 +66,7 @@ function isJson(json){
 	}
 }
 
-
+//If the values in the graph cells is empty, then the saved json that was input in the savedJson cell is used
 function boolDataFromFile(tableName, sourceNode){
 	//Retrieving the contents of the table determined by the table name parameter
 	var table = document.getElementById(tableName);
@@ -98,6 +100,7 @@ function boolDataFromFile(tableName, sourceNode){
 
 //Function for creating the json data from the table to pass on to the server
 function createJSON(tableName, algorithm, sourceNode){
+	//Checking if the values for the graph typed by the user is checked for any errors
 	const error = checkForErrors(tableName, sourceNode);
 	if(error){
 		return null;
@@ -188,6 +191,10 @@ function checkForErrors(tableName, sourceNode){
 	//Creating a list to store the edges of the graph, for use of validation later
 	const edgesList = [];
 	
+	/**
+	 * The last cell of the second row is the sourceNode (first row is header row), which isn't required as 
+	 * we are bringing the sourceNode into the function separately
+	 */
 	var cellsCount = table.rows[1].cells.length - 1;	
 
 
@@ -196,19 +203,20 @@ function checkForErrors(tableName, sourceNode){
 	 * errors in any of the rows
 	 * Starting with row 1 since row 0 is the row of headers
 	 */
-	
 	for(let rowIndex = 1; rowIndex < numberOfRows; rowIndex++){
-		var row = table.rows[rowIndex];	
+		//Getting the cell elements for node1 and node2
 		node1Cell = document.getElementById(tableName + rowIndex.toString() + "0");
 		node2Cell = document.getElementById(tableName + rowIndex.toString() + "1");
 		//Setting the node values equal to variables for use of validation later
 		var node1Value = node1Cell.value;
 		var node2Value = node2Cell.value;
 
+		//If node1 and node2 is the same in a row, then there a is same node error
 		if(node1Value == node2Value && node1Value != "" && node2Value != ""){
 			errorBoxCell("same nodes", node1Cell, node2Cell);
 			error = true;
 		}
+		
 		//initialising a direction variable which will be updated later 
 		var direction = "";
 		/**
@@ -223,13 +231,14 @@ function checkForErrors(tableName, sourceNode){
 			//Retrieving that specific cell from DOM
 			var cell = document.getElementById(cellId);
 			
-
+			//Cell empty error if the cell is empty
 			if(cellIndex < cellsCount - 1){
 				if(cell.value == ""){
-						errorBoxCell("cell empty", cell, null);
-						error = true;
+					errorBoxCell("cell empty", cell, null);
+					error = true;
 				}
 				if(tableName == "DijkstraGraphTable"){
+					//Validating the weight value
 					if(cellIndex == 2){
 						if(Number.isInteger(Number(cell.value)) == false || Number(cell.value) <= 0){
 							errorBoxCell("weight error", cell, null);
@@ -239,6 +248,7 @@ function checkForErrors(tableName, sourceNode){
 					
 				}
 			}
+			//The direction cell position is in another cell in the Dijsktra graph compared to the DFS and BFS graphs
 			if(tableName == "DijkstraGraphTable"){
 				//Setting the direction value to a variable for validation use later 
 				direction = document.getElementById(tableName + rowIndex.toString() + "3").value;
@@ -334,6 +344,7 @@ function errorBoxCell(error, cell1, cell2){
 		cell2.style.backgroundColor = cell2Colour;
 	}
 
+	//Waiting after colouring of cells before showing window alert message
 	setTimeout(() => {
 		window.alert(message);
 	}, 70);

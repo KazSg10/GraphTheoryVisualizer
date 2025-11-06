@@ -26,9 +26,7 @@
 			margin-left:0;
 			margin-right:auto;
 		}
-
 	</style>
-
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
@@ -41,6 +39,7 @@
 		<button id="homeButton" style="margin-left: auto;" onclick="history.back()"> Home </button>
 		<button id="Play" style="margin-left: center;" onClick="simulate()"> Play </button>
 		<button id="Save graph" style="margin-left: center;" onClick="saveGraph(localStorage.getItem('userJsonBody'))">Save Graph</button>
+		<input type="range" min = "1" max="50" value="25" id="speedRange">
 	</div>
 
 	<!-- Creating three div elements to represent three different parts of the HTML webpage collating them in one div
@@ -75,37 +74,33 @@
 			canvas.height=height;
 			//Setting newly created canvas' border style
 			canvas.style.border="5px solid  #ee0000";
-		//Adding the canvas element as a child node of the div element in DOM
+			//Adding the canvas element as a child node of the div element in DOM
 			divReference.appendChild(canvas);
 			return canvas;
 		}
-			
+		
+		/**
+		 * Procedure for triggering a download of a text file with the json of the graph created by the user, who can then
+		 * use it later when reusing the graph
+		 */	
 		function saveGraph(json){
 			const link = document.createElement("a");
 			const file = new Blob([json], {type: 'text/plain'});
-
 			link.href = URL.createObjectURL(file);
 			link.download = "GraphJson.txt";
 			link.click();
 			URL.revokeObjectURL(link.href);
 		}
 
-
-
-
 		//Creating three canvases and linking them to the three div elements created above
 		var canvasGraph = createCanvasElement('divGraph','canvasGraph',innerWidth*0.6,innerHeight*0.865);
 		var canvasADT = createCanvasElement('divADT','canvasADT',innerWidth*0.37,innerHeight*0.425);
 		var canvasPseudocode = createCanvasElement('divPseudocode','canvasPseudocode',innerWidth*0.37,innerHeight*0.425);
 
+		//After initialising the canvases and the loadVisualizer page, initialise is called
 		const circlesArray = initialise();
-
 	</script>
-
-	
-	
 </body>
 <footer>
-
 </footer>
 </html> 

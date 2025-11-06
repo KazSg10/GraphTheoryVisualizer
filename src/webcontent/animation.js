@@ -2,44 +2,36 @@ const pseudocode = JSON.parse(localStorage.getItem('body')).Pseudocode;
 const simulationSteps = JSON.parse(localStorage.getItem('body')).simulationSteps;
 const algorithm = JSON.parse(localStorage.getItem('body')).Algorithm;
 
+//Setting up variables required for the functions for the simulation 
 var framePath = 1;
-//Increasing the speed value, actually makes the simulation slower
-var speed =10;
-var framePseudocode = 1;
-var speedPseudocode = 500;
+//Increasing the inverseSpeed value, makes the simulation slower
+var inverseSpeed;
 var fromCircle;
 var toCircle;
 var stepsIndex = 0;
 var ctxGraph;
 var ctxPseudocode;
 var ctxADT;
-var colour;
+var lineColour;
 var startCirclesNamesList = [];
 var endCircleNamesList = [];
 var canvasGraph;
 var canvasADT;
 var canvasPseudocode;
 var start = null;
-var pseudocodeLine;
 var nullInteger = (Math.pow(2, 31) - 1);
 const visited = [];
 var pseudocodeUpdated = false;
-var stackEntryValue;
-var stackEntryAction;
 const stack = [];
-var stackUpdated = false;
-var stackIndex = 0;
 var queue = [];
-var distance;
 var tableData = []
 var fromCircleColour;
 var toCircleColour;
 
-
-var animationInProgress = false;
-
-//The function that will trigger the animation
+//The procedure that will trigger the animation
 function simulate() {
+	//Initialising the inverseSpeedValue based on the value of the speedRange slider 
+	inverseSpeed = 60 - document.getElementById("speedRange").value;
     //Getting canvas elements from DOM (Document Object Model)
     canvasGraph = document.getElementById('canvasGraph');
     canvasADT = document.getElementById('canvasADT');
@@ -52,22 +44,120 @@ function simulate() {
 	
 	//Disabling the play button for the duration of the animation
 	document.getElementById("Play").disabled = true;
-	
+	document.getElementById("speedRange").disabled = true;
 	//Starting the animation process
 	processSteps();
 }
 
-//Function for rewriting the pseudocode with the current line being highlighted
+//Procedure for processing the simulation steps which has come from the server
+function processSteps() {
+	//if stepsIndex is less than the number of simulation steps, then the simulation should stop
+	if(stepsIndex >= Object.keys(simulationSteps).length){
+		return;
+	}
+
+	//Retrieving FromNode and ToNode from the simulationSteps in json
+	var fromNode = simulationSteps[stepsIndex].FromNode;
+	var toNode = simulationSteps[stepsIndex].ToNode;
+	if(fromNode != null && toNode != null){
+		fromCircle = getCircle(fromNode, circlesArray);
+		toCircle = getCircle(toNode, circlesArray);
+	}
+	
+	var visitedNode = simulationSteps[stepsIndex].VisitedNodeName;
+	var traversedNode = simulationSteps[stepsIndex].TraversedNodeName;
+
+	switch(algorithm){
+		case "DFS":
+			if(simulationSteps[stepsIndex].StackEntry != null){
+				//Retrieving StackEntry.Value and StackEntry.Action from the simulationSteps in json and performing different actions based on the action
+				var stackEntryValue = simulationSteps[stepsIndex].StackEntry.Value;
+				var stackEntryAction = simulationSteps[stepsIndex].StackEntry.Action;
+				if(stackEntryAction == "PUSH"){
+					stack.push(stackEntryValue);
+				}
+				else if(stackEntryAction == "POP"){
+					stack.pop();
+				}
+			}
+			if(simulationSteps[stepsIndex].VisitedNodeName != null){
+				visited.push(visitedNode);
+				//If a node is visited, then the circle representing that node is filled with the colour blue
+				getCircle(visitedNode, circlesArray).drawCircle("blue");
+			}
+			//Redrawing the DFS canvas
+			drawDFSCanvas(ctxADT, canvasADT, stack, visited)
+			break;
+
+		case "BFS":
+			if(simulationSteps[stepsIndex].QueueEntry != null){
+				//Retrieving QueueEntry.Value and QueueEntry.Action from the simulationSteps in json and performing different actions based on the action
+				var queueEntryValue = simulationSteps[stepsIndex].QueueEntry.Value;
+				var queueEntryAction = simulationSteps[stepsIndex].QueueEntry.Action;
+				if(queueEntryAction == "ENQUEUE"){
+					queue.push(queueEntryValue);
+				}
+				else if(queueEntryAction == "DEQUEUE"){
+					queue.pop();
+				}
+			}
+			if(simulationSteps[stepsIndex].VisitedNodeName != null){
+				visited.push(visitedNode);
+				//If a node is visited, then the circle representing that node is filled with the colour blue
+				getCircle(visitedNode, circlesArray).drawCircle("blue");
+			}
+			//Redrawing the BFS canvas
+			drawBFSCanvas(ctxADT, canvasADT, queue, visited);
+			break;	
+
+		case "Dijkstra":
+			//If the new distance has changed, then the Dijktra Table is updated
+			if(simulationSteps[stepsIndex].NewDistance != nullInteger){
+				var tableData = buildTableData([simulationSteps[stepsIndex].VisitedNodeName, simulationSteps[stepsIndex].NewDistance, simulationSteps[stepsIndex].NewPreviousNode], circlesArray);
+				buildDijkstraTable(tableData, canvasADT, ctxADT);
+
+			}
+			//If all the paths between a node and its neighbours, then the circle representing the circle is filled with the colour blue
+			if(simulationSteps[stepsIndex].TraversedNodeName != null){
+				getCircle(traversedNode, circlesArray).drawCircle("blue");
+			}	
+			break;				
+	}
+
+	//The next step is to update the pseudocode and update the stepsIndex to go to the next step;
+	updatePseudocode();
+	stepsIndex++;
+}
+
+//Procedure for updating the highlighting of the pseudocode lines
+function updatePseudocode() {
+	//Highlighting the current line
+	writePseudocode(pseudocode, ctxPseudocode, canvasPseudocode, simulationSteps[stepsIndex].PseudocodeLineIndex);
+
+	/**
+	 * While the framePath is less than inverseSpeed, this function will be repeated until framePath is equal to inverseSpeed
+	 * The greater the inverseSpeed, the slower the time it takes to go through the pseudocode
+	 */
+	if(framePath <= inverseSpeed){
+		framePath++;
+		requestAnimationFrame(updatePseudocode)	
+	} else {
+		//After framePath equals inverseSpeed, the framePath is reset to 1 
+		framePath = 1;
+		//When the values are reset, the next step is animateEdge function
+		animateEdge()
+	}	
+}
+
+//Procedure for rewriting the pseudocode with the current line being highlighted
 function writePseudocode(pseudocode, ctxPseudocode, canvas, PseudocodeLineIndex){
 
 	//Clearing the pseudocode before writing pseudocode
 	ctxPseudocode.clearRect(0, 0, canvasPseudocode.width, canvasPseudocode.height);
-
 	//Getting length of the pseudocode array in the json
 	var length = Object.keys(pseudocode).length;
 	//var lineHeight = canvas.height/length;
 	ctxPseudocode.font = "10px Arial";
-	
 	
 	for(let i = 0; i < length; i++){
 		//Highlight current line in canvasPseudocode told by PseudocodeLineIndex
@@ -82,18 +172,26 @@ function writePseudocode(pseudocode, ctxPseudocode, canvas, PseudocodeLineIndex)
 	}
 }
 
-//Function for drawing line 
+//Procedure for drawing line 
 function animateEdge() {
 	//If there is no fromCircle or toCircle, then there is no edge to be drawn along, leading to processSteps being called again
-	
 	if (fromCircle == null || toCircle == null) {
 		processSteps();
 	}else{
+		/**
+		 * If the edge has been traversed already but in the other way, the colour of the part of the traversal in the other way 
+		 * will be cyan, otherwise it is red
+		 */
 		if(startCirclesNamesList.includes(toCircle.name) && endCircleNamesList.includes(fromCircle.name)){
-			colour = "cyan";
+			lineColour = "cyan";
 		}else{
-			colour = "red";
+			lineColour = "red";
 		}
+		/**
+		 * Saving the fromCircle and toCircle fill colours at the start so that after the full traversal, the circles are drawn again with the same 
+		 * fill colour so that the path of the traversal that goes in the circles are overriden so it looks like the traversal goes from
+		 * edge to edge, making it look more professional
+		 */
 		if(framePath == 1){
 			fromCircleColour = fromCircle.fillColour;
 			toCircleColour = toCircle.fillColour;
@@ -103,22 +201,28 @@ function animateEdge() {
 		//Difference in y-coordinates of the two circles
 		var yDiff = toCircle.y - fromCircle.y;
 		
-		var newX = (xDiff * (framePath /speed) + fromCircle.x);
-		var newY = (yDiff * (framePath/speed) + fromCircle.y);
+		//Setting up coordinates of the points in the path between the two circles based on the inverseSpeed
+		var newX = (xDiff * (framePath /inverseSpeed) + fromCircle.x);
+		var newY = (yDiff * (framePath/inverseSpeed) + fromCircle.y);
 		
+		//Drawing the path from the starting circle to the point in the path 
 		ctxGraph.beginPath();
 		ctxGraph.moveTo(fromCircle.x, fromCircle.y);
 		ctxGraph.lineTo(newX, newY);	
 
-		ctxGraph.strokeStyle=colour;
+		ctxGraph.strokeStyle=lineColour;
 		ctxGraph.lineWidth=4;
 		ctxGraph.stroke();	
 
-		if(framePath < speed){
+		if(framePath < inverseSpeed){
 			framePath++;
+			/**
+			 * requestAnimationFrame is used to loop animateEdge again. requestAnimationFrame instructs the system
+			 * to prepare for an animation leading to a more clean animation
+			 */
 			requestAnimationFrame(animateEdge);
 		} else {
-			
+			//Adding the fromCircle and toCircle to the startCirclesNamesList and endCirclesNameList
 			if(!startCirclesNamesList.includes(fromCircle.name)) {
 				startCirclesNamesList.push(fromCircle.name);
 			} 
@@ -127,9 +231,12 @@ function animateEdge() {
 			}
 			fromCircle.drawCircle(fromCircleColour);
 			toCircle.drawCircle(toCircleColour);
-
+			/**
+			 * This process is for the Dijkstra's Algorithms, I am redrawing the line with the same line colour so that
+			 * the number of the weight comes on the top and is not overriden by the line colour
+			 */
 			var line = retrieveLine(fromCircle, toCircle);
-			line.drawLine(colour, fromCircle.radius);
+			line.drawLine(lineColour, fromCircle.radius);
 
 			fromCircle = null;
 			toCircle = null;
@@ -139,129 +246,13 @@ function animateEdge() {
 	}
 }
 
+//Function for retrieving the line between the two circles
 function retrieveLine(circle1, circle2){
 		for(var line of JSON.parse(localStorage.getItem('edges'))){
 			if((line.x1 == circle1.x && line.x2 == circle2.x && line.y1 == circle1.y && line.y2 == circle2.y)||(line.x1 == circle2.x && line.x2 == circle1.x && line.y1 == circle2.y && line.y2 == circle1.y)){
 				return new Line(ctxGraph, line.x1, line.y1, line.x2, line.y2, line.weight);
 			}
 		}
-	}
-
-//Function for updating the highlighting of the pseudocode lines
-function updatePseudocode() {
-	//Highlighting the current line
-	writePseudocode(pseudocode, ctxPseudocode, canvasPseudocode, simulationSteps[stepsIndex].PseudocodeLineIndex);
-
-	/**
-	 * While the framePath is less than speed, this function will be repeated until framePath is equal to 50
-	 * Changing the framePath changes the speed
-	 */
-	if(framePath <= speed){
-		framePath++;
-		requestAnimationFrame(updatePseudocode)	
-	} else {
-		//After framePath equals speed, the framePath is reset to 1 
-		framePath = 1;
-		//When the values are reset, the animateEdge function is called
-		animateEdge()
-	}
-	
-}
- 
-// function updateADT(algorithm){
-// 	switch(algorithm){
-// 		case "DFS":
-// 			drawDFSCanvas(ctxADT, canvasADT, stack, visited);
-// 			break;
-// 		case "BFS":
-// 			drawBFSCanvas(ctxADT, canvasADT, queue, visited);
-// 			break;
-// 		case "Dijkstra":
-// 			updateDijkstraADT(algorithm);
-// 			break;	
-// 	}
-// 	processSteps();
-// }
-
-function processSteps() {
-	if(stepsIndex >= Object.keys(simulationSteps).length){
-		return;
-	}
-
-	
-	//Retrieving FromNode and ToNode from the simulationSteps in json
-	var fromNode = simulationSteps[stepsIndex].FromNode;
-	var toNode = simulationSteps[stepsIndex].ToNode;
-	if(fromNode != null && toNode != null){
-		fromCircle = getCircle(fromNode, circlesArray);
-		toCircle = getCircle(toNode, circlesArray);
-	}
-
-	//Retrieving PseudocodeLine from the simulationSteps in json
-	pseudocodeLine = pseudocode[simulationSteps[stepsIndex].PseudocodeLineIndex];
-	
-	var visitedNode = simulationSteps[stepsIndex].VisitedNodeName;
-	var traversedNode = simulationSteps[stepsIndex].TraversedNodeName;
-
-	switch(algorithm){
-		case "DFS":
-			if(simulationSteps[stepsIndex].StackEntry != null){
-				//Retrieving StackEntry.Value and StackEntry.Action from the simulationSteps in json
-				stackEntryValue = simulationSteps[stepsIndex].StackEntry.Value;
-				stackEntryAction = simulationSteps[stepsIndex].StackEntry.Action;
-				if(stackEntryAction == "PUSH"){
-					stack.push(stackEntryValue);
-				}
-				else if(stackEntryAction == "POP"){
-					stack.pop();
-				}
-			}
-			if(simulationSteps[stepsIndex].VisitedNodeName != null){
-				visited.push(visitedNode);
-				getCircle(visitedNode, circlesArray).drawCircle("blue");
-			}
-			drawDFSCanvas(ctxADT, canvasADT, stack, visited)
-			break;
-
-		case "BFS":
-			if(simulationSteps[stepsIndex].QueueEntry != null){
-				queueEntryValue = simulationSteps[stepsIndex].QueueEntry.Value;
-				queueEntryAction = simulationSteps[stepsIndex].QueueEntry.Action;
-				if(queueEntryAction == "ENQUEUE"){
-					queue.push(queueEntryValue);
-				}
-				else if(queueEntryAction == "DEQUEUE"){
-					queue.pop();
-				}
-			}
-			if(simulationSteps[stepsIndex].VisitedNodeName != null){
-				visited.push(visitedNode);
-				getCircle(visitedNode, circlesArray).drawCircle("blue");
-			}
-		
-			drawBFSCanvas(ctxADT, canvasADT, queue, visited);
-			break;			
-		case "Dijkstra":
-			if(simulationSteps[stepsIndex].NewDistance != nullInteger){
-				var tableData = buildTableData([simulationSteps[stepsIndex].VisitedNodeName, simulationSteps[stepsIndex].NewDistance, simulationSteps[stepsIndex].NewPreviousNode], circlesArray);
-				buildDijkstraTable(tableData, canvasADT, ctxADT);
-
-			}
-			if(simulationSteps[stepsIndex].TraversedNodeName != null){
-				getCircle(traversedNode, circlesArray).drawCircle("blue");
-			}	
-			break;				
-	}
-	
-	
-
-	//Start Animation
-	updatePseudocode();
-	stepsIndex++;
 }
 
 
-function sleep(milliseconds){
-	var currentTime = new Date().getTime();
-	while(currentTime + milliseconds >= new Date().getTime()){}
-}

@@ -38,6 +38,7 @@ public class WebServer {
 	
 	//Class for Web Server
 	public static void main(String[]args) {
+			
 		WebServer webServer = new WebServer();
 		//Web server starting
 		webServer.startServer();
