@@ -1,9 +1,11 @@
 /*Styling the html elements*/
+
 canvas{
 	border: 1px solid black;		
 	background: white;			
 	}	
 body, html{
+	overflow-x: hidden;
 	font-family: Arial;
 	margin: 0;
 	height: 100%;
@@ -25,7 +27,6 @@ body, html{
 }
 
 .menu{
-	float: left;
 	border: 1px solid;
 	width: 100%; 
 	background-color: #fa861af1;
@@ -41,7 +42,6 @@ body, html{
   float: left;
   border: none;
   cursor: pointer;
-  padding: 14px 10px;
   font-size: 30px;
   height: 100%;
   width: 25%;
@@ -56,7 +56,6 @@ body, html{
 }
 
 .optioncontent{
-	float: left;
 	padding: 0px 12px;
 	width: 100%;
  	border-left: none;
@@ -86,7 +85,7 @@ th{
 }
 
 .optioncontent p{
-	padding: 2%;
+	padding: 2.5%;
 }
 
 
