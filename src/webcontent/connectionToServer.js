@@ -207,6 +207,13 @@ function checkForErrors(tableName, sourceNode){
 		//Getting the cell elements for node1 and node2
 		node1Cell = document.getElementById(tableName + rowIndex.toString() + "0");
 		node2Cell = document.getElementById(tableName + rowIndex.toString() + "1");
+		
+		/**
+		 * Resetting each cell's colour to white so it is updated with a value when going for another check to show it is right now
+		 * If the value is still invalid then the cell will be coloured again	
+		 */
+		node1Cell.style.backgroundColor = "white";
+		node2Cell.style.backgroundColor = "white";
 		//Setting the node values equal to variables for use of validation later
 		var node1Value = node1Cell.value;
 		var node2Value = node2Cell.value;
@@ -224,42 +231,41 @@ function checkForErrors(tableName, sourceNode){
 		 * need to be read 
 		 */
 		for(let cellIndex = 0; cellIndex < cellsCount; cellIndex++){
-
 			//Creating a cellId for each cell to detect specific cells which have errors
 			var cellId = tableName + rowIndex.toString() + cellIndex.toString();
-
 			//Retrieving that specific cell from DOM
 			var cell = document.getElementById(cellId);
-			
+			/**
+			 * Resetting each cell's colour to white so it is updated with a value when going for another check to show it is right now
+			 * If the value is still invalid then the cell will be coloured again	
+			 */
+			if(cellIndex!=0 && cellIndex!=1){
+				cell.style.backgroundColor = "white";
+			}		
 			//Cell empty error if the cell is empty
-			if(cellIndex < cellsCount - 1){
+			if(cellIndex == 0 || cellIndex == 1){
 				if(cell.value == ""){
 					errorBoxCell("cell empty", cell, null);
 					error = true;
 				}
-				if(tableName == "DijkstraGraphTable"){
-					//Validating the weight value
-					if(cellIndex == 2){
-						if(Number.isInteger(Number(cell.value)) == false || Number(cell.value) <= 0){
-							errorBoxCell("weight error", cell, null);
-							error = true;
-						}
+			}
+			if(tableName == "DijkstraGraphTable"){
+				//Validating the weight value
+				if(cellIndex == 2){
+					if(cell.value == "" || Number.isInteger(Number(cell.value)) == false || Number(cell.value) <= 0){
+						errorBoxCell("weight error", cell, null);
+						error = true;
 					}
-					
-				}
+				}	
 			}
 			//The direction cell position is in another cell in the Dijsktra graph compared to the DFS and BFS graphs
 			if(tableName == "DijkstraGraphTable"){
 				//Setting the direction value to a variable for validation use later 
 				direction = document.getElementById(tableName + rowIndex.toString() + "3").value;
-
 			}else{
 				//Setting the direction value to a variable for validation use later 
 				direction = document.getElementById(tableName + rowIndex.toString() + "2").value;
-			}
-
-
-			
+			}	
 			/**
 			 * Error checking for duplicate edges
 			 */
@@ -270,6 +276,7 @@ function checkForErrors(tableName, sourceNode){
 					edgesList.push([node2Value, node1Value, "BIDIRECTION"]);
 				}else if(edgeChecker([node1Value, node2Value, "BIDIRECTION"], edgesList) || edgeChecker([node2Value, node1Value, "BIDIRECTION"], edgesList)){
 					errorBoxCell("duplicate", node1Cell, node2Cell);
+					error = true;
 				}
 				}else if(direction == "UNIDIRECTION"){
 					if(node1Value != "" && node2Value != "" && !edgeChecker([node1Value, node2Value, "BIDIRECTION"], edgesList)){
@@ -277,11 +284,11 @@ function checkForErrors(tableName, sourceNode){
 					}
 				}else if(edgeChecker([node1Value, node2Value, "UNIDIRECTION"], edgesList)){
 					errorBoxCell("duplicate", node1Cell, node2Cell);
+					error = true;
 				}	
 			}	
 		}
 	}
-
 	//Error checking for empty source node cell or no source node in the graph data
 	var sourceNodeError = true;
 	for(const [node1,node2, direction] of edgesList){
@@ -336,19 +343,14 @@ function errorBoxCell(error, cell1, cell2){
 		cell1Colour = "green";
 		cell2Colour = "white";
 	}
-	
 	if(cell1 != null){
 		cell1.style.backgroundColor = cell1Colour;
 	}
 	if(cell2 != null){
 		cell2.style.backgroundColor = cell2Colour;
 	}
-
 	//Waiting after colouring of cells before showing window alert message
 	setTimeout(() => {
 		window.alert(message);
 	}, 70);
 }
-
-
-
