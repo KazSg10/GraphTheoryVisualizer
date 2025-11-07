@@ -120,7 +120,7 @@ function processSteps() {
 			}
 			//If all the paths between a node and its neighbours, then the circle representing the circle is filled with the colour blue
 			if(simulationSteps[stepsIndex].TraversedNodeName != null){
-				getCircle(traversedNode, circlesArray).drawCircle("blue");
+				getCircle(traversedNode, circlesArray).drawCircle("green");
 			}	
 			break;				
 	}
