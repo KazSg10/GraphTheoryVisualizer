@@ -80,17 +80,20 @@ public class Algorithm {
 			visited.add(visitedNode);
 			c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(visitedNode.getName(), 6, null, null, null));
 			List<Node> neighboursList = graph.getNodeConnections(visitedNode);
-			for(Node neighbouringNode: neighboursList) {
-				System.out.println("In for loop");
-				c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, 7, null, null, null));
-				if(!visited.contains(neighbouringNode) && !queue.contains(neighbouringNode)){
-					c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, 8, null, null, null));
-					queue.enqueue(neighbouringNode);
-					c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, 9, new QueueEntry(neighbouringNode.getName(), ActionBFS.ENQUEUE), visitedNode.getName(), neighbouringNode.getName()));
-					System.out.println("enqueued "  + neighbouringNode.getName());
+			if(!(neighboursList == null)) {
+				for(Node neighbouringNode: neighboursList) {
+					System.out.println("In for loop");
+					c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, 7, null, null, null));
+					if(!visited.contains(neighbouringNode) && !queue.contains(neighbouringNode)){
+						c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, 8, null, null, null));
+						queue.enqueue(neighbouringNode);
+						c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, 9, new QueueEntry(neighbouringNode.getName(), ActionBFS.ENQUEUE), visitedNode.getName(), neighbouringNode.getName()));
+						System.out.println("enqueued "  + neighbouringNode.getName());
+					}
+					c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, 10, null, null, null));
 				}
-				c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, 10, null, null, null));
 			}
+			
 			System.out.println("Visited->" + visited);
 		}
 		c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, 11, null, null, null));

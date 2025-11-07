@@ -17,7 +17,7 @@ function initialise(){
     const ctxPseudocode = canvasPseudocode.getContext('2d');
 
 	//Creating the array of circles, which represent the nodes
-	var radius = 30
+	var radius = 35;
     const circlesArray = createCircles(JSON.parse(localStorage.getItem('nodesList')), radius, ctxGraph );
     for(let i = 0; i < circlesArray.length; i++){
 	    circlesArray[i].drawCircle("yellow");
@@ -213,14 +213,14 @@ function drawBFSQueue(ctxADT, canvasADT, numberOfNodes, nodes){
 	height = canvasADT.height;
 
 	var queueWidth = width * 0.3;
-	var queueHeight = height * 0.8;
+	var queueHeight = height * 0.9;
 
 	var cellWidth = queueWidth;
 	//The first row is the header row, therefore I am doing numberOfNode + 1 to have an extra row
 	var cellHeight = queueHeight/(numberOfNodes+1);
 
 	var x = width*0.1
-	var startY = height*0.1;
+	var startY = height*0.05;
 	var y;
 
 	var text;
@@ -234,7 +234,7 @@ function drawBFSQueue(ctxADT, canvasADT, numberOfNodes, nodes){
 			ctxADT.lineWidth = 2;
 			text = "Queue";
 			ctxADT.fillStyle = "brown";
-			ctxADT.font = "bold 16px Arial";
+			ctxADT.font = "bold 15px Arial";
 		}
 		else{
 			/**
@@ -243,6 +243,7 @@ function drawBFSQueue(ctxADT, canvasADT, numberOfNodes, nodes){
 			 */
 			text = nodes[rowIndex - 1] ? nodes[rowIndex - 1] :  "";
 		}
+		ctxADT.textBaseline = "middle";
 		ctxADT.fillText(text, x + cellWidth/2, y + cellHeight / 2)
 	}
 }
@@ -255,13 +256,13 @@ function drawBFSVisited(ctxADT, canvasADT, numberOfNodes, nodes){
 	height = canvasADT.height;
 
 	var queueWidth = width * 0.3;
-	var queueHeight = height * 0.8;
+	var queueHeight = height * 0.9;
 
 	var cellWidth = queueWidth;
 	var cellHeight = queueHeight/(numberOfNodes+1);
 
 	var x = width*0.6;
-	var startY = height*0.1;
+	var startY = height*0.05;
 	var y;
 
 	var text;
@@ -274,11 +275,12 @@ function drawBFSVisited(ctxADT, canvasADT, numberOfNodes, nodes){
 			ctxADT.lineWidth = 2;
 			text = "Visited";
 			ctxADT.fillStyle = "brown";
-			ctxADT.font = "bold 16px Arial";
+			ctxADT.font = "bold 15px Arial";
 		}
 		else{
 			text = nodes[rowIndex-1] ? nodes[rowIndex-1] :  "";
 		}
+		ctxADT.textBaseline = "middle";
 		ctxADT.fillText(text, x + cellWidth/2, y + cellHeight / 2)
 	}
 }
@@ -291,14 +293,14 @@ function drawDFSStack(ctxADT, canvasADT, numberOfNodes, nodes){
 	width = canvasADT.width;
 	height = canvasADT.height;
 
-	var queueWidth = width * 0.3;
-	var queueHeight = height * 0.8;
+	var stackWidth = width * 0.3;
+	var stackHeight = height * 0.9;
 
-	var cellWidth = queueWidth;
-	var cellHeight = queueHeight/(numberOfNodes+1);
+	var cellWidth = stackWidth;
+	var cellHeight = stackHeight/(numberOfNodes+1);
 
 	var x = width*0.1
-	var startY = height*0.1;
+	var startY = height*0.05;
 	var y;
 
 	var text;
@@ -311,12 +313,13 @@ function drawDFSStack(ctxADT, canvasADT, numberOfNodes, nodes){
 			ctxADT.lineWidth = 2;
 			text = "Stack";
 			ctxADT.fillStyle = "brown";
-			ctxADT.font = "bold 16px Arial";
+			ctxADT.font = "bold 15px Arial";
 		}
 		else{
 			text = nodes[rowIndex-1] ? nodes[rowIndex-1] :  "";
 			
 		}
+		ctxADT.textBaseline = "middle";
 		ctxADT.fillText(text, x + cellWidth/2, y + cellHeight / 2)
 	}
 }
@@ -328,13 +331,13 @@ function drawDFSVisited(ctxADT, canvasADT, numberOfNodes, nodes){
 	width = canvasADT.width;
 	height = canvasADT.height;
 	var queueWidth = width * 0.3;
-	var queueHeight = height * 0.8;
+	var queueHeight = height * 0.9;
 
 	var cellWidth = queueWidth;
 	var cellHeight = queueHeight/(numberOfNodes+1);
 
 	var x = width*0.6;
-	var startY = height*0.1;
+	var startY = height*0.05;
 	var y;
 
 	var text;
@@ -347,11 +350,12 @@ function drawDFSVisited(ctxADT, canvasADT, numberOfNodes, nodes){
 			ctxADT.lineWidth = 2;
 			text = "Visited";
 			ctxADT.fillStyle = "brown";
-			ctxADT.font = "bold 16px Arial";
+			ctxADT.font = "bold 15px Arial";
 		}
 		else{
 			text = nodes[rowIndex-1] ? nodes[rowIndex-1] :  "";
 		}
+		ctxADT.textBaseline = "middle";
 		ctxADT.fillText(text, x + cellWidth/2, y + cellHeight / 2)
 	}
 }
@@ -405,8 +409,8 @@ function buildTableData(tableChangedRowData, circlesArray){
  */
 function buildDijkstraTable(tableData, canvasADT, ctxADT){
 	//Padding around the table
-	var widthPadding = canvasADT.width * 0.1;
-	var heightPadding = canvasADT.height * 0.1;
+	var widthPadding = canvasADT.width * 0.05;
+	var heightPadding = canvasADT.height * 0.05;
 
 	//The start and end coordinates for the table
 	var startX = widthPadding;
@@ -444,6 +448,7 @@ function buildDijkstraTable(tableData, canvasADT, ctxADT){
 				ctxADT.lineWidth = 2;
 				text = columns[cellIndex];
 				ctxADT.fillStyle = "brown";
+				ctxADT.textBaseline = "middle";
 				ctxADT.font = "bold 10px Arial";
 			//If the row index is not 0, the values in the tableData will be written in the cell	
 			}else{
@@ -459,6 +464,7 @@ function buildDijkstraTable(tableData, canvasADT, ctxADT){
 				}
 			}
 			//Centering the values in the cells
+			ctxADT.textBaseline = "middle";
 			ctxADT.fillText(text, x + cellWidth / 2, y + cellHeight / 2);
 		}	
 	}

@@ -169,6 +169,7 @@ function writePseudocode(pseudocode, ctxPseudocode, canvas, PseudocodeLineIndex)
 			ctxPseudocode.fillStyle = "#000000";
 		}
 		//Writing the pseudocode with updated highlighted line
+		ctxPseudocode.textBaseline = "middle";
 		ctxPseudocode.fillText(pseudocode[i], 0, ((i+1)/length)*canvas.height - (0.35/length)*canvas.height, canvas.width);
 	}
 }

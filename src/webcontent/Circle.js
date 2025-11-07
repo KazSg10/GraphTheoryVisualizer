@@ -31,6 +31,7 @@ class Circle{
 		this.ctxGraph.fillStyle = "red";
 		this.ctxGraph.textAlign = "center";
 		this.ctxGraph.font = "20px Arial"
+		this.ctxGraph.textBaseline = "middle";
 		this.ctxGraph.fillText(this.name, this.x, this.y);
 		//Method instructing the circle to be drawn
 		this.ctxGraph.stroke();
