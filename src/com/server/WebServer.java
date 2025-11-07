@@ -77,6 +77,7 @@ public class WebServer {
 			writeFile(projectPath + "/src/webcontent/connectionToServer.js", connectionToServerFileUpdate(localHost));
 			/*Creating server socket that listens for clients on a specified port number, backlog of 10 connections and bound specifically
 			to ip address stored in addr*/
+			//Since I am using the private ip address, this webapp can only work on devices in the LAN at the moment
 			ServerSocket serverSocket = new ServerSocket(portNumber, 10, addr);
 			
 			System.out.println("Access webapp at " + serverSocket.getInetAddress().getHostAddress());

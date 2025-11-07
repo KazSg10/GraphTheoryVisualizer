@@ -26,7 +26,7 @@ function initialise(){
 	//Creating the edges between the circles
     const edges =  initialiseEdges(circlesArray, ctxGraph , algorithm);
     for(let i = 0; i < edges.length; i++){
-	    edges[i].drawLine("black", radius);
+	    edges[i].drawLine("orange", radius);
     }
 
 	//Writing the pseucode in the canvasPseudocode at the start, index is -1 since no line is being highlighted
@@ -462,5 +462,15 @@ function buildDijkstraTable(tableData, canvasADT, ctxADT){
 			ctxADT.fillText(text, x + cellWidth / 2, y + cellHeight / 2);
 		}	
 	}
+}
+
+//Queue dequeuing operation
+function dequeue(queue){
+	var newQueue = [];
+	var dequeuedElement = newQueue[0];
+	for(let i = 1; i < queue.length; i++){
+		newQueue.push(queue[i]);
+	}
+	return newQueue;
 }
 

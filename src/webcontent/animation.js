@@ -98,7 +98,8 @@ function processSteps() {
 					queue.push(queueEntryValue);
 				}
 				else if(queueEntryAction == "DEQUEUE"){
-					queue.pop();
+					queue = dequeue(queue);
+					
 				}
 			}
 			if(simulationSteps[stepsIndex].VisitedNodeName != null){

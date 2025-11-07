@@ -19,6 +19,7 @@ public class Algorithm {
 		c_graphOutputData = graphOutputData;
 	}
 	
+	//Depth-First Traversal Algorithm
 	public List<Node> depthFirstTraversal(UnweightedGraph graph, Node visitedNode, List<Node> visited, Stack<Node> stack ){
 		c_graphOutputData.getSimulationSteps().add(new DFSSimulationSteps(null, 0, null, null, null));
 		if(null == visited) {
@@ -59,6 +60,7 @@ public class Algorithm {
 		return visited;
 	}
 	
+	//Breadth-First Traversal Algorithm
 	public List<Node> BreadthFirstTraversal(UnweightedGraph graph, Node sourceNode){
 		c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, 0, null, null, null));	
 		List<Node> visited= new LinkedList<>();
@@ -84,7 +86,7 @@ public class Algorithm {
 				if(!visited.contains(neighbouringNode) && !queue.contains(neighbouringNode)){
 					c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, 8, null, null, null));
 					queue.enqueue(neighbouringNode);
-					c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, 9, new QueueEntry(visitedNode.getName(), ActionBFS.ENQUEUE), visitedNode.getName(), neighbouringNode.getName()));
+					c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, 9, new QueueEntry(neighbouringNode.getName(), ActionBFS.ENQUEUE), visitedNode.getName(), neighbouringNode.getName()));
 					System.out.println("enqueued "  + neighbouringNode.getName());
 				}
 				c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, 10, null, null, null));
@@ -99,6 +101,7 @@ public class Algorithm {
 		return visited;	
 	}
 	
+	//Dijkstra's Shortest Path-Finding Algorithm
 	public void DijkstraShortestPathFinding(WeightedGraph graph, Node sourceNode){
 		c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, 0, null, null, Integer.MAX_VALUE, null, null, null));
 		//Creating a priority queue for the nodes
