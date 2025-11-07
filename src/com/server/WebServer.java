@@ -68,11 +68,15 @@ public class WebServer {
 				}
 			} 
 			//Setting up a socket for client-server connections
+			
+			//Retrieving the local computer's hostname and IP address
 			InetAddress localHost = InetAddress.getLocalHost();
+			//Getting IP address and converting to InetAddress object
 			InetAddress addr = InetAddress.getByName(localHost.getHostAddress());
 			
 			writeFile(projectPath + "/src/webcontent/connectionToServer.js", connectionToServerFileUpdate(localHost));
-			
+			/*Creating server socket that listens for clients on a specified port number, backlog of 10 connections and bound specifically
+			to ip address stored in addr*/
 			ServerSocket serverSocket = new ServerSocket(portNumber, 10, addr);
 			
 			System.out.println("Access webapp at " + serverSocket.getInetAddress().getHostAddress());

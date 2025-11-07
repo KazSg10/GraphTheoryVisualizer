@@ -33,6 +33,7 @@ async function postData(tableName, algorithm, sourceNode){
 	* for which we need to wait again for it to be fulfilled. All manipulations on 
 	* further responses of Promises will continue to return new Promises.	
 	*/
+	//Fetch destination changes with local computer's (server's) IP address
 	var response = await fetch("http://192.168.1.194:8908/visualize",
 			{
 				method:"POST",
