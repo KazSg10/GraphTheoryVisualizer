@@ -13,6 +13,7 @@ var ctxGraph;
 var ctxPseudocode;
 var ctxADT;
 var lineColour;
+var circlePairs = [];
 var startCirclesNamesList = [];
 var endCircleNamesList = [];
 var canvasGraph;
@@ -120,7 +121,7 @@ function processSteps() {
 			}
 			//If all the paths between a node and its neighbours, then the circle representing the circle is filled with the colour blue
 			if(simulationSteps[stepsIndex].TraversedNodeName != null){
-				getCircle(traversedNode, circlesArray).drawCircle("green");
+				getCircle(traversedNode, circlesArray).drawCircle("blue");
 			}	
 			break;				
 	}
@@ -184,7 +185,7 @@ function animateEdge() {
 		 * If the edge has been traversed already but in the other way, the colour of the part of the traversal in the other way 
 		 * will be cyan, otherwise it is red
 		 */
-		if(startCirclesNamesList.includes(toCircle.name) && endCircleNamesList.includes(fromCircle.name)){
+		if(includesPair(circlePairs, [toCircle.name, fromCircle.name])){
 			lineColour = "cyan";
 		}else{
 			lineColour = "red";
@@ -224,13 +225,10 @@ function animateEdge() {
 			 */
 			requestAnimationFrame(animateEdge);
 		} else {
-			//Adding the fromCircle and toCircle to the startCirclesNamesList and endCirclesNameList
-			if(!startCirclesNamesList.includes(fromCircle.name)) {
-				startCirclesNamesList.push(fromCircle.name);
-			} 
-			if(!endCircleNamesList.includes(toCircle.name)){
-				endCircleNamesList.push(toCircle.name);
+			if(!includesPair(circlePairs, [fromCircle.name, toCircle.name])){
+				circlePairs.push([fromCircle.name, toCircle.name]);
 			}
+
 			fromCircle.drawCircle(fromCircleColour);
 			toCircle.drawCircle(toCircleColour);
 			/**
@@ -255,6 +253,16 @@ function retrieveLine(circle1, circle2){
 				return new Line(ctxGraph, line.x1, line.y1, line.x2, line.y2, line.weight);
 			}
 		}
+}
+
+//Going through each pair and comparing first and second element with fromCircleName and toCircleName to see if there is a pair that matches those elements in the circlesPair array
+function includesPair(circlesPair, [fromCircleName, toCircleName]){
+	if(circlesPair.some(pair => pair[0] == fromCircleName && pair[1] == toCircleName)){
+		return true;
+	}
+	else{
+		return false;
+	} 
 }
 
 

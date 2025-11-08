@@ -58,6 +58,7 @@ public class WebServer {
 		 * C:\Users\karan\OneDrive - Reading School\Computer Science NEA - Karan Singh\coderepository\GraphTheoryVisualizer
 		 */
 		String projectPath = System.getenv("NEA_PROJECT_ROOT");
+		//Getting portNumber from server.config
 		try {
 			BufferedReader buffer = new BufferedReader(new FileReader(projectPath + "/src/com/server/server.config"));
 			String line = buffer.readLine();
@@ -80,7 +81,7 @@ public class WebServer {
 			//Since I am using the private ip address, this webapp can only work on devices in the LAN at the moment
 			ServerSocket serverSocket = new ServerSocket(portNumber, 10, addr);
 			
-			System.out.println("Access webapp at " + serverSocket.getInetAddress().getHostAddress());
+			System.out.println("Access webapp at " + serverSocket.getInetAddress().getHostAddress() + ":" + portNumber);
 
 			//Processing HTTP requests
 			while(true) {
@@ -126,14 +127,12 @@ public class WebServer {
 						//Reading next header line
 						headerLine = clientBufferedReader.readLine();
 					}	
-
 					//Depending on the http method, call that particular function
 					if(parsedRequestLine.get("Method").equals("GET")) {
 						processMethodGet(parsedRequestLine.get("Path"), socket);
 					}else if(parsedRequestLine.get("Method").equals("POST")){
 						processMethodPost(parsedRequestLine.get("Path"), readBody(clientBufferedReader, httpRequestHeaders), socket);
 					}
-
 					System.out.println();
 				} else {
 					//Unsupported request line received, we need to close the connection since it can't be handled
@@ -143,8 +142,8 @@ public class WebServer {
 		}catch(Exception e) {
 			System.out.println(e);
 		}
-
 	}
+	
 	//Parses the first line of http request, which is the request line
 	private	Map<String, String> parseRequestLine(String httpRequestLine) {
 		Map<String, String> httpRequestLineComponents = new HashMap<String, String>();
@@ -158,7 +157,7 @@ public class WebServer {
 		}
 		return httpRequestLineComponents;
 	}
-
+	
 	//Function for processing HTTP GET request from browser
 	private void processMethodGet(String path, Socket socket) {
 		//Getting part of the path of the file from the environment variable to shorten the path of the files
@@ -173,14 +172,11 @@ public class WebServer {
 				//Processing the path of the html file code requested
 				path = projectPath + "/src/webcontent" + path;
 			}
-
 			//Setting up the outputWriter to return data back to the browser
 			PrintWriter outputWriter = new PrintWriter(socket.getOutputStream());
 			System.out.println("Reading file " + path);
 			BufferedReader buffer = new BufferedReader(new FileReader(path));
-
-			System.out.println("Reading content from file");
-			
+			System.out.println("Reading content from file");	
 			/*
 			 * Status line of the HTTP response from response
 			 * HTTP/1.1 = HTTP version
@@ -195,8 +191,7 @@ public class WebServer {
 				//returning the html file code requested by the browser
 				outputWriter.println(outputLine);
 				outputLine = buffer.readLine();
-			}
-			
+			}		
 			//Sending the html file data to browser
 			outputWriter.flush();
 			socket.close();
@@ -214,10 +209,8 @@ public class WebServer {
 			GraphInputData inputData = graphInputDataMapper.readValue(body,GraphInputData.class);
 			//Processing inputData using the algorithm specified in the body
 			String json = simulateAlgorithm(inputData);
-
 			//Creating a PrintWriter, which will be used to send data back to client
-			PrintWriter outputWriter = new PrintWriter(socket.getOutputStream());
-			
+			PrintWriter outputWriter = new PrintWriter(socket.getOutputStream());		
 			/*
 			 * Status line of the HTTP response from response
 			 * HTTP/1.1 = HTTP version
@@ -238,7 +231,6 @@ public class WebServer {
 			outputWriter.flush();
 			//Closing client socket
 			socket.close();
-
 		}catch(Exception e) {
 			System.out.println(e);
 		}
@@ -271,18 +263,15 @@ public class WebServer {
 		//Getting part of the path of the file from the environment variable to shorten the path of the files
 		String projectPath = System.getenv("NEA_PROJECT_ROOT");
 		if(inputData.getAlgorithm().equals("DFS") || inputData.getAlgorithm().equals("BFS")){
-			UnweightedGraph graph = new UnweightedGraph();
-			
-			Node sourceNode = new Node(inputData.getSourceNodeName());
-			
+			UnweightedGraph graph = new UnweightedGraph();			
+			Node sourceNode = new Node(inputData.getSourceNodeName());			
 			//Creating a graph based on the client data
 			for(ConnectionData data: inputData.getConnections()) {
 				Node node1 = new Node(data.getNode1());
 				Node node2 = new Node(data.getNode2());
 				Edge edge = new Edge(node1, node2, Direction.valueOf(data.getEdgeDirection()));
 				graph.addEdge(edge);
-			}
-			
+			}			
 			//Simulating DFS
 			if(inputData.getAlgorithm().equals("DFS")) {
 				GraphOutputData c_graphOutputDataDFS = new GraphOutputData(inputData.getAlgorithm(), graph, readFile(projectPath + "/src/com/algorithms/DFSPseudoCode.txt"), sourceNode);
@@ -294,14 +283,12 @@ public class WebServer {
 				//Returning the steps of the traversal in json form
 				return toJson(c_graphOutputDataDFS);
 			}
-
 			//Simulating BFS
 			if(inputData.getAlgorithm().equals("BFS")) {
 				GraphOutputData c_graphOutputDataBFS = new GraphOutputData(inputData.getAlgorithm(), graph, readFile(projectPath + "/src/com/algorithms/BFSPseudoCode.txt"), sourceNode);
 				Algorithm algorithmBFS = new Algorithm(c_graphOutputDataBFS);
 				Queue<Node> queue = new Queue<Node>();
-				algorithmBFS.BreadthFirstTraversal(graph, sourceNode);
-				
+				algorithmBFS.BreadthFirstTraversal(graph, sourceNode);			
 				//Returning the steps of the traversal in json form
 				return toJson(c_graphOutputDataBFS);
 			}		
@@ -341,6 +328,7 @@ public class WebServer {
 		return json;
 	}
 	
+	//Function for reading a file
 	public List<String> readFile(String path){
 		List<String> output = null;
 		try {
@@ -364,7 +352,6 @@ public class WebServer {
 	public void writeFile(String path, List<String> fileList) throws IOException {
 		File currentFile = new File(path);
 		currentFile.delete();
-		System.out.println("Deleted file");
 		File newFile = new File(path);
 		BufferedWriter buffer = new BufferedWriter(new FileWriter(path));
 		try {
@@ -376,9 +363,9 @@ public class WebServer {
 			e.printStackTrace();
 		}	
 		buffer.close();
-		System.out.println("Created file");
 	}
 	
+	//Function for updating the connectionToServer.js file with new IP address 
 	public List<String> connectionToServerFileUpdate(InetAddress localHost) {
 		String filePath = System.getenv("NEA_PROJECT_ROOT") + "/src/webcontent/connectionToServer.js";
 		List<String> jsFileList = readFile(filePath);

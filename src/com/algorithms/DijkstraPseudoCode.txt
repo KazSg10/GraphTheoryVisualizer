@@ -2,7 +2,7 @@ sub Dijkstra(graph, source)
 	Queue = []
 	TraversedNodes = []
 	FOREACH (node v in graph.nodes)
-		IF (v is not the source)
+		IF (v is not the source node)
 			dist[v] <-INFINITY
 			prev[v] <- NULL
 		ELSE
