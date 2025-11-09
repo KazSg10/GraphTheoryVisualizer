@@ -14,12 +14,11 @@ var ctxPseudocode;
 var ctxADT;
 var lineColour;
 var circlePairs = [];
-var startCirclesNamesList = [];
-var endCircleNamesList = [];
 var canvasGraph;
 var canvasADT;
 var canvasPseudocode;
 var start = null;
+//The max integer value in Java
 var nullInteger = (Math.pow(2, 31) - 1);
 const visited = [];
 var pseudocodeUpdated = false;
@@ -29,7 +28,9 @@ var tableData = []
 var fromCircleColour;
 var toCircleColour;
 
-//The procedure that will trigger the animation
+/**
+ * Triggering the animation
+ */
 function simulate() {
 	//Initialising the inverseSpeedValue based on the value of the speedRange slider 
 	inverseSpeed = 60 - document.getElementById("speedRange").value;
@@ -50,7 +51,10 @@ function simulate() {
 	processSteps();
 }
 
-//Procedure for processing the simulation steps which has come from the server
+/**
+ * Processing the simulation steps which have come from the server
+ * @returns 
+ */
 function processSteps() {
 	//if stepsIndex is less than the number of simulation steps, then the simulation should stop
 	if(stepsIndex >= Object.keys(simulationSteps).length){
@@ -63,8 +67,7 @@ function processSteps() {
 	if(fromNode != null && toNode != null){
 		fromCircle = getCircle(fromNode, circlesArray);
 		toCircle = getCircle(toNode, circlesArray);
-	}
-	
+	}	
 	var visitedNode = simulationSteps[stepsIndex].VisitedNodeName;
 	var traversedNode = simulationSteps[stepsIndex].TraversedNodeName;
 
@@ -89,7 +92,6 @@ function processSteps() {
 			//Redrawing the DFS canvas
 			drawDFSCanvas(ctxADT, canvasADT, stack, visited)
 			break;
-
 		case "BFS":
 			if(simulationSteps[stepsIndex].QueueEntry != null){
 				//Retrieving QueueEntry.Value and QueueEntry.Action from the simulationSteps in json and performing different actions based on the action
@@ -111,7 +113,6 @@ function processSteps() {
 			//Redrawing the BFS canvas
 			drawBFSCanvas(ctxADT, canvasADT, queue, visited);
 			break;	
-
 		case "Dijkstra":
 			//If the new distance has changed, then the Dijktra Table is updated
 			if(simulationSteps[stepsIndex].NewDistance != nullInteger){
@@ -125,13 +126,14 @@ function processSteps() {
 			}	
 			break;				
 	}
-
 	//The next step is to update the pseudocode and update the stepsIndex to go to the next step;
 	updatePseudocode();
 	stepsIndex++;
 }
 
-//Procedure for updating the highlighting of the pseudocode lines
+/**
+ * Updating the highlighting of the pseudocode lines
+ */
 function updatePseudocode() {
 	//Highlighting the current line
 	writePseudocode(pseudocode, ctxPseudocode, canvasPseudocode, simulationSteps[stepsIndex].PseudocodeLineIndex);
@@ -151,9 +153,14 @@ function updatePseudocode() {
 	}	
 }
 
-//Procedure for rewriting the pseudocode with the current line being highlighted
-function writePseudocode(pseudocode, ctxPseudocode, canvas, PseudocodeLineIndex){
-
+/**
+ * Rewriting the pseudocode with the current line being highlighted
+ * @param {*} pseudocode - Pseudocode to be written
+ * @param {*} ctxPseudocode - Context to be used to write the pseudocode in canvasPseudocode
+ * @param {*} canvas - canvas to write the pseudocode in
+ * @param {*} pseudocodeLineIndex - Index of the line to be highlighted, in the pseudocode
+ */
+function writePseudocode(pseudocode, ctxPseudocode, canvas, pseudocodeLineIndex){
 	//Clearing the pseudocode before writing pseudocode
 	ctxPseudocode.clearRect(0, 0, canvasPseudocode.width, canvasPseudocode.height);
 	//Getting length of the pseudocode array in the json
@@ -162,8 +169,8 @@ function writePseudocode(pseudocode, ctxPseudocode, canvas, PseudocodeLineIndex)
 	ctxPseudocode.font = "10px Arial";
 	
 	for(let i = 0; i < length; i++){
-		//Highlight current line in canvasPseudocode told by PseudocodeLineIndex
-		if(i == PseudocodeLineIndex){
+		//Highlight current line in canvasPseudocode told by pseudocodeLineIndex
+		if(i == pseudocodeLineIndex){
 			ctxPseudocode.fillStyle = "#ff2f00ff";
 		}
 		else{
@@ -175,7 +182,9 @@ function writePseudocode(pseudocode, ctxPseudocode, canvas, PseudocodeLineIndex)
 	}
 }
 
-//Procedure for drawing line 
+/**
+ * Animating the travel along an edge 
+ */
 function animateEdge() {
 	//If there is no fromCircle or toCircle, then there is no edge to be drawn along, leading to processSteps being called again
 	if (fromCircle == null || toCircle == null) {
@@ -246,18 +255,29 @@ function animateEdge() {
 	}
 }
 
-//Function for retrieving the line between the two circles
+/**
+ * Retrieving the line between the two circles
+ * @param {*} circle1 - First circle in a line
+ * @param {*} circle2 - Second circle in a line
+ * @returns a line object with the two circles as endpoints
+ */
 function retrieveLine(circle1, circle2){
-		for(var line of JSON.parse(localStorage.getItem('edges'))){
-			if((line.x1 == circle1.x && line.x2 == circle2.x && line.y1 == circle1.y && line.y2 == circle2.y)||(line.x1 == circle2.x && line.x2 == circle1.x && line.y1 == circle2.y && line.y2 == circle1.y)){
-				return new Line(ctxGraph, line.x1, line.y1, line.x2, line.y2, line.weight);
-			}
+	for(var line of JSON.parse(localStorage.getItem('edges'))){
+		if((line.x1 == circle1.x && line.x2 == circle2.x && line.y1 == circle1.y && line.y2 == circle2.y)||(line.x1 == circle2.x && line.x2 == circle1.x && line.y1 == circle2.y && line.y2 == circle1.y)){
+			return new Line(ctxGraph, line.x1, line.y1, line.x2, line.y2, line.weight);
 		}
+	}
 }
 
-//Going through each pair and comparing first and second element with fromCircleName and toCircleName to see if there is a pair that matches those elements in the circlesPair array
-function includesPair(circlesPair, [fromCircleName, toCircleName]){
-	if(circlesPair.some(pair => pair[0] == fromCircleName && pair[1] == toCircleName)){
+/**
+ * Going through each pair and comparing first and second element with fromCircleName and toCircleName to 
+ * see if there is a pair that matches those elements in the circlesPair array
+ * @param {*} circlePairs - Array containing the circle pairs 
+ * @param {*} param1 - pair of the circles to be checked in the array
+ * @returns boolean value, true if the array contains the pair of circles, otherwise false
+ */
+function includesPair(circlePairs, [fromCircleName, toCircleName]){
+	if(circlePairs.some(pair => pair[0] == fromCircleName && pair[1] == toCircleName)){
 		return true;
 	}
 	else{

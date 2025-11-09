@@ -3,7 +3,10 @@ package com.algorithms;
 import java.util.ArrayList;
 import java.util.List;
 
-//Class for creating Queue ADT objects which follow the FIFO system 
+/**
+ * Class for creating Queue ADT objects which follow the FIFO system 
+ * @param <T> - Generic, data type of elements in queue must be swapped with the T
+ */
 public class Queue<T> {
 	private List<T> c_queue;
 
@@ -28,6 +31,9 @@ public class Queue<T> {
 		return c_queue.contains(element);
 	}
 	
+	/**
+	 * Overridden function of toString()
+	 */
 	@Override 
 	public String toString() {
 		List <String> nodeNames = new ArrayList<String>();
@@ -37,10 +43,18 @@ public class Queue<T> {
 		return "List: " + nodeNames;
 	}
 
+	/**
+	 * Retrieving the list of the queue
+	 * @return - Returning list of queue
+	 */
 	public List<T> getList() {
 		return c_queue;
 	}
 	
+	/**
+	 * Dequeuing a node from the queue
+	 * @param node - Dequeued node
+	 */
 	public void dequeue(T node) {
 		c_queue.remove(node);
 	}

@@ -1,4 +1,6 @@
-//Class for creating a circle
+/**
+ * Class for creating a circle
+ */
 class Circle{
 	/**
 	 * Constructor for creating a circle object
@@ -15,7 +17,10 @@ class Circle{
 		this.radius = radius;
 		this.fillColour = "white";
 	}
-	//Procedure for drawing a circle
+	/**
+	 * Drawing a circle
+	 * @param {*} circleFillColour - Fill colour of circle
+	 */
 	drawCircle(circleFillColour){
 		console.log('Drawing Circle with co-ordinates - ' + 'x:' + this.x);
 		//Method for starting a new path for the line

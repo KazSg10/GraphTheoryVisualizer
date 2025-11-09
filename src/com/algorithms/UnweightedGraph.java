@@ -7,6 +7,9 @@ import java.util.Map;
 
 import com.algorithms.Edge.Direction;
 
+/**
+ * Child class of Graph, used for creating unweightedGraph objects 
+ */
 public class UnweightedGraph extends Graph {	
 	public UnweightedGraph(){
 		c_nodeConnections = new HashMap<Node, List<Node>>();
@@ -14,6 +17,10 @@ public class UnweightedGraph extends Graph {
 		c_edgeList = new ArrayList<Edge>();
 	}
 	
+	/**
+	 * Adding an edge to the edge's list
+	 * @param edge - edge to be added to list
+	 */
 	public void addEdge(Edge edge){
 		c_edgeList.add(edge);
 		if(edge.getDirection() == Direction.BIDIRECTION) {

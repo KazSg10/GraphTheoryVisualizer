@@ -1,4 +1,6 @@
-//Initialising the canvases and variables required for the simulation of the algorithm
+/**
+ * Initialising the canvases and variables required for the simulation of the algorithm 
+ */
 function initialise(){
     //Getting the body from the local storage of the window
     var body = localStorage.getItem("body");
@@ -48,40 +50,52 @@ function initialise(){
  * Splitting up the json body into its different components and storing it in the local storage
  * JSON.stringify required because local storage can only store strings
  * When converting back to individual components which can be used, JSON.parse is required
+ * @param {*} body - body of the json to be split up
  */
 function readJsonBody(body){
 	//Parsing the body into Json form
-	const jsonBody = JSON.parse(body);
+	var jsonBody = JSON.parse(body);
 	localStorage.setItem('jsonBody', JSON.stringify(jsonBody));
-	console.log(jsonBody);
+	//Pseudocode of algorithm
 	var pseudocode = jsonBody.Pseudocode;
 	localStorage.setItem('pseudocode', JSON.stringify(pseudocode));
-	console.log(pseudocode);
+	//Graph object on which the algorithm is simulated
 	var graph = jsonBody.Graph;
 	localStorage.setItem('Graph', JSON.stringify(graph));
+	//Algorithm to be simulated
 	var algorithm = jsonBody.Algorithm;
-	console.log(algorithm);
 	localStorage.setItem('algorithm', JSON.stringify(algorithm));
-	var numberOfNodes = graph.nodesList.length;
-	localStorage.setItem('numberOfNodes', JSON.stringify(numberOfNodes));
+	//The node connections list
 	var nodeConnections = graph.NodeConnections;
 	localStorage.setItem('nodeConnections', JSON.stringify(nodeConnections));
+	//Simulation steps to piece the step by step simulation
 	var simulationSteps = jsonBody.simulationSteps;
 	localStorage.setItem('simulationSteps', JSON.stringify(simulationSteps));
+	//List of nodes in graph
 	var nodesList = graph.nodesList;
 	localStorage.setItem('nodesList', JSON.stringify(nodesList));
-	console.log(nodesList);
+	//Number of nodes in graph
+	var numberOfNodes = graph.nodesList.length;
+	localStorage.setItem('numberOfNodes', JSON.stringify(numberOfNodes));
+	//List of edges in graph
 	var edgeList = graph.edgeList;
 	localStorage.setItem('edgeList', JSON.stringify(edgeList));
-	var sourceNode= jsonBody.SourceNode;
+	//Source node for the algorithm
+	var sourceNode = jsonBody.SourceNode;
 	localStorage.setItem('sourceNode', JSON.stringify(sourceNode));
 }
 
-//Initialising edges between the circles
+/**
+ * Initialising edges between the circles
+ * @param {*} circlesArray - Array containing the circles representing the nodes in the graph
+ * @param {*} ctxGraph - context being used draw in canvasGraph
+ * @param {*} algorithm - Algorithm being simulated
+ * @returns array of edges
+ */
 function initialiseEdges(circlesArray, ctxGraph , algorithm){
 	var nodeConnections = JSON.parse(localStorage.getItem('nodeConnections'));
 	var keys = Object.keys(nodeConnections);
-	//Initialising a list for the edges 
+	//Initialising an array for the edges 
 	var edges = [];
 	var length = keys.length;
 	for(let i = 0; i<length; i++){
@@ -109,7 +123,7 @@ function initialiseEdges(circlesArray, ctxGraph , algorithm){
 				}
 				//DFS and BFS graph edges have no weight
 			}else{
-				//since there is no weight, I am saying the value for that parameter is -1
+				//Since there is no weight,the value for that parameter is -1
 				var weight = -1;
 			}
 		edges.push(new Line(ctxGraph , keyNode.x, keyNode.y, neighbourNode.x, neighbourNode.y, weight));			
@@ -119,7 +133,12 @@ function initialiseEdges(circlesArray, ctxGraph , algorithm){
 	return edges;
 }
 
-//Function for retrieving the circle, respresenting a specific node, from circlesArray 
+/**
+ * Retrieving the circle, respresenting a specific node, from circlesArray 
+ * @param {*} key - Name of circle to find
+ * @param {*} circlesArray  - Array of circles
+ * @returns circle object with the right name
+ */
 function getCircle(key, circlesArray){
 	var length = circlesArray.length;
 	for(let i = 0; i < length; i++){
@@ -129,7 +148,13 @@ function getCircle(key, circlesArray){
 	}
 }
 
-//Function to create an array of circles representing the nodes
+/**
+ * Create an array of circles representing the nodes
+ * @param {*} nodesList - List of nodes in graph
+ * @param {*} radius - Radius of the circles
+ * @param {*} ctxGraph - Context being used draw in canvasGraph
+ * @returns array of circles
+ */
 function createCircles(nodesList, radius, ctxGraph ){
 	//Initialising a list of circles
 	const circles = [];
@@ -142,7 +167,7 @@ function createCircles(nodesList, radius, ctxGraph ){
 		while(!coordinatesCheck){
 			xCent = getRandomCoordinates(radius,canvasGraph.width - radius, radius);
 			yCent = getRandomCoordinates(radius,canvasGraph.height - radius, radius);
-			coordinatesCheck = centreCoordinatesValidator(xCent, yCent, radius, circles);
+			coordinatesCheck = centreCoordinatesValidator(xCent, yCent, circles);
 		}
 		circles.push(new Circle(nodesList[i].name, ctxGraph , xCent, yCent , radius,))
 	}
@@ -150,20 +175,24 @@ function createCircles(nodesList, radius, ctxGraph ){
 }
 
 /**
- * 
+ * Getting a random x or y coordinate for circles in the graph
  * @param {*} min - The minimum value returned by the random number generator
  * @param {*} max - The maximum value returned by the random number generator
- * @param {*} radius - The radius of the circle required
- * @returns 
+ * @param {*} radius - The radius of the circle
+ * @returns a random x or y coordinate
  */
-
-//Getting random coordinates for circles in the graph
 function getRandomCoordinates(min, max, radius) {
   return Math.random() * (max - (min + radius + 1)) + min;
 }
 
-//Validating the coordinates of the centre to see if the nodes are suitably apart
-function centreCoordinatesValidator(xCent, yCent, radius, circles){
+/**
+ * Validating the coordinates of the centre to see if the nodes are suitably apart
+ * @param {*} xCent - x-coordinate of centre
+ * @param {*} yCent - y-coordinate of centre
+ * @param {*} circles - array of circles
+ * @returns boolean value, true if the coordinates are valid, otherwise false
+ */
+function centreCoordinatesValidator(xCent, yCent, circles){
 	for(var circle of circles){
 		var pythag = distance(xCent, circle.x, yCent, circle.y);
 		var minimumPixelDistance = 100;
@@ -175,14 +204,22 @@ function centreCoordinatesValidator(xCent, yCent, radius, circles){
 	return true;
 }
 
-//Getting distance between two coordinates
+/**
+ * Getting distance between two coordinates
+ * @param {*} x1 - First x-coordinate
+ * @param {*} x2 - Second x-coordinate
+ * @param {*} y1 - First y-coordinate
+ * @param {*} y2 - Second y-coordinate
+ * @returns distance between the two coordinates
+ */
 function distance(x1, x2, y1, y2){
 	return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
 }
 
 /**
- * Following two function are used to redraw the canvasADT for DFS and BFS
-*/
+ * Following functions are used to redraw the canvasADT for DFS, BFS and Dijkstra
+ */
+
 function drawDFSCanvas(ctxADT, canvasADT, stack, visited){
 	//Clearing the canvas before remaking the queue
 	ctxADT.clearRect(0, 0, canvasADT.width, canvasADT.height);
@@ -404,7 +441,7 @@ function buildTableData(tableChangedRowData, circlesArray){
 }
 
 /**
- * Proceudre for building the table for the Dijkstra Algorithm
+ * Procedure for building the table for the Dijkstra Algorithm
  * There will be three columns: Node, Distance From Source Node, Previous Node
  */
 function buildDijkstraTable(tableData, canvasADT, ctxADT){
@@ -470,10 +507,13 @@ function buildDijkstraTable(tableData, canvasADT, ctxADT){
 	}
 }
 
-//Queue dequeuing operation
+/**
+ * Queue dequeuing operation
+ * @param {*} queue - queue from which to dequeue
+ * @returns new queue with the dequeued element removed
+ */
 function dequeue(queue){
 	var newQueue = [];
-	var dequeuedElement = newQueue[0];
 	for(let i = 1; i < queue.length; i++){
 		newQueue.push(queue[i]);
 	}

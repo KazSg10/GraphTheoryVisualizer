@@ -1,6 +1,9 @@
 package com.server.json;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * Child class of SimulationSteps, used for creating simulation steps for Dijkstra's algorithm
+ */
 public class DijkstraSimulationSteps extends SimulationSteps{
 
 	@JsonProperty("TraversedNodeName")
@@ -17,6 +20,7 @@ public class DijkstraSimulationSteps extends SimulationSteps{
 	
 	@JsonProperty("Path")
 	private String c_path;
+	
 	
 	public DijkstraSimulationSteps(String traversedNodeName, String visitedNodeName, int pseudocodeLineIndex, String fromNode, String toNode, int newDistance, String newPreviousNode, String nodeOfPath, String path) {
 		super(visitedNodeName, pseudocodeLineIndex, fromNode, toNode);

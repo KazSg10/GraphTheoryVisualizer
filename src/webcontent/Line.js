@@ -1,4 +1,6 @@
-//Class for creating a line between two nodes
+/**
+ * Class for creating a line between two nodes
+ */
 class Line {
 	/**
 	 * Constructor for creating a line object between start node and end node
@@ -16,9 +18,10 @@ class Line {
 		this.y2 = y2;
 		this.weight = weight;
 	}
+
 	/**
-	 * Procedure to draw a line between two points
-	 * @param {*} color - Colour of the line
+	 * Draw a line between two points
+	 * @param {*} colour - Colour of the line
 	 */
 	drawLine(colour, radius){
 		const xDiff = this.x2 - this.x1;
@@ -46,7 +49,6 @@ class Line {
 		 */
 		const newx2 = this.x2 - (unitx * radius);
 		const newy2 = this.y2 - (unity * radius);
-
 		//Method for starting a new path for the line
 		this.ctxGraph.beginPath();
 		//Method instructing the line to start from coordinates (newx1,newy1)
@@ -59,12 +61,10 @@ class Line {
 		this.ctxGraph.lineWidth = 5;
 		//Method instructing the line to be drawn
 		this.ctxGraph.stroke();
-
 		//Weight -1 means that there is no weight
 		if(this.weight != -1){
 			const xWeightCent = (this.x1 + this.x2)/2;
 			const yWeightCent = (this.y1 + this.y2)/2;
-
 			this.ctxGraph.font = "16px Arial";
 			this.ctxGraph.fillStyle = "blue";
 			this.ctxGraph.fillText(this.weight, xWeightCent, yWeightCent);

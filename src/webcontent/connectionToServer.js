@@ -1,4 +1,9 @@
-//Sending data of the user input graph to the server and then extracting the relevent data from the server sent data
+/**
+ * Sending data of the user input graph to the server and then extracting the relevant data from the server sent data
+ * @param {*} tableName - Name of table to get the graph data from
+ * @param {*} algorithm - Algorithm to be simulated
+ * @param {*} sourceNode - Source node in the algorithm
+ */
 async function postData(tableName, algorithm, sourceNode){
 	var jsonData;	
 	if(boolDataFromFile(tableName, sourceNode)){
@@ -55,7 +60,11 @@ async function postData(tableName, algorithm, sourceNode){
 	window.location.href = "loadvisualizer.html";
 }
 
-//Validating json
+/**
+ * Validating json
+ * @param {*} json - json to be validated 
+ * @returns boolean value based on if json is valid
+ */
 function isJson(json){
 	try{
 		JSON.parse(json);
@@ -65,7 +74,13 @@ function isJson(json){
 	}
 }
 
-//If the values in the graph cells is empty, then the saved json that was input in the savedJson cell is used
+
+/**
+ * Checking if graph data is to be taken from table or savedJson cell
+ * @param {*} tableName 
+ * @param {*} sourceNode 
+ * @returns 
+ */
 function boolDataFromFile(tableName, sourceNode){
 	//Retrieving the contents of the table determined by the table name parameter
 	var table = document.getElementById(tableName);
@@ -83,7 +98,7 @@ function boolDataFromFile(tableName, sourceNode){
 
 			//Retrieving that specific cell from DOM
 			var cell = document.getElementById(cellId);
-						
+			
 			if(cellIndex < cellsCount){
 				if(cell.value != ""){
 					empty = false; 
@@ -91,13 +106,19 @@ function boolDataFromFile(tableName, sourceNode){
 				}
 			}
 		}
-		
 	}
+	//If the values in the graph cells is empty, then the saved json that was input in the savedJson cell is used 	
 	sourceNode.value != "" ? empty = false : empty = true;
 	return empty;
 }
 
-//Function for creating the json data from the table to pass on to the server
+/**
+ * Creating the json data from the table to pass on to the server
+ * @param {*} tableName - Table to get the data from
+ * @param {*} algorithm - Algorithm to be simulated
+ * @param {*} sourceNode - Source node in algorithm
+ * @returns json to be sent to server
+ */
 function createJSON(tableName, algorithm, sourceNode){
 	//Checking if the values for the graph typed by the user is checked for any errors
 	const error = checkForErrors(tableName, sourceNode);
@@ -168,7 +189,11 @@ function createJSON(tableName, algorithm, sourceNode){
 	return postJSON;
 }
 
-//Extracting the json body containing the data for the algorithms and graphs from the server sent data
+/**
+ * Extracting the json body containing the data for the algorithms and graphs from the server sent data
+ * @param {*} text - server sent data
+ * @returns json body
+ */
 function bodyfromResponse(text){
 	//Splitting text on the basis of new lines
 	const textSplit = text.split("\r\n");
@@ -178,7 +203,12 @@ function bodyfromResponse(text){
 	return body;
 }
 
-//Validation Checks
+/**
+ * Validation checks on table graph data
+ * @param {*} tableName - Table to get the data from
+ * @param {*} sourceNode - Source node in algorithm
+ * @returns boolean value, if there are no errors then false will be returned, otherwise true
+ */
 function checkForErrors(tableName, sourceNode){
 	var node1List = [];
 	var node2List = [];
@@ -299,8 +329,13 @@ function checkForErrors(tableName, sourceNode){
 	}
 	return error;
 }
-
-//Validation check for duplicate edges	
+	
+/**
+ * Validation check for duplicate edges
+ * @param {*} param0 - Pair of nodes to be checked
+ * @param {*} nodePairs - Array of pairs of nodes
+ * @returns boolean value, true if the edge exists, otherwise false
+ */
 function edgeChecker([node1, node2], nodePairs){
 	
 	var included = false;
@@ -313,7 +348,12 @@ function edgeChecker([node1, node2], nodePairs){
 	return included;
 }
 
-//Results of errors
+/**
+ * Results of different error 
+ * @param {*} error - Type of error
+ * @param {*} cell1 
+ * @param {*} cell2 
+ */
 function errorBoxCell(error, cell1, cell2){
 	var cell1Colour;
 	var cell2Colour;

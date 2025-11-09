@@ -11,7 +11,6 @@ import com.server.json.QueueEntry;
 import com.server.json.QueueEntry.ActionBFS;
 import com.server.json.StackEntry;
 import com.server.json.StackEntry.ActionDFS;
-
 /**
  * Class containing functionalities of the different graph algorithms
  */

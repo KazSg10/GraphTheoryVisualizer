@@ -59,7 +59,14 @@
 	<script>
 		var innerWidth = window.innerWidth;
 		var innerHeight = window.innerHeight;
-
+		
+		/**
+		 * Creating a new canvas element 
+		 * @param {*} divId = id of div element
+		 * @param {*} canvasId - id that the new canvas element will receive
+		 * @param {*} width - width of the canvas
+		 * @param {*} height - height of the canvas
+		 */
 		function createCanvasElement(divId, canvasId, width, height) {
 			//Getting reference of div element from DOM (Document Object Model - Tree representation of HTML elements)
 			const divReference = document.getElementById(divId);
@@ -78,11 +85,12 @@
 			divReference.appendChild(canvas);
 			return canvas;
 		}
-		
-		/**
+
+		 /**
 		 * Procedure for triggering a download of a text file with the json of the graph created by the user, who can then
 		 * use it later when reusing the graph
-		 */	
+		 * @param {*} json = json to be in the downloaded text file
+		 */
 		function saveGraph(json){
 			const link = document.createElement("a");
 			const file = new Blob([json], {type: 'text/plain'});

@@ -2,6 +2,9 @@ package com.server.json;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * Child class of SimulationSteps, used for creating simulation steps for DFS algorithm
+ */
 public class DFSSimulationSteps extends SimulationSteps{
 	@JsonProperty("StackEntry")
 	private StackEntry c_stackEntry;
@@ -10,9 +13,9 @@ public class DFSSimulationSteps extends SimulationSteps{
 		super(visitedNodeName, pseudocodeLineIndex, fromNode, toNode);
 		c_stackEntry = stackEntry;
 	}
-	public StackEntry getC_stackEntry() {
-		return c_stackEntry;
-	}
+//	public StackEntry getC_stackEntry() {
+//		return c_stackEntry;
+//	}
 }
 
 

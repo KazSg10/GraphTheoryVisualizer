@@ -178,8 +178,13 @@
 		</div>	
 	</div>
 
-	<script>
-		//Event Handler when a tab is clicked, which loads the page of that tab
+	<script>	
+		/**
+		 * Event Handler when a tab is clicked, which loads the page of that tab
+		 * @param {*} event 
+		 * @param {*} option - the algorithm's tab to be opened
+		 * @returns 
+		 */
 		function selectOption(event, option){
 			//Getting all the elements under the class "optioncontent"
 			var optionContent = document.getElementsByClassName("optioncontent");
@@ -200,21 +205,33 @@
 		}
 		document.getElementById("defaultOpen").click();
 
-		//Function of adding a new row to the table 
-		function addNewRow(tableId, count){
+		/**
+		 * Adding a new row to the table 
+		 * @param {*}  tableId - id of table to add the row to
+		 * @param {*}  cellCount - number of cells to add in the row
+		 * @returns 
+		 */
+		function addNewRow(tableId, cellCount){
 			var table = document.getElementById(tableId);
 			var newRow = table.insertRow();	
 			var last = false;
-			for(let i = 0; i < count; i++) {
-				if(i == count - 1){
+			for(let i = 0; i < cellCount; i++) {
+				if(i == cellCount - 1){
 					 last = true;
 				}	
 				insertCell(tableId, table, newRow, i, last);
 			}
 		}
-		
-		//Function of adding a new cell to a row in the table 
+				
+		/**
+		 * Adding a new cell to a row in the table  
+		 * @param {*} tableId = id of table to add the new cells to  
+		 * @param {*} table - table to add the new cells to 
+		 * @param {*} row - row element to add the cells to
+		 * @param {*} index - index at which the cell must be added
+		 */
 		function insertCell(tableId, table, row, index, last){
+			//in built function for adding a cell to a row
 			var cell = row.insertCell(index);
 			//If it is the last cell, the element type must be select (drop-down box) for taking input of direction
 			if(last){

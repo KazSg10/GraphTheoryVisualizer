@@ -185,7 +185,7 @@ public class WebServer {
 			 * Creating a PrintWriter, which will be used to send data back to client.
 			 * Second parameter being true indicates auto-flushing data back to client
 			 */
-			PrintWriter outputWriter = new PrintWriter(socket.getOutputStream(), true);
+			PrintWriter outputWriter = new PrintWriter(socket.getOutputStream());
 			System.out.println("Reading file " + path);
 			BufferedReader buffer = new BufferedReader(new FileReader(path));
 			System.out.println("Reading content from file");	
@@ -203,7 +203,8 @@ public class WebServer {
 				//returning the html file code requested by the browser
 				outputWriter.println(outputLine);
 				outputLine = buffer.readLine();
-			}		
+			}
+			outputWriter.flush();			
 			//Sending the html file data to browser
 			socket.close();
 		}catch(Exception e) {
@@ -222,9 +223,8 @@ public class WebServer {
 			String json = simulateAlgorithm(inputData);
 			/*
 			 * Creating a PrintWriter, which will be used to send data back to client.
-			 * Second parameter being true indicates auto-flushing data back to client
 			 */
-			PrintWriter outputWriter = new PrintWriter(socket.getOutputStream(), true);		
+			PrintWriter outputWriter = new PrintWriter(socket.getOutputStream());		
 			/*
 			 * Status line of the HTTP response from response
 			 * HTTP/1.1 = HTTP version
@@ -240,6 +240,7 @@ public class WebServer {
 			outputWriter.println();
 			//Adding body to response
 			outputWriter.print(json); 
+			outputWriter.flush();
 			//Closing client socket
 			socket.close();
 		}catch(Exception e) {

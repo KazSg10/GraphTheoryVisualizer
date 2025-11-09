@@ -43,7 +43,7 @@ public abstract class Graph {
 	/**
 	 * Returning the neighbours of a node in the graph
 	 * @param inputNode - Node of which we need the neighbours
-	 * @return - RE
+	 * @return - Returning the neighbours of inputNode
 	 */
 	public List<Node> getNodeConnections(Node inputNode) {
 		for(Map.Entry<Node, List<Node>> nodeEntry: c_nodeConnections.entrySet()) {

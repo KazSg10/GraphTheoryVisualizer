@@ -2,8 +2,9 @@ package com.algorithms;
 
 import java.util.Objects;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
+/**
+ * Class for creating Node objects
+ */
 public class Node {
 	private String c_name;
 
@@ -29,7 +30,9 @@ public class Node {
 		return Objects.hash(c_name);
 	}
 
-	//Overriding the equals operation so the Node objects are compared on their names, not memory locations
+	/**
+	 * Overriding the equals operation so the Node objects are compared on their names, not memory locations
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
