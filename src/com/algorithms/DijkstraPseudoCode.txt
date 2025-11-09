@@ -30,4 +30,4 @@ sub Dijkstra(graph, source)
 			break from while loop
 		ENDIF	
 	ENDWHILE	
-		
+ENDSUB		

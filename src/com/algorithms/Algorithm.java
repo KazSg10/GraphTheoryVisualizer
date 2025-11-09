@@ -267,6 +267,8 @@ public class Algorithm {
 		}
 
 		c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, 31, null, null, Integer.MAX_VALUE, null, null, null));
+		c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, 32, null, null, Integer.MAX_VALUE, null, null, null));
+
 	}
 
 	/**
