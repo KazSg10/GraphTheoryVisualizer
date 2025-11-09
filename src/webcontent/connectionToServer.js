@@ -27,8 +27,9 @@ async function postData(tableName, algorithm, sourceNode){
 		}
 	localStorage.setItem('userJsonBody', jsonData);
 
-	//Submiting POST request to the server for processing algorithm input data
 	/*
+	* Submiting POST request to the server for processing algorithm input data
+	*
 	* JS is a single-threaded language, therefore this asynchronous approach is required
 	* to wait response from the server 
 	* await causes the thread to wait for the promise to be fulfilled
@@ -37,8 +38,9 @@ async function postData(tableName, algorithm, sourceNode){
 	* Any manipulations on object of type "Response" will return a new Promise<Response>
 	* for which we need to wait again for it to be fulfilled. All manipulations on 
 	* further responses of Promises will continue to return new Promises.	
+	* 
+	* Fetch destination changes with local computer's (server's) IP address
 	*/
-	//Fetch destination changes with local computer's (server's) IP address
 	var response = await fetch("http://192.168.1.194:8908/visualize",
 			{
 				method:"POST",

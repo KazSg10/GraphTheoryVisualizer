@@ -26,9 +26,9 @@ public class GraphOutputData {
 	/**
 	 * GraphOutputData constructor
 	 * @param algorithm - Algorithm being simulated
-	 * @param graph
-	 * @param pseudoCode
-	 * @param sourceNode
+	 * @param graph - The graph on which the algorithm is being simulated
+	 * @param pseudoCode - Pseudocode of algorithm
+	 * @param sourceNode - Source node in the algorithm
 	 */
 	public GraphOutputData(String algorithm, Graph graph, List<String> pseudoCode, Node sourceNode ) {
 		c_algorithm = algorithm;

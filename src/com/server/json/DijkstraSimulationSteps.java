@@ -20,16 +20,7 @@ public class DijkstraSimulationSteps extends SimulationSteps{
 	
 	@JsonProperty("Path")
 	private String c_path;
-	
-	/**
-	 * BFSSimulationSteps constructor
-	 * @param visitedNodeName - Name of visited node
-	 * @param pseudocodeLineIndex - Index of the pseudocode line to be highlighted
-	 * @param queueEntry - Value to be enqueued or dequeued into the queue
-	 * @param fromNode - Start from node where the animation of the edge will begin
-	 * @param toNode - End node where the animation of the edge will stop
-	 */
-	
+
 	/**
 	 * DijkstraSimulationSteps constructor
 	 * @param traversedNodeName - name of node who have had the paths between itself and all of its neighbouring nodes travelled on
