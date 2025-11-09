@@ -51,13 +51,10 @@ public class WebServer {
 	public void startServer() {
 		System.out.println("Web server started");
 		int portNumber = -1;
-		/*
-		 * Use of environment variable for convenience as shorter path required when typing file paths
-		 * later on when using this environment variable.
-		 * The path of this environment variable is 
-		 * C:\Users\karan\OneDrive - Reading School\Computer Science NEA - Karan Singh\coderepository\GraphTheoryVisualizer
-		 */
-		String projectPath = System.getenv("NEA_PROJECT_ROOT");
+		//Getting current working directory
+		String directory = System.getProperty("user.dir");
+		System.out.println(directory);
+		String projectPath = directory;
 		//Getting portNumber from server.config
 		try {
 			BufferedReader buffer = new BufferedReader(new FileReader(projectPath + "/src/com/server/server.config"));
@@ -170,8 +167,9 @@ public class WebServer {
 	 */
 	//Function for processing HTTP GET request from browser
 	private void processMethodGet(String path, Socket socket) {
-		//Getting part of the path of the file from the environment variable to shorten the path of the files
-		String projectPath = System.getenv("NEA_PROJECT_ROOT");
+		//Getting current working directory
+		String directory = System.getProperty("user.dir");
+		String projectPath = directory;
 		try {
 			System.out.println("Handling HTTP Method GET " + path);
 			if(path.equals("/")) {
@@ -277,8 +275,9 @@ public class WebServer {
 	 * @return
 	 */
 	private String simulateAlgorithm(GraphInputData inputData) {
-		//Getting part of the path of the file from the environment variable to shorten the path of the files
-		String projectPath = System.getenv("NEA_PROJECT_ROOT");
+		//Getting working directory
+		String directory = System.getProperty("user.dir");
+		String projectPath = directory;
 		if(inputData.getAlgorithm().equals("DFS") || inputData.getAlgorithm().equals("BFS")){
 			UnweightedGraph graph = new UnweightedGraph();			
 			Node sourceNode = new Node(inputData.getSourceNodeName());			
@@ -401,7 +400,9 @@ public class WebServer {
 	 * @return
 	 */
 	public List<String> connectionToServerFileUpdate(InetAddress localHost) {
-		String filePath = System.getenv("NEA_PROJECT_ROOT") + "/src/webcontent/connectionToServer.js";
+		String directory = System.getProperty("user.dir");
+		String projectPath = directory;
+		String filePath = projectPath + "/src/webcontent/connectionToServer.js";
 		List<String> jsFileList = readFile(filePath);
 		int index = 0;
 		for(int i = 0; i<jsFileList.size(); i++) {
