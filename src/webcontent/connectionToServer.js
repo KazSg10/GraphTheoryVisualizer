@@ -180,6 +180,8 @@ function bodyfromResponse(text){
 
 //Validation Checks
 function checkForErrors(tableName, sourceNode){
+	var node1List = [];
+	var node2List = [];
 	//Setting a boolean value to false since no errors have been detected
 	var error = false;
 
@@ -187,7 +189,8 @@ function checkForErrors(tableName, sourceNode){
 	var table = document.getElementById(tableName);
 	var numberOfRows = table.rows.length;
 
-	//Creating a list to store the edges of the graph, for use of validation later
+	//Creating a list to store the pairs of nodes linked by edges of the graph, for use of validation later
+	const nodePairs = [];
 	const edgesList = [];
 	
 	/**
@@ -217,6 +220,8 @@ function checkForErrors(tableName, sourceNode){
 		var node1Value = node1Cell.value;
 		var node2Value = node2Cell.value;
 
+		node1List.push(node1Value);
+		node2List.push(node2Value);
 		//If node1 and node2 is the same in a row, then there a is same node error
 		if(node1Value == node2Value && node1Value != "" && node2Value != ""){
 			errorBoxCell("same nodes", node1Cell, node2Cell);
@@ -269,33 +274,31 @@ function checkForErrors(tableName, sourceNode){
 			 * Error checking for duplicate edges
 			 */
 			if(cellIndex == 1){
-				if(direction == "BIDIRECTION"){
-				if(node1Value != "" && node2Value != "" && !edgeChecker([node1Value, node2Value, "BIDIRECTION"], edgesList) && !edgeChecker([node2Value, node1Value, "BIDIRECTION"], edgesList)){
-					edgesList.push([node1Value, node2Value, "BIDIRECTION"]);
-					edgesList.push([node2Value, node1Value, "BIDIRECTION"]);
-				}else if(edgeChecker([node1Value, node2Value, "BIDIRECTION"], edgesList) || edgeChecker([node2Value, node1Value, "BIDIRECTION"], edgesList)){
+				if(node1Value != "" && node2Value != "" && !edgeChecker([node1Value, node2Value], nodePairs) && !edgeChecker([node2Value, node1Value], nodePairs)){
+					nodePairs.push([node1Value, node2Value]);
+					if(direction ==  "BIDIRECTION")  nodePairs.push([node2Value, node1Value]);
+				}else if(edgeChecker([node1Value, node2Value], nodePairs)){
 					errorBoxCell("duplicate", node1Cell, node2Cell);
 					error = true;
 				}
-				}else if(direction == "UNIDIRECTION"){
-					if(node1Value != "" && node2Value != "" && !edgeChecker([node1Value, node2Value, "BIDIRECTION"], edgesList)){
-						edgesList.push([node1Value, node2Value, "UNIDIRECTION"]);
-					}
-				}else if(edgeChecker([node1Value, node2Value, "UNIDIRECTION"], edgesList)){
-					errorBoxCell("duplicate", node1Cell, node2Cell);
-					error = true;
-				}	
 			}	
-		}
-	}
+		}			
+	}	
+
 	//Error checking for empty source node cell or no source node in the graph data
+	sourceNode.style.backgroundColor = "white";
 	var sourceNodeError = true;
-	for(const [node1,node2, direction] of edgesList){
-		if(node1 == sourceNode.value || node2 == sourceNode.value){
+	for(const node1Value of node1List){
+		if(node1Value == sourceNode.value){
 			sourceNodeError = false;
-			break;
 		}
 	}
+	for(const node2Value of node2List){
+		if(node2Value == sourceNode.value){
+			sourceNodeError = false;
+		}
+	}
+
 	if(sourceNodeError){
 		errorBoxCell("source node error", sourceNode, null);
 		error = true;	
@@ -304,11 +307,11 @@ function checkForErrors(tableName, sourceNode){
 }
 
 //Validation check for duplicate edges
-function edgeChecker([node1, node2, direction], edgesList){
+function edgeChecker([node1, node2], nodePairs){
 	
 	var included = false;
-	for(const[node1List, node2List, directionList] of edgesList){
-		if(node1 == node1List && node2 == node2List && direction == directionList){
+	for(const [node1Value, node2Value] of nodePairs){
+		if(node1 == node1Value && node2 == node2Value){
 			included = true;
 			return included
 		}

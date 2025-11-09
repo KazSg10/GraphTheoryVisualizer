@@ -79,16 +79,20 @@ public class WebServer {
 			/*Creating server socket that listens for clients on a specified port number, backlog of 10 connections and bound specifically
 			to ip address stored in addr*/
 			//Since I am using the private ip address, this webapp can only work on devices in the LAN at the moment
-			ServerSocket serverSocket = new ServerSocket(portNumber, 10, addr);
+			ServerSocket serverSocket = new ServerSocket(portNumber, 50, addr);
 			
-			System.out.println("Access webapp at " + serverSocket.getInetAddress().getHostAddress() + ":" + portNumber);
-
+			
 			//Processing HTTP requests
 			while(true) {
+				System.out.println("Access webapp at http://" + serverSocket.getInetAddress().getHostAddress() + ":" + portNumber);
 				System.out.println(String.format("Server waiting for connection on port %d", portNumber));
 				//Server is now waiting for a connection
 				Socket socket = serverSocket.accept();
-				//The request from browser is being stored
+				/*
+				 * The request from browser is being stored
+				 * socket.getInputStream is used to read the data coming from the socket#
+				 * InputStreamReader reads bytes in the data and decoded them into characters
+				 */
 				InputStreamReader input = new InputStreamReader(socket.getInputStream());
 
 				//Getting each message from input one line at a time

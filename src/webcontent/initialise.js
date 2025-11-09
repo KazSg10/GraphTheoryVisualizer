@@ -449,7 +449,7 @@ function buildDijkstraTable(tableData, canvasADT, ctxADT){
 				text = columns[cellIndex];
 				ctxADT.fillStyle = "brown";
 				ctxADT.textBaseline = "middle";
-				ctxADT.font = "bold 10px Arial";
+				ctxADT.font = "bold 12.5px Arial";
 			//If the row index is not 0, the values in the tableData will be written in the cell	
 			}else{
 				switch(cellIndex){
