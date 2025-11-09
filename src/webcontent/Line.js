@@ -9,7 +9,6 @@ class Line {
 	 * @param {*} x2 - x-coordinate of end node
 	 * @param {*} y2 - y-coordinate of end node
 	 */
-	
 	constructor(ctxGraph , x1, y1, x2, y2, weight){
 		this.ctxGraph  = ctxGraph ;    
 		this.x1 = x1;

@@ -10,7 +10,10 @@ import com.algorithms.Edge.Direction;
 /**
  * Child class of Graph, used for creating unweightedGraph objects 
  */
-public class UnweightedGraph extends Graph {	
+public class UnweightedGraph extends Graph {
+	/**
+	 * UnweightedGraph constructor
+	 */
 	public UnweightedGraph(){
 		c_nodeConnections = new HashMap<Node, List<Node>>();
 		c_nodesList = new ArrayList<>();

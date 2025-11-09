@@ -10,6 +10,9 @@ import com.algorithms.Edge.Direction;
  * Child class of Graph, used for creating weightedGraph objects 
  */
 public class WeightedGraph extends Graph {
+	/**
+	 * WeightedGraph constructor
+	 */
 	public WeightedGraph(){
 		c_nodeConnections = new HashMap<Node, List<Node>>();
 		c_nodesList = new ArrayList<>();

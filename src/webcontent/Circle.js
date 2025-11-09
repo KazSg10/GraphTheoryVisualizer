@@ -8,7 +8,6 @@ class Circle{
 	 * @param {*} y - y-coordinate of circle
 	 * @param {*} radius - Radius of circle
 	 */
-
 	constructor(name, ctxGraph , x, y, radius){
 		this.name = name;
 		this.ctxGraph  = ctxGraph;

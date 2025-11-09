@@ -8,6 +8,10 @@ import java.util.Objects;
 public class Node {
 	private String c_name;
 
+	/**
+	 * Node constructor
+	 * @param name - Node name
+	 */
 	public Node(String name) {
 		c_name = name;
 	}

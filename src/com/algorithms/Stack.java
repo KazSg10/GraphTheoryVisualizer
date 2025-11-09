@@ -10,6 +10,9 @@ import java.util.List;
 public class Stack<T> {
 	private List<T> c_stack;
 
+	/**
+	 * Stack constructor
+	 */
 	public Stack(){		
 		c_stack = new ArrayList<T>();
 	}
@@ -27,10 +30,10 @@ public class Stack<T> {
 	 * @return - Returning popped node from stack
 	 */
 	public T pop() {
-		System.out.println("Pop before: " + c_stack);
+		System.out.println("Before pop: " + c_stack);
 		T poppedNode = c_stack.get(c_stack.size() - 1);
 		c_stack.remove(c_stack.size() - 1);
-		System.out.println("Pop after: " +c_stack);
+		System.out.println("After pop: " +c_stack);
 
 		return poppedNode;
 	}

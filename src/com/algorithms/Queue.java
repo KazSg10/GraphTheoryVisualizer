@@ -10,6 +10,9 @@ import java.util.List;
 public class Queue<T> {
 	private List<T> c_queue;
 
+	/**
+	 * Queue constructor
+	 */
 	public Queue(){		
 		c_queue = new ArrayList<>();
 	}

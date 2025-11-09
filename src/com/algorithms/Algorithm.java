@@ -16,6 +16,11 @@ import com.server.json.StackEntry.ActionDFS;
  */
 public class Algorithm {
 	private GraphOutputData c_graphOutputData;
+	
+	/**
+	 * Algorithm constructor 
+	 * @param graphOutputData - object containing fields to be converted to json, which is sent to browser client
+	 */
 	public Algorithm(GraphOutputData graphOutputData) {
 		c_graphOutputData = graphOutputData;
 	}

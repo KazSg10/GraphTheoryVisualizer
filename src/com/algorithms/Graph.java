@@ -12,7 +12,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * Super abstract class for creating graphs 
  */
 public abstract class Graph {
-	
 	@JsonProperty("NodeConnections")
 	protected  Map<Node,List<Node>> c_nodeConnections;
 	
