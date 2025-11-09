@@ -314,14 +314,18 @@ function checkForErrors(tableName, sourceNode){
 	//Error checking for empty source node cell or no source node in the graph data
 	sourceNode.style.backgroundColor = "white";
 	var sourceNodeError = true;
+
+	
 	for(const node1Value of node1List){
-		if(node1Value == sourceNode.value){
+		if(node1Value == sourceNode.value && sourceNode.value!=""){
 			sourceNodeError = false;
+			break;
 		}
 	}
 	for(const node2Value of node2List){
-		if(node2Value == sourceNode.value){
+		if(node2Value == sourceNode.value  && sourceNode.value != ""){
 			sourceNodeError = false;
+			break;
 		}
 	}
 	
@@ -329,8 +333,10 @@ function checkForErrors(tableName, sourceNode){
 		errorBoxCell("source node error", sourceNode, null);
 		error = true;	
 	}
+
 	return error;
 }
+
 	
 /**
  * Validation check for duplicate edges
