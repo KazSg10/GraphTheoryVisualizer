@@ -2,16 +2,13 @@ package com.server.json;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.algorithms.Node;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/*
+/**
  * Class used to split up the json from the browser into the different components
  * The JsonProperty annotations instruct which values of the json should be mapped to which field
  */
-
 //Whatever values are unknown are ignored
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GraphInputData {
@@ -57,7 +54,6 @@ public class GraphInputData {
 		@JsonProperty("Edge Weight")
 		private String weight;
 		
-		
 		public String getNode1() {
 			return node1;
 		}
@@ -83,8 +79,4 @@ public class GraphInputData {
 			this.weight = weight;
 		}
 	}
-
 }
-
-
-

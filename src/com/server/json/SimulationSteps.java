@@ -3,7 +3,10 @@ package com.server.json;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-//Class with fields that are mapped to json, which help the browser to piece together the step by step simulation for the user
+/**
+ * Abstract super class with fields that are mapped to json, which help the browser to piece together 
+ * the step by step simulation for the user
+ */
 public abstract class SimulationSteps {
 	@JsonProperty("VisitedNodeName")
 	private String c_visitedNodeName;

@@ -7,9 +7,9 @@ import com.algorithms.Node;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/*
- * These fields will be mapped to json components which will be sent to the browser
- * Any other classes objects, in this class, have their fields also converted to json  
+/**
+ * Class containing fields will be mapped to json components which will be sent to the browser.
+ * Any other classes objects, in this class, have their fields also converted to json. 
  */
 public class GraphOutputData {
 	@JsonProperty("Algorithm")

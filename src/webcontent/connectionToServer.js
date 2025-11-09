@@ -184,22 +184,16 @@ function checkForErrors(tableName, sourceNode){
 	var node2List = [];
 	//Setting a boolean value to false since no errors have been detected
 	var error = false;
-
 	//Retrieving the contents of the table determined by the table name parameter
 	var table = document.getElementById(tableName);
 	var numberOfRows = table.rows.length;
-
 	//Creating a list to store the pairs of nodes linked by edges of the graph, for use of validation later
 	const nodePairs = [];
-	const edgesList = [];
-	
 	/**
 	 * The last cell of the second row is the sourceNode (first row is header row), which isn't required as 
 	 * we are bringing the sourceNode into the function separately
 	 */
 	var cellsCount = table.rows[1].cells.length - 1;	
-
-
 	/**
 	 * Creating a for loop to iterate over all the rows in the graph table to detect any
 	 * errors in any of the rows
@@ -298,7 +292,7 @@ function checkForErrors(tableName, sourceNode){
 			sourceNodeError = false;
 		}
 	}
-
+	
 	if(sourceNodeError){
 		errorBoxCell("source node error", sourceNode, null);
 		error = true;	
@@ -306,7 +300,7 @@ function checkForErrors(tableName, sourceNode){
 	return error;
 }
 
-//Validation check for duplicate edges
+//Validation check for duplicate edges	
 function edgeChecker([node1, node2], nodePairs){
 	
 	var included = false;

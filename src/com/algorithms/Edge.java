@@ -1,6 +1,8 @@
 package com.algorithms;
 
-
+/**
+ * Class for creating edges between the nodes
+ */
 public class Edge {
 	public enum Direction{
 		BIDIRECTION,

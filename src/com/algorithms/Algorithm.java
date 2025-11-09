@@ -3,24 +3,32 @@ package com.algorithms;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import com.algorithms.Edge.Direction;
 import com.server.json.BFSSimulationSteps;
 import com.server.json.DFSSimulationSteps;
 import com.server.json.DijkstraSimulationSteps;
 import com.server.json.GraphOutputData;
 import com.server.json.QueueEntry;
-import com.server.json.StackEntry;
 import com.server.json.QueueEntry.ActionBFS;
+import com.server.json.StackEntry;
 import com.server.json.StackEntry.ActionDFS;
 
+/**
+ * Class containing functionalities of the different graph algorithms
+ */
 public class Algorithm {
 	private GraphOutputData c_graphOutputData;
 	public Algorithm(GraphOutputData graphOutputData) {
 		c_graphOutputData = graphOutputData;
 	}
 	
-	//Depth-First Traversal Algorithm
-	public List<Node> depthFirstTraversal(UnweightedGraph graph, Node visitedNode, List<Node> visited, Stack<Node> stack ){
+	/**
+	 * Depth-First Traversal Algorithm
+	 * @param graph - Graph on which the algorithm will be simulated
+	 * @param visitedNode - The node who neighbour is being visited next
+	 * @param visited - List of visited nodes
+	 * @param stack - Stack object containing nodes that have been pushed onto it during the algorithm
+	 */
+	public void depthFirstTraversal(UnweightedGraph graph, Node visitedNode, List<Node> visited, Stack<Node> stack ){
 		c_graphOutputData.getSimulationSteps().add(new DFSSimulationSteps(null, 0, null, null, null));
 		if(null == visited) {
 			visited = new LinkedList<>();
@@ -57,11 +65,14 @@ public class Algorithm {
 		System.out.println("Back  --------------->" + visitedNode);
 		c_graphOutputData.getSimulationSteps().add(new DFSSimulationSteps(null, 9, null, null, null));
 		c_graphOutputData.getSimulationSteps().add(new DFSSimulationSteps(null, 10, null, null, null));
-		return visited;
 	}
 	
-	//Breadth-First Traversal Algorithm
-	public List<Node> BreadthFirstTraversal(UnweightedGraph graph, Node sourceNode){
+	/**
+	 * Breadth-First Traversal Algorithm
+	 * @param graph - Graph on which the algorithm will be simulated
+	 * @param sourceNode - The node from which the traversal will begin
+	 */
+	public void BreadthFirstTraversal(UnweightedGraph graph, Node sourceNode){
 		c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, 0, null, null, null));	
 		List<Node> visited= new LinkedList<>();
 		c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, 1, null, null, null));	
@@ -100,11 +111,13 @@ public class Algorithm {
 		c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, 12, null, null, null));
 		c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, 13, null, null, null));
 		c_graphOutputData.getSimulationSteps().add(new BFSSimulationSteps(null, 14, null, null, null));
-
-		return visited;	
 	}
 	
-	//Dijkstra's Shortest Path-Finding Algorithm
+	/**
+	 * Dijkstra's Shortest Path-Finding Algorithm
+	 * @param graph - Graph on which the algorithm will be simulated
+	 * @param sourceNode - The node from which the traversal will begin
+	 */
 	public void DijkstraShortestPathFinding(WeightedGraph graph, Node sourceNode){
 		c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, 0, null, null, Integer.MAX_VALUE, null, null, null));
 		//Creating a priority queue for the nodes
@@ -119,9 +132,8 @@ public class Algorithm {
 		for(Node node: NodeList){
 			c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, 3, null, null, Integer.MAX_VALUE, null, null, null));
 			
-			//System.out.println(node + " -> " + graph.getNodeConnections(node));
 			/*
-			 * If the node is not the source node, then the boolean value will be set to false, otherwise it will be set to true
+			 * If the node is not the source node, then the boolean value will be set to false, otherwise it will be set to true.
 			 * Depending on this, the distance from the source node field will be altered
 			 */
 			if(!node.equals(sourceNode)){
@@ -146,7 +158,6 @@ public class Algorithm {
 			
 		}
 		c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, 13, null, null, Integer.MAX_VALUE, null, null, null));
-
 		
 		/*
 		 * Trying to find the DijkstraQueueNode in the priority queue with the shortest distance from the source node
@@ -215,16 +226,13 @@ public class Algorithm {
 
 							System.out.println(priorityQueue);
 						}
-						c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, 23, null, null, Integer.MAX_VALUE, null, null, null));
-
-						
+						c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, 23, null, null, Integer.MAX_VALUE, null, null, null));				
 					}
 				}
 				
 				c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, 24, null, null, Integer.MAX_VALUE, null, null, null));
 				traversedNodes.add(traversingNode);
-				c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(traversingNode.getNode().getName(), null, 26, null, null, Integer.MAX_VALUE, null, null, null));
-			
+				c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(traversingNode.getNode().getName(), null, 26, null, null, Integer.MAX_VALUE, null, null, null));		
 			}else {
 				c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, 28, null, null, Integer.MAX_VALUE, null, null, null));
 
@@ -242,24 +250,23 @@ public class Algorithm {
 				} 
 				c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, 29, null, null, Integer.MAX_VALUE, null, null, null));			
 				break;
-
-			}
-			
+			}			
 			c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, 30, null, null, Integer.MAX_VALUE, null, null, null));
 		}
 		c_graphOutputData.getSimulationSteps().add(new DijkstraSimulationSteps(null, null, 31, null, null, Integer.MAX_VALUE, null, null, null));
-
 	}
 	
-	//Recursive subroutine to create the shortest path for each node from the source node	
+	/**
+	 * Recursive subroutine to create the shortest path for each node from the source node	
+	 * @param node - Node to which the shortest path from the source node is to be created
+	 * @param sourceNode - Start node of path
+	 * @param path - Path up to that point, this function is recursive so it will be added on to
+	 * @return
+	 */
 	public static String createPath(DijkstraQueueNode node, Node sourceNode, String path) {
-		
-		if(node.getNode() == sourceNode) {
+		if(node.getNode() == sourceNode){
 			return sourceNode.getName();
-		}
-		
-		else {
-			
+		}else{		
 			if(node.getDistanceFromSourceNode() == Integer.MAX_VALUE - 1) {
 				return node.getNode().getName() + " is unreachable";	
 			}else{
@@ -269,7 +276,9 @@ public class Algorithm {
 		}	
 	}
 
-	//Creating special nodes called DijkstraQueueNodes which will be used to store nodes in the priority queue along with their distance from source node
+	/**
+	 * Class for creating special nodes called DijkstraQueueNodes which will be used to store nodes in the priority queue along with their distance from source node
+	 */
 	public static class DijkstraQueueNode{
 		private Node c_node;
 		private DijkstraQueueNode c_previousNode;

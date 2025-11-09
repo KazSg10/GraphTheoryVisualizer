@@ -2,6 +2,9 @@ package com.server.json;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * Class for creating queue entries
+ */
 public class StackEntry{
 	public enum ActionDFS{
 		PUSH,

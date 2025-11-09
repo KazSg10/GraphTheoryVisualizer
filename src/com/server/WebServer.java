@@ -22,32 +22,32 @@ import com.algorithms.Node;
 import com.algorithms.Queue;
 import com.algorithms.Stack;
 import com.algorithms.UnweightedGraph;
-
 import com.algorithms.WeightedGraph;
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.server.json.GraphInputData;
 import com.server.json.GraphInputData.ConnectionData;
 import com.server.json.GraphOutputData;
 
+/**
+ * Class containing functionalities related to communicating with the browser client
+ */
 public class WebServer {
-
 	//Enum to store constants of the HTTP Methods which will be included in the client browser request
 	enum HttpMethods{
 		GET,
 		POST;
 	}
 	
-	//Class for Web Server
 	public static void main(String[]args) {
-			
 		WebServer webServer = new WebServer();
 		//Web server starting
 		webServer.startServer();
 	}
 	
+	/**
+	 * Starts server
+	 */
 	public void startServer() {
 		System.out.println("Web server started");
 		int portNumber = -1;
@@ -68,34 +68,33 @@ public class WebServer {
 					portNumber = Integer.parseInt(arr[1]);
 				}
 			} 
-			//Setting up a socket for client-server connections
-			
-			//Retrieving the local computer's hostname and IP address
+			/*
+			 * Setting up a socket for client-server connections and 
+			 * retrieving the local computer's hostname and IP address.
+			 */
 			InetAddress localHost = InetAddress.getLocalHost();
 			//Getting IP address and converting to InetAddress object
 			InetAddress addr = InetAddress.getByName(localHost.getHostAddress());
 			
 			writeFile(projectPath + "/src/webcontent/connectionToServer.js", connectionToServerFileUpdate(localHost));
-			/*Creating server socket that listens for clients on a specified port number, backlog of 10 connections and bound specifically
-			to ip address stored in addr*/
-			//Since I am using the private ip address, this webapp can only work on devices in the LAN at the moment
+			/*
+			 * Creating server socket that listens for clients on a specified port number, backlog of 50 connections and bound specifically
+			 * to this computer's IP address.
+			 * Since I am using the private IP address, this webapp can only work on devices in the LAN, at the moment.
+			 */
 			ServerSocket serverSocket = new ServerSocket(portNumber, 50, addr);
-			
-			
 			//Processing HTTP requests
 			while(true) {
-				System.out.println("Access webapp at http://" + serverSocket.getInetAddress().getHostAddress() + ":" + portNumber);
-				System.out.println(String.format("Server waiting for connection on port %d", portNumber));
+				System.out.println(String.format("Server waiting for connection on IP address: %s and port: %d", serverSocket.getInetAddress().getHostAddress(), portNumber));
 				//Server is now waiting for a connection
 				Socket socket = serverSocket.accept();
 				/*
-				 * The request from browser is being stored
-				 * socket.getInputStream is used to read the data coming from the socket#
-				 * InputStreamReader reads bytes in the data and decoded them into characters
+				 * The request from browser is being stored.
+				 * socket.getInputStream is used to read the data coming from the socket.
+				 * InputStreamReader reads bytes in the data and decodes them into characters.
 				 */
 				InputStreamReader input = new InputStreamReader(socket.getInputStream());
-
-				//Getting each message from input one line at a time
+				//Getting each message from input, one line at a time
 				BufferedReader clientBufferedReader = new BufferedReader(input);	
 				/*
 				 * First line of the http request is the request line which contains following information:
@@ -105,20 +104,18 @@ public class WebServer {
 				 * 
 				 * (Syntax ->  Request-Line   = Method SP Request-URI SP HTTP-Version CRLF)
 				 */
-
 				//Reading the first line in the http request
 				String httpRequestLine = clientBufferedReader.readLine();
-
 				/*
-				 * Checking whether first line is valid or not
-				 * If not, then close current connection and wait for a new client connection
+				 * Checking whether first line is valid or not.
+				 * If not, then close current connection and wait for a new client connection.
 				 */
 				if(httpRequestLine != null) {
 					//Parsing the httpRequestLine into its 3 components
 					Map<String, String> parsedRequestLine = parseRequestLine(httpRequestLine);
 					//Creating a dictionary to assign headers to their values							
 					Map<String, String> httpRequestHeaders = new HashMap<String, String>();
-
+					
 					//Start fetching headers
 					String headerLine = clientBufferedReader.readLine();
 					while(headerLine != null && !headerLine.isBlank()) {
@@ -131,6 +128,7 @@ public class WebServer {
 						//Reading next header line
 						headerLine = clientBufferedReader.readLine();
 					}	
+					
 					//Depending on the http method, call that particular function
 					if(parsedRequestLine.get("Method").equals("GET")) {
 						processMethodGet(parsedRequestLine.get("Path"), socket);
@@ -139,7 +137,7 @@ public class WebServer {
 					}
 					System.out.println();
 				} else {
-					//Unsupported request line received, we need to close the connection since it can't be handled
+					//Unsupported request line received, we need to close the connection since it can not be handled
 					socket.close();
 				}
 			}
@@ -147,8 +145,11 @@ public class WebServer {
 			System.out.println(e);
 		}
 	}
-	
-	//Parses the first line of http request, which is the request line
+	/**
+	 * Parsing the first line of http request, which is the request line
+	 * @param httpRequestLine - httpRequestLine string in request from client
+	 * @return - returning the different components of this requestLine, in an array
+	 */
 	private	Map<String, String> parseRequestLine(String httpRequestLine) {
 		Map<String, String> httpRequestLineComponents = new HashMap<String, String>();
 		//Parsing the first line into 3 components
@@ -162,11 +163,15 @@ public class WebServer {
 		return httpRequestLineComponents;
 	}
 	
+	/**
+	 * Processing GET Request from browser client
+	 * @param path - Path of the file request by browser client
+	 * @param socket
+	 */
 	//Function for processing HTTP GET request from browser
 	private void processMethodGet(String path, Socket socket) {
 		//Getting part of the path of the file from the environment variable to shorten the path of the files
 		String projectPath = System.getenv("NEA_PROJECT_ROOT");
-
 		try {
 			System.out.println("Handling HTTP Method GET " + path);
 			if(path.equals("/")) {
@@ -176,8 +181,11 @@ public class WebServer {
 				//Processing the path of the html file code requested
 				path = projectPath + "/src/webcontent" + path;
 			}
-			//Setting up the outputWriter to return data back to the browser
-			PrintWriter outputWriter = new PrintWriter(socket.getOutputStream());
+			/*
+			 * Creating a PrintWriter, which will be used to send data back to client.
+			 * Second parameter being true indicates auto-flushing data back to client
+			 */
+			PrintWriter outputWriter = new PrintWriter(socket.getOutputStream(), true);
 			System.out.println("Reading file " + path);
 			BufferedReader buffer = new BufferedReader(new FileReader(path));
 			System.out.println("Reading content from file");	
@@ -197,7 +205,6 @@ public class WebServer {
 				outputLine = buffer.readLine();
 			}		
 			//Sending the html file data to browser
-			outputWriter.flush();
 			socket.close();
 		}catch(Exception e) {
 			System.out.println(e);
@@ -213,8 +220,11 @@ public class WebServer {
 			GraphInputData inputData = graphInputDataMapper.readValue(body,GraphInputData.class);
 			//Processing inputData using the algorithm specified in the body
 			String json = simulateAlgorithm(inputData);
-			//Creating a PrintWriter, which will be used to send data back to client
-			PrintWriter outputWriter = new PrintWriter(socket.getOutputStream());		
+			/*
+			 * Creating a PrintWriter, which will be used to send data back to client.
+			 * Second parameter being true indicates auto-flushing data back to client
+			 */
+			PrintWriter outputWriter = new PrintWriter(socket.getOutputStream(), true);		
 			/*
 			 * Status line of the HTTP response from response
 			 * HTTP/1.1 = HTTP version
@@ -230,9 +240,6 @@ public class WebServer {
 			outputWriter.println();
 			//Adding body to response
 			outputWriter.print(json); 
-			System.out.println(json.getBytes());
-			//Sending response back to client
-			outputWriter.flush();
 			//Closing client socket
 			socket.close();
 		}catch(Exception e) {
@@ -240,11 +247,16 @@ public class WebServer {
 		}
 	}
 	
-	//function for reading the body of the client data in the http request
+	/**
+	 * Reading the body of the client data in the http request
+	 * @param reader - Buffer containing the lines in the request
+	 * @param headers - Dictionary containing key-value pairs of headers and their values
+	 * @return - Returning body of the request
+	 */
 	private String readBody(BufferedReader reader, Map<String, String> headers) {	
 		/*
 		 * Retrieving the length of the body from the Content-Length header to know how many
-		 * characters are part of the body
+		 * characters are part of the body.
 		*/
 		int bodyLength = Integer.parseInt(headers.get("Content-Length").trim());
 		String body = "";
@@ -257,11 +269,11 @@ public class WebServer {
 		}
 		return body;
 	}
-	
-	/*
-	 * Simulating the algorithm to get the json of the steps which will be returned to browser
-	 * If it's BFS or DFS, then an unweighted graph will be created
-	 * If it's Dijkstra then a weighted graph will be created
+
+	/**
+	 * Simulating the algorithm requested to get the json of the steps which will be returned to the browser client.
+	 * @param inputData - Object which contains the data that has come from the client
+	 * @return
 	 */
 	private String simulateAlgorithm(GraphInputData inputData) {
 		//Getting part of the path of the file from the environment variable to shorten the path of the files
@@ -283,7 +295,6 @@ public class WebServer {
 				List<Node> visitedDFS = new ArrayList<Node>();
 				Stack<Node> stack = new Stack<Node>();
 				algorithmDFS.depthFirstTraversal(graph, sourceNode, visitedDFS, stack);
-				
 				//Returning the steps of the traversal in json form
 				return toJson(c_graphOutputDataDFS);
 			}
@@ -311,13 +322,17 @@ public class WebServer {
 			GraphOutputData c_graphOutputDataDijkstra = new GraphOutputData(inputData.getAlgorithm(), graph, readFile(projectPath + "/src/com/algorithms/DijkstraPseudoCode.txt"), sourceNode);
 			Algorithm algorithmDijkstra = new Algorithm(c_graphOutputDataDijkstra);
 			algorithmDijkstra.DijkstraShortestPathFinding(graph, sourceNode);
-
 			//Returning the steps of the traversal in json form
 			return toJson(c_graphOutputDataDijkstra);
 		}
 		return null;
 	}
 
+	/**
+	 * Converting the fields and their values in the GraphOutputData object to json
+	 * @param outputData - GraphOutputData object
+	 * @return
+	 */
 	public String toJson(GraphOutputData outputData) {
 		//Creating an objectMapper to map GraphOutputData to Json
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -332,7 +347,11 @@ public class WebServer {
 		return json;
 	}
 	
-	//Function for reading a file
+	/**
+	 * Reading a file
+	 * @param path - Path fo file that is to be read from
+	 * @return - Returning a list of all the lines in the file
+	 */
 	public List<String> readFile(String path){
 		List<String> output = null;
 		try {
@@ -353,6 +372,12 @@ public class WebServer {
 		return output;
 	}
 	
+	/**
+	 * Reading a file
+	 * @param path - Path of file that is to be written to
+	 * @param fileList - List of all the lines in the file given by path
+	 * @return - Returning a list of all the lines in the file
+	 */
 	public void writeFile(String path, List<String> fileList) throws IOException {
 		File currentFile = new File(path);
 		currentFile.delete();
@@ -368,8 +393,12 @@ public class WebServer {
 		}	
 		buffer.close();
 	}
-	
-	//Function for updating the connectionToServer.js file with new IP address 
+	 
+	/**
+	 * Updating the connectionToServer.js file with new IP address 
+	 * @param localHost - This computer 
+	 * @return
+	 */
 	public List<String> connectionToServerFileUpdate(InetAddress localHost) {
 		String filePath = System.getenv("NEA_PROJECT_ROOT") + "/src/webcontent/connectionToServer.js";
 		List<String> jsFileList = readFile(filePath);
@@ -380,6 +409,7 @@ public class WebServer {
 				break;
 			}
 		}
+		//Updating the fetch() line with the new IP address
 		jsFileList.add(index, "	var response = await fetch(\"http://"+ localHost.getHostAddress() + ":8908/visualize\",");
 		jsFileList.remove(index + 1);
 		System.out.println("updated file");

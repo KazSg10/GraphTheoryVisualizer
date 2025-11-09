@@ -8,30 +8,43 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-//Class for creating graph objects
+/**
+ * Super abstract class for creating graphs 
+ */
 public abstract class Graph {
 	
-	//Naming the connections in Json
 	@JsonProperty("NodeConnections")
 	protected  Map<Node,List<Node>> c_nodeConnections;
 	
-	//Naming the list in Json
 	@JsonProperty("NodesList")
 	protected  List<Node> c_nodesList;
+	
 	@JsonProperty("edgeList")
 	protected List<Edge> c_edgeList;
 
 	public Map<Node, List<Node>> getNodeConnections() {
 		return c_nodeConnections;
 	}
+	
+	/**
+	 * Getting the list of all the nodes in a graph
+	 * @return - Returning the list of the nodes in the graph
+	 */
 	public List<Node> getNodesList(){
-		
-		//Returning the list of nodes in the graph
 		return c_nodesList;
 	}
+	
+	/**
+	 * Adding an edge to the graph
+	 * @param edge - Edge to be added
+	 */
 	public abstract void addEdge(Edge edge);
 
-	//Returning the neighbours of each node
+	/**
+	 * Returning the neighbours of a node in the graph
+	 * @param inputNode - Node of which we need the neighbours
+	 * @return - RE
+	 */
 	public List<Node> getNodeConnections(Node inputNode) {
 		for(Map.Entry<Node, List<Node>> nodeEntry: c_nodeConnections.entrySet()) {
 			if(nodeEntry.getKey().getName().equals(inputNode.getName())){
