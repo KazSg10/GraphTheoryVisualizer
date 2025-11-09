@@ -1,5 +1,4 @@
 /*Styling the html elements*/
-
 canvas{
 	border: 1px solid black;		
 	background: white;			
@@ -56,7 +55,7 @@ body, html{
 }
 
 .optioncontent{
-	padding: 0px 12px;
+	padding: 0px 10px;
 	width: 100%;
  	border-left: none;
   	height: 90%;
