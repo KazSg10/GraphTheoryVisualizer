@@ -21,7 +21,27 @@ public class DijkstraSimulationSteps extends SimulationSteps{
 	@JsonProperty("Path")
 	private String c_path;
 	
+	/**
+	 * BFSSimulationSteps constructor
+	 * @param visitedNodeName - Name of visited node
+	 * @param pseudocodeLineIndex - Index of the pseudocode line to be highlighted
+	 * @param queueEntry - Value to be enqueued or dequeued into the queue
+	 * @param fromNode - Start from node where the animation of the edge will begin
+	 * @param toNode - End node where the animation of the edge will stop
+	 */
 	
+	/**
+	 * DijkstraSimulationSteps constructor
+	 * @param traversedNodeName - name of node who have had the paths between itself and all of its neighbouring nodes travelled on
+	 * @param visitedNodeName - Name of visited node
+	 * @param pseudocodeLineIndex - Index of the pseudocode line to be highlighted
+	 * @param fromNode - Start from node where the animation of the edge will begin
+	 * @param toNode - End node where the animation of the edge will stop
+	 * @param newDistance - New calculated shortest distance
+	 * @param newPreviousNode - New previous node after a change in distance
+	 * @param nodeOfPath - Node for which the shortest path from the source node is for
+	 * @param path - Shortest path of nodes between nodeOfPath and source node
+	 */
 	public DijkstraSimulationSteps(String traversedNodeName, String visitedNodeName, int pseudocodeLineIndex, String fromNode, String toNode, int newDistance, String newPreviousNode, String nodeOfPath, String path) {
 		super(visitedNodeName, pseudocodeLineIndex, fromNode, toNode);
 

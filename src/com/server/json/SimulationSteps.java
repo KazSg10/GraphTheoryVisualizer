@@ -20,6 +20,13 @@ public abstract class SimulationSteps {
 	@JsonProperty("ToNode")
 	private String c_toNode;
 	
+	/**
+	 * SimulationSteps constructor
+	 * @param pseudocodeLineIndex - Index of the pseudocode line to be highlighted
+	 * @param queueEntry - Value to be enqueued or dequeued into the queue
+	 * @param fromNode - Start from node where the animation of the edge will begin
+	 * @param toNode - End node where the animation of the edge will stop
+	 */
 	public SimulationSteps(String visitedNodeName, int PseudocodeLineIndex, String fromNode, String toNode) {
 		c_visitedNodeName = visitedNodeName;
 		c_PseudocodeLineIndex = PseudocodeLineIndex;

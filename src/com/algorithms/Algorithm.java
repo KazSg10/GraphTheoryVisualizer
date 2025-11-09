@@ -300,6 +300,12 @@ public class Algorithm {
 		 * If the node is the source node, then the distance from the source node will be 0, otherwise it will be set to the largest integer to denote infinity,
 		 * which will represent that a shortest distance has not been found yet
 		 */
+		
+		/**
+		 * DijkstraQueueNode constructor
+		 * @param node - node being converted into a dijsktraQueueNode
+		 * @param sourceNode - node from which the shortest path to node will be created
+		 */
 		public DijkstraQueueNode(Node node, Boolean sourceNode) {
 			c_previousNode = null;
 			c_distanceFromSourceNode = sourceNode? 0 : Integer.MAX_VALUE - 1;

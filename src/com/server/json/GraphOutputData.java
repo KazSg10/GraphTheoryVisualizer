@@ -23,6 +23,13 @@ public class GraphOutputData {
 
 	private List<SimulationSteps> c_stepsList = new ArrayList<>();
 	
+	/**
+	 * GraphOutputData constructor
+	 * @param algorithm - Algorithm being simulated
+	 * @param graph
+	 * @param pseudoCode
+	 * @param sourceNode
+	 */
 	public GraphOutputData(String algorithm, Graph graph, List<String> pseudoCode, Node sourceNode ) {
 		c_algorithm = algorithm;
 		c_graph = graph;

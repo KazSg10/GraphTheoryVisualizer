@@ -17,6 +17,11 @@ public class StackEntry{
 	@JsonProperty("Action")
 	private ActionDFS c_action;
 
+	/**
+	 * StackEntry constructor
+	 * @param value - Value to be pushed or popped 
+	 * @param action - Push or pop
+	 */
 	public StackEntry(String value, ActionDFS action) {
 		c_value = value;
 		c_action = action;

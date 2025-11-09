@@ -17,6 +17,11 @@ public class QueueEntry{
 	@JsonProperty("Action")
 	private ActionBFS c_action;
 
+	/**
+	 * QueueEntry constructor
+	 * @param value - Value to be enqueued or dequeued
+	 * @param action - Enqueue or dequeue
+	 */
 	public QueueEntry(String value, ActionBFS action) {	
 		c_value = value;
 		c_action = action;

@@ -45,8 +45,4 @@ public class WeightedGraph extends Graph {
 		}
 		return Integer.MAX_VALUE;
 	}
-
-//	public List<Edge> getEdgeList() {
-//		return c_edgeList;
-//	}	
 }
