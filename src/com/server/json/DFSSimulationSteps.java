@@ -13,9 +13,6 @@ public class DFSSimulationSteps extends SimulationSteps{
 		super(visitedNodeName, pseudocodeLineIndex, fromNode, toNode);
 		c_stackEntry = stackEntry;
 	}
-//	public StackEntry getC_stackEntry() {
-//		return c_stackEntry;
-//	}
 }
 
 
