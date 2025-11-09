@@ -1,6 +1,6 @@
-sub Dijkstra(graph, source)
-	Queue = []
-	TraversedNodes = []
+SUB Dijkstra(graph, source)
+	queue <- []
+	traversedNodes <- []
 	FOREACH (node v in graph.nodes)
 		IF (v is not the source node)
 			dist[v] <-INFINITY
@@ -9,14 +9,14 @@ sub Dijkstra(graph, source)
 			dist[source] <- 0
 		ENDIF	
 		
-		enqueue v in Queue
+		enqueue v in queue
 		
 	ENDFOREACH	
 	
 	WHILE (true)
-		u <- node in Queue with minimum dist[u]
+		u <- node in queue with minimum dist[u]
 		
-		FOREACH (neighbour node v of u in Queue that is not in TraversedNodes)
+		FOREACH (neighbour node v of u in queue that is not in traversedNodes)
 			altDist <- dist[u] + graph.edges(u, v)
 			IF(altDist < dist[v])
 				dist[v] <- altDist
@@ -24,9 +24,9 @@ sub Dijkstra(graph, source)
 			ENDIF
 		ENDFOREACH
 		
-		Add u to TraversedNodes
+		Add u to traversedNodes
 		
-		IF(all the nodes have been enqueued in Queue)
+		IF(all the nodes have been enqueued in queue)
 			break from while loop
 		ENDIF	
 	ENDWHILE	
