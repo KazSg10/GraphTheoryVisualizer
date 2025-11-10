@@ -83,6 +83,7 @@ public class WebServer {
 			//Processing HTTP requests
 			while(true) {
 				System.out.println(String.format("Server waiting for connection on IP address: %s and port: %d", serverSocket.getInetAddress().getHostAddress(), portNumber));
+				System.out.println("URL to access webapp -> http://" + serverSocket.getInetAddress().getHostAddress() + ":" + portNumber);
 				//Server is now waiting for a connection
 				Socket socket = serverSocket.accept();
 				/*
